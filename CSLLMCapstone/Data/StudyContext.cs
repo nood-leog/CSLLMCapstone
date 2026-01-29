@@ -24,45 +24,333 @@ namespace CSLLMCapstone.Data
 
             // Add the seed data for Courses
             modelBuilder.Entity<Course>().HasData(
-                new Course { CourseId = 102, Title = "Health and Technology", CourseDesc = "test desc" },
-                new Course { CourseId = 105, Title = "The Logical Basis of Computing", CourseDesc = "test desc" },
-                new Course { CourseId = 107, Title = "Make a Game with Computer Science", CourseDesc = "test desc" },
-                new Course { CourseId = 109, Title = "Quantitative Reasoning Using Python", CourseDesc = "test desc" },
-                new Course { CourseId = 110, Title = "Programming Fundamentals I", CourseDesc = "test desc" },
-                new Course { CourseId = 111, Title = "Programming Fundamentals II", CourseDesc = "test desc" },
-                new Course { CourseId = 112, Title = "Introduction to Data Science in Python", CourseDesc = "test desc" },
-                new Course { CourseId = 301, Title = "Data Structures", CourseDesc = "test desc" },
-                new Course { CourseId = 302, Title = "Advanced Data Structures and File Processing", CourseDesc = "test desc" },
-                new Course { CourseId = 311, Title = "Computer Architecture I", CourseDesc = "test desc" },
-                new Course { CourseId = 312, Title = "Computer Architecture II", CourseDesc = "test desc" },
-                new Course { CourseId = 325, Title = "Technical Writing in Computer Science", CourseDesc = "test desc" },
-                new Course { CourseId = 351, Title = "Web Development Technologies II", CourseDesc = "test desc" },
-                new Course { CourseId = 361, Title = "Principles of Language Design I", CourseDesc = "test desc" },
-                new Course { CourseId = 362, Title = "Principles of Language Design II", CourseDesc = "test desc" },
-                new Course { CourseId = 367, Title = "Advanced Visual Basic Programming", CourseDesc = "test desc" },
-                new Course { CourseId = 370, Title = "Introduction to Linux", CourseDesc = "test desc" },
-                new Course { CourseId = 380, Title = "Introduction to Software Engineering", CourseDesc = "test desc" },
-                new Course { CourseId = 420, Title = "Database Management Systems", CourseDesc = "test desc" },
-                new Course { CourseId = 427, Title = "Algorithm Analysis", CourseDesc = "test desc" },
-                new Course { CourseId = 428, Title = "Introduction to Graph Algorithm", CourseDesc = "test desc" },
-                new Course { CourseId = 430, Title = "Cybersecurity", CourseDesc = "test desc" },
-                new Course { CourseId = 440, Title = "Computer Graphics", CourseDesc = "test desc" },
-                new Course { CourseId = 445, Title = "Data and Information Visualization", CourseDesc = "test desc" },
-                new Course { CourseId = 446, Title = "User Interface Design and Development", CourseDesc = "test desc" },
-                new Course { CourseId = 450, Title = "Computer Network and Data Communications", CourseDesc = "test desc" },
-                new Course { CourseId = 452, Title = "Ethical Hacking and Penetration Testing for Computer Science", CourseDesc = "test desc" },
-                new Course { CourseId = 456, Title = "Data Mining", CourseDesc = "test desc" },
-                new Course { CourseId = 457, Title = "Computational Intelligence and Machine Learning", CourseDesc = "test desc" },
-                new Course { CourseId = 460, Title = "Software Engineering for Mobile Devices", CourseDesc = "test desc" },
-                new Course { CourseId = 465, Title = "Scientific Computing", CourseDesc = "test desc" },
-                new Course { CourseId = 466, Title = "Virtual Reality", CourseDesc = "test desc" },
-                new Course { CourseId = 467, Title = "Computational Statistics", CourseDesc = "test desc" },
-                new Course { CourseId = 470, Title = "Operating Systems", CourseDesc = "test desc" },
-                new Course { CourseId = 471, Title = "Optimization", CourseDesc = "test desc" },
-                new Course { CourseId = 473, Title = "Parallel Computing", CourseDesc = "test desc" },
-                new Course { CourseId = 480, Title = "Advanced Software Engineering", CourseDesc = "test desc" },
-                new Course { CourseId = 481, Title = "Capstone Project", CourseDesc = "test desc" },
-                new Course { CourseId = 489, Title = "Senior Colloquium", CourseDesc = "test desc" }
+                new Course { CourseId = 102, Title = "Health and Technology", 
+                    CourseDesc = "CS 102 guides students to analyze the impact of health factors through construction of a personal health index calculator and create health " +
+                    "analysis tools with instantaneous updating. Students will also evaluate the pros and cons of technology in the health field. Course topics will " +
+                    "vary but may include Big Tech, Video games, Telemedicine, Artificial intelligence, Robotics, 5G, Deep web, Virtual reality, Music technology, " +
+                    "Wearables, and Ethics. The course emphasizes exploration of new methods of obtaining, analyzing, and reporting information in health-technology. " +
+                    "Students will engage through written papers and group discussions, and create their own personal health index calculator through simple, " +
+                    "beginning-level programming."
+                },
+
+                new Course { CourseId = 105, Title = "The Logical Basis of Computing", 
+                    CourseDesc = "CS 105 guides students in developing mathematical and quantitative reasoning skills by learning the fundamentals of computer programming. " +
+                    "Learning to program helps students develop enhanced critical thinking skills, grounded in mathematical logic and quantitative reasoning. " +
+                    "Students gain an understanding of possible connections between technology and artistic expression. Course goals include students demonstrating " +
+                    "knowledge of the inner workings of the digital revolution, composing the mathematical logic required to solve problems with programming code, " +
+                    "and demonstrating mathematical and quantitative reasoning skills by identifying the programming code needed to solve problems of increasing complexity."
+                },
+
+                new Course { CourseId = 107, Title = "Make a Game with Computer Science", 
+                    CourseDesc = "CS 107 focuses on the complete principles of software development, guiding students through the full lifecycle from requirement specification " +
+                    "to deployment and maintenance. The primary goal is to foster the ability to apply both theoretical and practical knowledge to develop various " +
+                    "software tools, packages, or libraries addressing a specific problem statement. Students will gain hands-on experience in designing, debugging, " +
+                    "and executing programs in modern programming languages such as Java. The course uses Unreal Engine 4.24.xx."
+                },
+
+                new Course { CourseId = 109, Title = "Quantitative Reasoning Using Python", 
+                    CourseDesc = "CS 109 explores quantitative and statistical processes by implementing the programming language Python. Students will apply procedures from " +
+                    "Python's data visualization libraries to present data in formats including, but not limited to, graphs, histograms, and bar charts. " +
+                    "They will evaluate these mathematical forms to formulate meaningful conclusions. In addition to quantitative and statistical processes, " +
+                    "students will learn programming skills to develop enhanced critical thinking skills, grounded in logic and reason. Course topics include " +
+                    "Introduction to Python, Data visualization, Classes and Object Oriented Programming (OOP), Stochastic programs, probability and distributions, " +
+                    "Sampling and confidence intervals, Understanding experimental data, Hypothesis checking, and Conditional probability and Bayesian statistics."
+                },
+
+                new Course { CourseId = 110, Title = "Programming Fundamentals I", 
+                    CourseDesc = "CS110 teaches students the basics of writing Java programs to solve problems of increasing complexity. Specific learner outcomes include " +
+                    "implementing sequential programming, decision statements, repetition constructs (including nested loops), and arithmetic operators. " +
+                    "Students will also implement Java primitive data type variables, file processing, methods to modularize programs, class definitions, and arrays " +
+                    "and objects of the ArrayList class."
+                },
+
+                new Course { CourseId = 111, Title = "Programming Fundamentals II", 
+                    CourseDesc = "CS 111 provides an in-depth exploration of intermediate programming concepts in Java, building upon the foundations of " +
+                    "Programming Fundamentals I. Students advance their skills in object-oriented programming, specifically focusing on inheritance, polymorphism, and " +
+                    "abstract classes to create scalable and reusable code. The course also reinforces core logic while introducing complex topics like " +
+                    "Advanced File I/O, including object serialization and random access files, alongside a thorough introduction to Recursion. Beyond command-line " +
+                    "applications, students are expected to design and implement Graphical User Interfaces (GUIs) using Event Listeners and Layout Managers. " +
+                    "This comprehensive approach ensures students understand how to transition from basic logic to building robust, interactive software systems " +
+                    "equipped with professional error-handling and debugging techniques."
+                },
+
+                new Course { CourseId = 112, Title = "Introduction to Data Science in Python", 
+                    CourseDesc = "CS112 focuses on the foundations of data science and its applications, including how the data science process can be used to address " +
+                    "real-life problems. Students will identify key characteristics of Python programming, including syntax, semantics, debugging, and data science packages. " +
+                    "The course aims to resolve compilation warnings and error messages in Python and demonstrate full understanding of the Python programming paradigms in " +
+                    "respect to the data science paradigm."
+                },
+
+                new Course { CourseId = 301, Title = "Data Structures", 
+                    CourseDesc = "CS 301 explores data structures, algorithms for manipulating them, and the practical problems of implementing those structures in real " +
+                    "programming languages and environments. Attention is paid to the analysis of algorithms to characterize their worst and average case requirements for " +
+                    "running time and memory. The course should expand the students' toolbox of basic techniques for manipulating data at both the conceptual and the concrete level. " +
+                    "Topics will proceed through classic data structures and Java-based containers, exploring the use and implementation of each. Motivating problems will be " +
+                    "drawn from a variety of application areas."
+                },
+
+                new Course { CourseId = 302, Title = "Advanced Data Structures and File Processing", 
+                    CourseDesc = "CS 302 continues the exploration of data structures, algorithms for manipulating them, and implementing those structures in real " +
+                    "programming languages and environments. This course will focus on the analysis of algorithms to characterize worst and average case requirements " +
+                    "for running time and memory. Students will be able to apply basic complexity measures and demonstrate the correct use and application of " +
+                    "various data structures, including trees, hashing, and graphs. The primary goal is to expand the student's toolbox of basic techniques for " +
+                    "manipulating data at both the conceptual and concrete levels."
+                },
+
+                new Course { CourseId = 311, Title = "Computer Architecture I", 
+                    CourseDesc = "CS 311 is an introduction to computer architecture focusing on assembly language programming on the x86-64 bit architecture. " +
+                    "The course uses the yasm assembly compiler and the ebe interface. Students will learn to create and modify programs of significant size " +
+                    "using 64-bit Assembly language. Course topics include numbers type conversions, computer memory architecture, registers in 32/64-bit modes, " +
+                    "arithmetic, bit operations, branching, looping, and functions in Assembly. The primary goal is to gain hands-on experience in Assembly language programming."
+                },
+
+                new Course { CourseId = 312, Title = "Computer Architecture II", 
+                    CourseDesc = "CS 312 focuses on distinguishing between computer architecture and computer organization, and using Boolean algebra to solve basic " +
+                    "logic problems. Students will describe the operation of CPU, memory, bus, and I/O, and compare different instruction sets for processors. " +
+                    "The course will cover topics such as Digital Logic, Cache Memory, and Instruction Sets. The primary goal is for students to comprehend different " +
+                    "gate and logic-based structures and analyze various computer architectures. Students will gain hands-on experience using software like MultiMedia Logic and Java."
+                },
+
+                new Course { CourseId = 325, Title = "Technical Writing in Computer Science", 
+                    CourseDesc = "CS 325 is a writing-intensive, upper-division course that prepares students for professional communication within the computer science field. " +
+                    "The curriculum focuses on mastering technical writing, editing, and ethical practices, with a heavy emphasis on APA documentation. " +
+                    "Students engage in a workshop-oriented environment, applying their skills through hands-on assignments such as technical summaries, " +
+                    "research proposals, annotated bibliographies, and professional presentations. By utilizing software tools like LaTeX and Microsoft Office, " +
+                    "students learn to produce high-quality documentation that meets industry standards. The course requires significant effort outside of class to " +
+                    "refine professional-level writing and mechanical proficiency."
+                },
+
+                new Course { CourseId = 351, Title = "Web Development Technologies II", 
+                    CourseDesc = "CS 351 provides an in-depth exploration of server-side technologies essential for modern web software development. " +
+                    "Students advance their skills in programming languages and database access, specifically focusing on designing and creating " +
+                    "dynamic web applications using PHP and SQL. The course also reinforces client-side mastery of XHTML, CSS, and JavaScript, while introducing " +
+                    "complex topics like e-commerce and system testing. Beyond technical implementation, students are expected to articulate ethical positions " +
+                    "on contemporary web issues and deliver professional oral presentations on their designs. This comprehensive approach ensures students " +
+                    "understand both the functional and societal impacts of web technologies."
+                },
+
+                new Course { CourseId = 361, Title = "Principles of Language Design I", 
+                    CourseDesc = "CS 361 introduces the fundamental principles of programming language design and software construction, primarily using the " +
+                    "C programming language. The course covers essential topics including data types, operators, expressions, functions, and scope. " +
+                    "Students delve into complex concepts such as pointers, arrays, strings, dynamic memory management, and structures. By following a " +
+                    "structured approach to branching, iteration, and input/output, learners gain a deep understanding of how languages are implemented and utilized. " +
+                    "Through these technical foundations, the course aims to develop a student's ability to design efficient software and understand the underlying mechanics " +
+                    "of various programming paradigms."
+                },
+
+                new Course { CourseId = 362, Title = "Principles of Language Design II", 
+                    CourseDesc = "CS 362 explores the fundamental concepts of programming languages by examining design issues, syntax description methods, and semantic models. " +
+                    "Students critically compare design alternatives across various common languages and study implementation methods integrated throughout the class. " +
+                    "Key topics include abstract data types, parallel processing, object-oriented programming, exception handling, and functional and logic programming. " +
+                    "Upon completion, students will be able to apply formal methods of syntax, such as attribute grammars, and understand static and dynamic semantics. " +
+                    "The course ultimately empowers students to compare computer languages effectively and demonstrate advanced knowledge in naming and language constructs."
+                },
+
+                new Course { CourseId = 367, Title = "Advanced Visual Basic Programming", 
+                    CourseDesc = "CS 367 provides a comprehensive introduction to the fundamental principles of software engineering, focusing on the systematic processes " +
+                    "required to build high-quality software systems. Students explore the Software Development Life Cycle (SDLC), covering essential phases such as " +
+                    "requirements elicitation, system analysis, and architectural design. The curriculum emphasizes Object-Oriented Analysis and Design (OOAD) using UML " +
+                    "for modeling and documentation. Additionally, the course addresses practical industry concerns, including project management, software testing strategies, " +
+                    "and the ethical implications of technology. Through collaborative projects and technical writing, students learn to translate complex user needs " +
+                    "into robust, maintainable software solutions."
+                },
+
+                new Course { CourseId = 370, Title = "Introduction to Linux", 
+                    CourseDesc = "CS 370 provides a comprehensive introduction to the Linux operating system, focusing on its architecture, command-line interface, " +
+                    "and administrative capabilities. Students explore the fundamental philosophy of Linux, learning to navigate the file system, manage permissions, " +
+                    "and utilize shell scripting for task automation. The course curriculum covers essential topics such as process management, software installation, " +
+                    "and system configuration, emphasizing practical, hands-on experience. Students also delve into networking basics and security protocols within the " +
+                    "Linux environment. By the end of the term, learners will have developed the technical proficiency required to manage Linux-based systems effectively " +
+                    "in both personal and professional computing contexts."
+                },
+
+                new Course { CourseId = 380, Title = "Introduction to Software Engineering", 
+                    CourseDesc = "CS 380 introduces the fundamental principles and professional practices of software engineering, with a core focus on object-oriented analysis " +
+                    "and design. Students explore essential methodologies, including the use of design patterns (specifically Java patterns) and the implementation of " +
+                    "robust testing strategies. The curriculum covers the entire Software Development Lifecycle, from project planning and requirements gathering using UML diagrams " +
+                    "to version control and final execution. Beyond technical skills, the course emphasizes human-centric elements such as customer interaction, team organization, " +
+                    "and conflict resolution. Through collaborative projects and progress presentations, students gain practical experience in managing large-scale resources " +
+                    "and delivering quality software solutions."
+                },
+
+                new Course { CourseId = 420, Title = "Database Management Systems", 
+                    CourseDesc = "CS 420 provides an in-depth exploration of the logical aspects of database processing and the concepts of organizing data into integrated databases. " +
+                    "Students examine various structural approaches, including hierarchical, network, and relational models. The curriculum focuses on translating complex " +
+                    "user requirements into valid database designs using Entity/Relationship (E/R) modeling and relational algebra. Practical skills are emphasized through " +
+                    "the mastery of Structured Query Language (SQL) and the application of normalization principles via functional dependencies. By utilizing industry-standard tools " +
+                    "like MySQL Workbench, students learn to identify and implement high-quality relational database designs. The course ensures that learners can " +
+                    "effectively manage data integrity and optimize database organization for modern software applications."
+                },
+
+                new Course { CourseId = 427, Title = "Algorithm Analysis", 
+                    CourseDesc = "CS 427 provides a rigorous study of algorithm design, algorithm complexity analysis, and problem complexity analysis. " +
+                    "The course explores fundamental problem-solving strategies, including divide-and-conquer, dynamic programming, greedy algorithms, backtracking, and " +
+                    "branch-and-bound techniques. Students learn to evaluate the efficiency of algorithms using asymptotic notation, focusing on both time and " +
+                    "space complexity for iterative and recursive processes. By applying these strategies to traditional and non-traditional computing domains, " +
+                    "students develop high-level critical thinking and technical skills. The curriculum emphasizes mastering specific strategies to solve complex mathematical and " +
+                    "computational problems efficiently."
+                },
+
+                new Course { CourseId = 428, Title = "Introduction to Graph Algorithm", 
+                    CourseDesc = "CS 428 offers a comprehensive introduction to the field of graph algorithms, focusing on the identification, analysis, and " +
+                    "practical solution of algorithmic graph problems. The curriculum spans fundamental concepts, including graph terminology and implementation variants like " +
+                    "directed, undirected, and weighted graphs. Students master essential search techniques such as DFS, BFS, and Maximum Cardinality Search, while " +
+                    "exploring efficiently solvable problems like shortest paths (A* and Floyd-Warshall), Max-Flow, and Min-Cut. Additionally, the course delves into " +
+                    "advanced topics such as graph coloring, isomorphism, and planarity. Through lab assignments and quizzes, students develop the skills necessary to " +
+                    "apply these complex mathematical structures to real-world computing challenges."
+                },
+
+                new Course { CourseId = 430, Title = "Cybersecurity", 
+                    CourseDesc = "CS 430 provides a comprehensive overview of computer security, spanning from fundamental principles to contemporary security trends and " +
+                    "the evolving threat environment. The curriculum covers critical areas such as general security principles, operational and organizational controls, and " +
+                    "the vital human element in cybersecurity. Students delve into technical topics including cryptography, physical security concepts, and network fundamentals. " +
+                    "Additionally, the course explores IT infrastructure security practices, authentication mechanisms, remote access, and wireless security. " +
+                    "A significant focus is placed on understanding and implementing methods to counter cyber-attacks in modern computer systems. " +
+                    "By combining theoretical knowledge with practical defense strategies, students develop the skills necessary to protect digital assets and maintain " +
+                    "secure computing environments."
+                },
+
+                new Course { CourseId = 440, Title = "Computer Graphics", 
+                    CourseDesc = "CS 440 introduces the fundamental concepts, algorithms, and challenges within the field of computer graphics, along with a survey of " +
+                    "modern graphics software and hardware systems. Students develop the technical ability to write graphics programs using OpenGL, mastering both 2-D and " +
+                    "3-D techniques. The curriculum emphasizes the mathematical foundations of graphics, including vector manipulation, dot and cross products, and " +
+                    "matrix techniques for rotation, scaling, and translation. Additionally, students explore advanced topics such as vector clipping, scientific visualization, " +
+                    "and image processing. Through hands-on programming assignments involving rosettes, arcs, and clipping algorithms, learners gain practical experience " +
+                    "in rendering complex visual data and managing aspect ratios in dynamic windows."
+                },
+
+                new Course { CourseId = 445, Title = "Data and Information Visualization", 
+                    CourseDesc = "CS 445 explores the principles of Data Visualization, focusing on transforming complex data into insightful visual representations. " +
+                    "Students learn to utilize tools like Jupyter Notebooks, Matplotlib, and Seaborn to create effective marks and channels for data abstraction. " +
+                    "The curriculum covers task abstraction, spatial fields, and the arrangement of networks and trees. Key topics include color theory, 3D graph practice, " +
+                    "and advanced techniques such as Principal Component Analysis (PCA) and map visualization. Through lab assignments and a multi-phase final project, " +
+                    "students master rules of thumb for design and gain practical experience in visual knowledge discovery and machine learning integration."
+                },
+
+                new Course { CourseId = 446, Title = "User Interface Design and Development", 
+                    CourseDesc = "CS 446 focuses on the fundamental principles of Human-Computer Interaction (HCI) and the design of effective user interfaces. " +
+                    "Using Don Norman's The Design of Everyday Things as a foundation, students explore psychological concepts like affordances, signifiers, and " +
+                    "mental models to understand how users interact with technology. The curriculum follows a practical, lab-based approach covering the entire design lifecycle, " +
+                    "including requirements gathering, paper prototyping, and computer-based implementation using Visual C#. Students master critical topics such as " +
+                    "usability testing, accessibility, information visualization, and graphic design elements like typography and color theory. Through a multi-phase project, " +
+                    "learners gain hands-on experience in building and evaluating interfaces that are intuitive, safe, and efficient."
+                },
+
+                new Course { CourseId = 450, Title = "Computer Network and Data Communications", 
+                    CourseDesc = "CS 450 provides a comprehensive examination of the technical foundations of networking and data communication. " +
+                    "The course focuses on critical concepts such as device and network protocols, network configurations, and infrastructure topologies. " +
+                    "Students analyze the nature of protocol layering and identify the primary standards bodies that govern global networking. " +
+                    "The curriculum also delves into advanced topics including encryption, data compression, and network security. " +
+                    "Practical objectives include identifying LAN architectures and evaluating the messaging mechanisms of various network operating systems. " +
+                    "By the end of the course, students will be equipped to analyze the functionality of modern computer networks and understand the fundamentals of " +
+                    "wide area versus local area communications."
+                },
+
+                new Course { CourseId = 452, Title = "Ethical Hacking and Penetration Testing for Computer Science", 
+                    CourseDesc = "CS 452 focuses on ethical offensive security techniques. It covers exploiting vulnerabilities like SQL injection, input validation flaws, " +
+                    "and scripting attacks. The curriculum is structured to cover the full process, including reconnaissance, vulnerability scanning, and penetration testing. " +
+                    "Students will use DevOps security tools to simulate and analyze real-world attacks. Key topics include Enumeration, Vulnerability Analysis, Exploitation, " +
+                    "Privilege Escalation, and Post-Exploitation. Further content covers Web Interception, Malware Analysis, Wireless, Cloud & IoT Attacks, " +
+                    "AI-powered ethical hacking, and professional reporting."
+                },
+
+                new Course { CourseId = 456, Title = "Data Mining", 
+                    CourseDesc = "CS456 studies algorithms and computational paradigms to find patterns, regularities, and perform prediction in databases. " +
+                    "It is a key element of Knowledge Discovery, covering the full process from data selection, cleaning, and coding to using statistical and " +
+                    "machine learning techniques, and visualization. The course emphasizes Machine Learning methods as real knowledge discovery tools. " +
+                    "Important related technologies, such as data warehousing, are also discussed. Students will gain proficiency in techniques like classification, " +
+                    "clustering, association rule mining, and regression, and apply them to real-world problems using recent Data Mining software. " +
+                    "The main goal is to extract useful knowledge from raw data."
+                },
+
+                new Course { CourseId = 457, Title = "Computational Intelligence and Machine Learning", 
+                    CourseDesc = "CS 457 introduces intelligent systems from a machine learning perspective, focusing on the fundamentals of Computational Intelligence and " +
+                    "Machine Learning (CI & ML) models. Typical topics include neural networks, supervised and unsupervised learning, clustering, support vector machines, " +
+                    "evolutionary learning, deep learning, and convolutional neural networks. Upon completion, students will understand core CI & ML models, implement algorithms, " +
+                    "and apply techniques to solve classification, regression, prediction, and optimization problems. Practical application is emphasized through three group " +
+                    "projects and an individual final project. Students are encouraged to use software tools like Python, Anaconda, and Weka for implementation."
+                },
+
+                new Course { CourseId = 460, Title = "Software Engineering for Mobile Devices", 
+                    CourseDesc = "CS 460 provides a comprehensive introduction to the principles and practices of database systems, focusing on both traditional and modern " +
+                    "data management techniques. The curriculum covers fundamental concepts of relational database models, including relational algebra, SQL, and database design " +
+                    "using entity-relationship and functional dependency modeling. Students will also explore advanced topics such as NoSQL databases, transaction management, " +
+                    "concurrency control, and data warehousing. A major component of the course is hands-on experience in designing, implementing, and querying a database system. " +
+                    "The course objective is to enable students to effectively design and manage robust, scalable, and secure data storage solutions for various applications."
+                },
+
+                new Course { CourseId = 465, Title = "Scientific Computing", 
+                    CourseDesc = "CS 465 covers different topics in scientific computing, including numerical computation, mathematical modeling, statistical modeling, optimization, " +
+                    "and machine learning. Taught asynchronously, the curriculum is designed to help students formulate techniques required to implement and use " +
+                    "mathematical algorithms to a variety of complex computational problems. Key content areas include an introduction to computing with Python, symbolic computing, " +
+                    "plotting and visualization, equation solving, and various advanced topics like sparse matrices, data processing, Bayesian statistics, and signal processing. " +
+                    "Students will demonstrate their knowledge by applying coding skills to develop solutions using scientific computing libraries and tools. " +
+                    "Assessment consists of five lab exercises with both written and coding parts, and a final project is assigned only to CS 565 students."
+                },
+
+                new Course { CourseId = 466, Title = "Virtual Reality", 
+                    CourseDesc = "CS 466 is an introduction to virtual reality application development and human-computer interaction research. " +
+                    "The course covers essential topics including 3D programming, virtual reality application domains, 3D interaction designs, and the development of " +
+                    "human-computer interaction research papers. Students will also explore experimental study designs. This is a hybrid class with asynchronous online assignments " +
+                    "and real-time meetings for demonstrations, discussions, and projects. The curriculum uses the Unity 3D game engine for programming and requires a smartphone " +
+                    "and a Google Cardboard-like VR Viewer. The course integrates a group term project, worth 40% of the grade, where student teams develop a " +
+                    "VR-related human-computer interaction research paper."
+                },
+
+                new Course { CourseId = 467, Title = "Computational Statistics", 
+                    CourseDesc = "CS 467 explores the interface between statistics and computer science, encompassing computational and graphical approaches to solving statistical " +
+                    "problems. Students will learn to manipulate and analyze data, design simulated experiments, and use resampling methods. The primary focus is on the " +
+                    "in-depth understanding and use of the R Language, the predominate software platform for statistical analysis. The curriculum covers key topics like correlation, " +
+                    "linear regression, and logistic regression. The course includes four research seminars and two complex programming projects involving background research, " +
+                    "coding, and analysis of results."
+                },
+
+                new Course { CourseId = 470, Title = "Operating Systems", 
+                    CourseDesc = "CS 470 provides a fundamental understanding of the structure and function of contemporary operating systems, with a primary focus on " +
+                    "UNIX-based systems, including Linux and Windows. It begins with an architectural overview, followed by an in-depth exploration of major components " +
+                    "like processes, threads, memory management, and file I/O. Students will assess and critically analyze various CPU scheduling algorithms, recognizing " +
+                    "their advantages and limitations. Through practical assessments, students will demonstrate the ability to discern and articulate different strategies " +
+                    "within the operating system framework. The goal is to prepare students for advanced academic study or professional pursuits in computer science."
+                },
+
+                new Course { CourseId = 471, Title = "Optimization", 
+                    CourseDesc = "CS 471 is an intensive study of operating systems principles and implementation. Key topics include process and thread management, " +
+                    "CPU scheduling algorithms, synchronization, deadlock prevention, and concurrent programming. A major focus is on memory management, covering virtual memory, " +
+                    "paging, and segmentation techniques. The curriculum also delves into file system structure, I/O systems, and the fundamentals of system security. " +
+                    "Students will gain practical experience in system-level programming and apply theoretical concepts to understand the design and trade-offs of modern " +
+                    "operating systems. The core objective is to equip students with the knowledge to analyze, design, and implement operating system components."
+                },
+
+                new Course { CourseId = 473, Title = "Parallel Computing", 
+                    CourseDesc = "CS 473 provides a comprehensive study of parallel computing, focusing on the design and implementation of parallel algorithms. " +
+                    "Key topics include Parallel Algorithm Design, Shared-Memory Programming with OpenMP, CUDA, Message-Passing Programming (MPI), and Performance Analysis. " +
+                    "Students will engage with advanced concepts such as the Sieve of Eratosthenes, Floyd's Algorithm, Document Classification, and Combinatorial Search. " +
+                    "The course includes a rigorous laboratory schedule with multiple projects, challenging students to implement concepts in OpenMP, CUDA, and MPI. " +
+                    "The course material includes a major technical report and an online book by Ian Foster."
+                },
+
+                new Course { CourseId = 480, Title = "Advanced Software Engineering", 
+                    CourseDesc = "CS 480 provides advanced principles and practices for the complete software engineering lifecycle. The curriculum covers project management, " +
+                    "requirements gathering and specification, design, coding, testing, maintenance, and documentation. Students will study the software product lifecycle, " +
+                    "from problem definition and client interaction to deployment. A key focus is on acquiring and integrating concepts like software project management and " +
+                    "learning how to prepare essential documentation, such as a Software Requirements Specification. The course emphasizes teamwork and culminates in students " +
+                    "working in teams to develop a large software project."
+                },
+
+                new Course { CourseId = 481, Title = "Capstone Project", 
+                    CourseDesc = "CS 481 focuses on the complete principles of software development, guiding students through the full lifecycle from requirement " +
+                    "specification to deployment and maintenance. The primary goal is to foster the ability to apply both theoretical and practical knowledge to develop various " +
+                    "software tools, packages, or libraries addressing a specific problem statement. The course content is structured around weekly discussions, " +
+                    "five major assignments, and two required presentations (midterm and final). Students will gain hands-on experience in designing, debugging, and " +
+                    "executing programs in modern programming languages such as Python, Java, JavaScript, and C++. The project culminates in an oral defense of the developed software."
+                },
+
+                new Course { CourseId = 489, Title = "Senior Colloquium", 
+                    CourseDesc = "CS489 is an introduction to research in computer science through the investigation of ethical and historical topics in the field. " +
+                    "It also includes end-of-major assessment activities. Topics may include AI Ethics, Professional Responsibility, Computer Crime, and Internet Security. " +
+                    "Students will research current topics, prepare written reports on ethical or historical topics, and present their research results with critical analysis to the class. " +
+                    "A Major Field Test (MFT) is also required for the course."
+                }
             );
 
             // Add the seed data for Topics that reference the Courses
