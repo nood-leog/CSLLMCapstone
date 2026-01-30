@@ -2153,13 +2153,13 @@ h1:focus {
     box-shadow: 0 6px 20px rgba(211, 47, 47, 0.4);
 }
 
-.modal {
+/*.modal {
     display: none;
 }
 
 .modal:target {
     display: flex;
-}
+}*/
 
 a {
     text-decoration: none;

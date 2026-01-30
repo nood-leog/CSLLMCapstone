@@ -1,11 +1,18 @@
-﻿<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+﻿<!--CourseName and OnClose input params-->
+@code {
+    [Parameter] public string? CourseID { get; set; }
+    [Parameter] public string? CourseTitle { get; set; }
+    [Parameter] public EventCallback OnClose { get; set; }
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <!--Course Modal-->
-<div class="modal" id="courseModal">
+<div class="modal" id="courseModal" style="display: flex !important; align-items: center; justify-content: center;">
     <div class="modal-content">
         <div class="modal-header">
             <h2><i class="fas fa-cat"></i> CS Study Cat</h2>
-            <a href="#" class="close-modal">&times;</a>
+            <a class="close-modal" @onclick="OnClose">&times;</a>
         </div>
 
         <div class="modal-body">
@@ -37,13 +44,13 @@
             </div>
 
             <!--Right Column - Course Info-->
-            <!--HARDCODED - Change later with courses data from DB->
+            <!--HARDCODED - Change later with courses data from DB-->
             <div class="right-column">
                 <div class="course-title-section">
                     <div class="course-title-icon">CS</div>
                     <div class="course-title-text">
-                        <h2>CS 111</h2>
-                        <p>Data Structures & Algorithms</p>
+                        <h2>@CourseID</h2>
+                        <p>@CourseTitle</p>
                     </div>
                 </div>
 
@@ -56,7 +63,7 @@
             </div>
 
             <!--Topics Section-->
-            <!--HARDCODED - Change later with topics data from DB->
+            <!--HARDCODED - Change later with topics data from DB-->
             <div class="topics-section">
                 <h3>Topics</h3>
                 <div>
