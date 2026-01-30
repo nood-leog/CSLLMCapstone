@@ -1,0 +1,75 @@
+﻿<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<!--Course Modal-->
+<div class="modal" id="courseModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2><i class="fas fa-cat"></i> CS Study Cat</h2>
+            <a href="#" class="close-modal">&times;</a>
+        </div>
+
+        <div class="modal-body">
+            <!--Left Column - Quiz, Flashcards, and Tutor Mode Buttons-->
+            <div class="left-column">
+                <a href="#quizModal" class="study-button">
+                    <i class="fas fa-question-circle"></i>
+                    <div class="button-label">
+                        <div>Quiz</div>
+                        <span>Test your knowledge</span>
+                    </div>
+                </a>
+
+                <a href="#flashcardsModal" class="study-button">
+                    <i class="fas fa-sticky-note"></i>
+                    <div class="button-label">
+                        <div>Flashcards</div>
+                        <span>Learn terms & concepts</span>
+                    </div>
+                </a>
+
+                <a href="#tutorModal" class="study-button">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                    <div class="button-label">
+                        <div>Tutor</div>
+                        <span>Interactive AI tutoring</span>
+                    </div>
+                </a>
+            </div>
+
+            <!--Right Column - Course Info-->
+            <!--HARDCODED - Change later with courses data from DB->
+            <div class="right-column">
+                <div class="course-title-section">
+                    <div class="course-title-icon">CS</div>
+                    <div class="course-title-text">
+                        <h2>CS 111</h2>
+                        <p>Data Structures & Algorithms</p>
+                    </div>
+                </div>
+
+                <div class="course-description">
+                    <h3>Course Description</h3>
+                    <p>
+                        Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.
+                    </p>
+                </div>
+            </div>
+
+            <!--Topics Section-->
+            <!--HARDCODED - Change later with topics data from DB->
+            <div class="topics-section">
+                <h3>Topics</h3>
+                <div>
+                    <a href="#topicModal" class="topic-row">
+                        <div class="topic-name">Object-Oriented Programming - Lorem ipsum dolor sit amet consectetur...</div>
+                        <div class="topic-arrow"><i class="fas fa-chevron-right"></i></div>
+                    </a>
+                    <a href="#topicModal" class="topic-row">
+                        <div class="topic-name">Data Structures - Quisque faucibus ex sapien vitae pellentesque...</div>
+                        <div class="topic-arrow"><i class="fas fa-chevron-right"></i></div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
