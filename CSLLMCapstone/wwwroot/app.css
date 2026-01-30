@@ -523,7 +523,7 @@ h1:focus {
 .signup-login-link a {
     color: var(--primary-red);
     text-decoration: none;
-    font-weight: 700;
+    font-weight: 600;
     margin-left: 5px;
     transition: color 0.3s ease;
 }
@@ -531,6 +531,10 @@ h1:focus {
 .signup-login-link a:hover {
     text-decoration: underline;
     color: var(--dark-red);
+}
+
+#change-password {
+    margin-bottom: 15px;
 }
 
 /* ========== FORGOT PASSWORD PAGE STYLES ========== */
@@ -774,6 +778,11 @@ h1:focus {
 
 .forgot-forgot-link:hover {
     text-decoration: underline;
+}
+
+#create-account {
+    border-top: 1px solid var(--border-color);
+    padding-top: 15px;
 }
 
 .forgot-logo {
