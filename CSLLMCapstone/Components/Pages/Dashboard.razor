@@ -4,58 +4,57 @@
 
 <PageTitle>CS Study Cat - Dashboard</PageTitle>
 
-<!--Main Content-->
-<div class="main-content">
-    <!--Top Bar-->
-    <div class="top-bar">
-        <label for="sidebar-toggle" class="mobile-menu-btn">
-            <i class="fas fa-bars"></i>
-        </label>
+<div class="dashboard-body">
+    <!--Sidebar component-->
+    <Sidebar />
+    <!--Main Content-->
+    <div class="main-content">
+        <!--Top Bar-->
+        <div class="top-bar">
+            <label for="sidebar-toggle" class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </label>
 
-        <div class="page-title">
-            <h2>Courses Dashboard</h2>
+            <div class="page-title">
+                <h2>Courses Dashboard</h2>
+            </div>
+
         </div>
 
-        <div class="user-actions">
-            <div class="notification-icon">
-                <i class="fas fa-bell"></i>
+        <!--Courses Container-->
+        <div class="courses-container">
+            <div class="courses-header">
+                <h3>Your Computer Science Courses</h3>
+                <p>Click on a course to view details and study materials</p>
+            </div>
+
+            <div class="courses-grid">
+                <!-- CS111 Course Card -->
+                <a href="#courseModal" class="course-card" data-course="cs111">
+                    <div class="course-content">
+                        <div class="course-number">CS 111</div>
+                        <div class="course-name">Data Structures & Algorithms</div>
+                    </div>
+                    <div class="course-footer">
+                        <div class="course-action">View Details</div>
+                    </div>
+                </a>
+
+                <!-- CS110 Course Card -->
+                <a href="#courseModal" class="course-card" data-course="cs110">
+                    <div class="course-content">
+                        <div class="course-number">CS 110</div>
+                        <div class="course-name">Introduction to Programming</div>
+                    </div>
+                    <div class="course-footer">
+                        <div class="course-action">View Details</div>
+                    </div>
+                </a>
             </div>
         </div>
-    </div>
 
-    <!--Courses Container-->
-    <div class="courses-container">
-        <div class="courses-header">
-            <h3>Your Computer Science Courses</h3>
-            <p>Click on a course to view details and study materials</p>
+        <!--Footer-->
+        <div class="footer">
         </div>
-
-        <div class="courses-grid">
-            <!-- CS111 Course Card -->
-            <a href="#courseModal" class="course-card" data-course="cs111">
-                <div class="course-content">
-                    <div class="course-number">CS 111</div>
-                    <div class="course-name">Data Structures & Algorithms</div>
-                </div>
-                <div class="course-footer">
-                    <div class="course-action">View Details</div>
-                </div>
-            </a>
-
-            <!-- CS110 Course Card -->
-            <a href="#courseModal" class="course-card" data-course="cs110">
-                <div class="course-content">
-                    <div class="course-number">CS 110</div>
-                    <div class="course-name">Introduction to Programming</div>
-                </div>
-                <div class="course-footer">
-                    <div class="course-action">View Details</div>
-                </div>
-            </a>
-        </div>
-    </div>
-
-    <!--Footer-->
-    <div class="footer">
     </div>
 </div>
