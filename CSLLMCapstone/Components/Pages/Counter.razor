@@ -2,20 +2,43 @@
 @page "/counter2"
 
 @rendermode InteractiveServer
+@using Models;
+@using System.Threading.Tasks
+@using Services
+@inject DbService dbService
 
 <PageTitle>Counter</PageTitle>
 
-<h1>Counter</h1>
+<h1>llm</h1>
 
-<p role="status">Current count: @currentCount</p>
+<div class="mb-3">
+    <label>Query:</label>
+    <InputText @bind-Value="queryText" class="form-control" />
+</div>
 
-<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+<div class="mb-3">
+    <label>Result:</label>
+    <label>@response</label>
+</div>
+
+<button class="btn btn-primary" @onclick="Query">Click me</button>
 
 @code {
-    private int currentCount = 0;
 
-    private void IncrementCount()
+    private string queryText = "";
+
+    private string response = "";
+
+
+
+    private async Task Query()
     {
-        currentCount++;
+        int courseId = 427;
+        List<string> str = await dbService.GetTopicNamesByCourseIDAsync(courseId);
+        LLM llm = new LLM(InstanceType.Flash, str);
+
+        response = await llm.AskSync("generate flashcards as initial prompt. Each keyword sould be seperated by line-space");
+
+
     }
 }

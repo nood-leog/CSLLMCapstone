@@ -1,5 +1,6 @@
 using CSLLMCapstone.Components;
 using CSLLMCapstone.Data;
+using CSLLMCapstone.Models;
 using CSLLMCapstone.Services;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,7 +26,7 @@ builder.Services.AddDbContextFactory<StudyContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<DbService>();
-
+builder.Services.AddScoped<LLMService>();   
 
 var app = builder.Build();
 

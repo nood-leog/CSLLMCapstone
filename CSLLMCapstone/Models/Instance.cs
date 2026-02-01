@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using CSLLMCapstone.Services;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CSLLMCapstone.Models
@@ -12,6 +13,11 @@ namespace CSLLMCapstone.Models
 
     public class Instance
     {
+
+        [NotMapped]
+        public LLM? llm { get; set; }
+
+
         [Key]
         [MaxLength(8)]
         public string InstanceId { get; set; } = Guid.NewGuid().ToString().Substring(0, 8);

@@ -43,6 +43,28 @@ namespace CSLLMCapstone.Services
             await context.SaveChangesAsync();
         }
 
+        public async Task<string?> GetCourseNameByCourseIdAsync(int courseId)
+        {
+            using var context = _contextFactory.CreateDbContext();
+            return await context.Courses.Where(t => t.CourseId == courseId).Select(t => t.Title).FirstOrDefaultAsync();
+        }
+
+        public async Task<string?> GetCourseDescriptionByCourseIdAsync(int courseId)
+        {
+            using var context = _contextFactory.CreateDbContext();
+            return await context.Courses.Where(t => t.CourseId == courseId).Select(t => t.CourseDesc).FirstOrDefaultAsync();
+        }
+
+        // --- TOPIC METHODS ---
+
+        public async Task<List<string>> GetTopicNamesByCourseIDAsync(int courseId)
+        {
+            using var context = _contextFactory.CreateDbContext();
+            // takes courseId, returns list of d of that course.
+            return await context.Topics.Where(t => t.CourseId == courseId).Select(t => t.Name).ToListAsync();
+        }
+
+
         // --- INSTANCE/STUDY SESSION METHODS ---
         public async Task SaveInstanceAsync(Instance instance)
         {
