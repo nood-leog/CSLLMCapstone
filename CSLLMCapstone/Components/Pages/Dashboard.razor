@@ -61,24 +61,24 @@
     </div>
 
     <!--Display Course Overview if course is clicked-->
-    @if (isClicked)
+    @if (isCourseClicked)
     {
-        <CourseOverview CourseID="@courseID" CourseTitle="@courseTitle" OnClose="() => isClicked = false"/>
+        <CourseOverview CourseID="@courseID" CourseTitle="@courseTitle" OnClose="() => isCourseClicked = false"/>
     }
 </div>
 
 <!--HandleCourseClick Logic - Set flag to true when course clicked and false if not-->
 @code {
-    // isClicked flag
-    private bool isClicked = false;
+    // isCourseClicked flag
+    private bool isCourseClicked = false;
     // courseID to hold clicked course ID
     private string? courseID;
-    // courseTitle to hold clicked course title\
+    // courseTitle to hold clicked course title
     private string? courseTitle;
 
     private void HandleCourseClick(string selectedCourseID, string selectedCourseTitle)
     {
-        isClicked = true; // flip flag
+        isCourseClicked = true; // flip flag
         courseID = selectedCourseID; // set courseID
         courseTitle = selectedCourseTitle; // set courseTitle
     }

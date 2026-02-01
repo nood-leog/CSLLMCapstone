@@ -1,0 +1,65 @@
+﻿<!--TopicName, CourseID, and OnClose input params-->
+@code {
+    [Parameter] public string? TopicName { get; set; }
+    [Parameter] public string? CourseID { get; set; }
+    [Parameter] public EventCallback OnClose { get; set; }
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<!--Topic Modal-->
+<div class="modal" id="topicModal" style="display: flex !important; align-items: center; justify-content: center;">
+    <div class="topic-modal-content">
+        <div class="topic-modal-header">
+            <h2><i class="fas fa-cat"></i> CS Study Cat</h2>
+            <a class="close-modal" @onclick="OnClose">&times;</a>
+        </div>
+
+        <div class="topic-modal-body">
+            <!--Left Column - Quiz, Flashcards, and Tutor Mode Buttons-->
+            <div class="topic-left-column">
+                <a href="#quizModal" class="topic-study-button">
+                    <i class="fas fa-question-circle"></i>
+                    <div class="topic-button-label">
+                        <div>Quiz</div>
+                        <span>Test your knowledge</span>
+                    </div>
+                </a>
+
+                <a href="#flashcardsModal" class="topic-study-button">
+                    <i class="fas fa-sticky-note"></i>
+                    <div class="topic-button-label">
+                        <div>Flashcards</div>
+                        <span>Learn terms & concepts</span>
+                    </div>
+                </a>
+
+                <a href="#tutorModal" class="topic-study-button">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                    <div class="topic-button-label">
+                        <div>Tutor</div>
+                        <span>Interactive AI tutoring</span>
+                    </div>
+                </a>
+            </div>
+
+            <!--Right Column - Topic Info-->
+            <!--HARDCODED - Change later with topics data from DB-->
+            <div class="topic-right-column">
+                <div class="topic-title-section">
+                    <div class="topic-title-icon">CS</div>
+                    <div class="topic-title-text">
+                        <h2>@CourseID/@TopicName</h2>
+                    </div>
+                </div>
+
+                <div class="topic-description">
+                    <h3>Topic Description</h3>
+                    <p>
+                        Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

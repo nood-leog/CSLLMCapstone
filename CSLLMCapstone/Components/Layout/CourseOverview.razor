@@ -1,4 +1,4 @@
-﻿<!--CourseName and OnClose input params-->
+﻿<!--CourseID, CourseTitle, and OnClose input params-->
 @code {
     [Parameter] public string? CourseID { get; set; }
     [Parameter] public string? CourseTitle { get; set; }
@@ -67,16 +67,36 @@
             <div class="topics-section">
                 <h3>Topics</h3>
                 <div>
-                    <a href="#topicModal" class="topic-row">
+                    <a class="topic-row" @onclick='() => HandleTopicClick("Object-Oriented Programming")'>
                         <div class="topic-name">Object-Oriented Programming - Lorem ipsum dolor sit amet consectetur...</div>
                         <div class="topic-arrow"><i class="fas fa-chevron-right"></i></div>
                     </a>
-                    <a href="#topicModal" class="topic-row">
-                        <div class="topic-name">Data Structures - Quisque faucibus ex sapien vitae pellentesque...</div>
+                    <a class="topic-row" @onclick='() => HandleTopicClick("Binary Trees")'>
+                        <div class="topic-name">Binary Trees - Quisque faucibus ex sapien vitae pellentesque...</div>
                         <div class="topic-arrow"><i class="fas fa-chevron-right"></i></div>
                     </a>
                 </div>
             </div>
         </div>
     </div>
+
+    <!--Display Topic Overview if topic is clicked-->
+    @if (isTopicClicked)
+    {
+        <TopicOverview TopicName="@topicName" CourseID="@CourseID" OnClose="() => isTopicClicked = false" />
+    }
 </div>
+
+<!--HandleTopicClick Logic-->
+@code {
+    // isTopicClicked flag
+    private bool isTopicClicked = false;
+    // topicName to hold clicked topic name
+    private string? topicName;
+
+    private void HandleTopicClick(string selectedTopicName)
+    {
+        isTopicClicked = true; // flip flag
+        topicName = selectedTopicName; // set topicName
+    }
+}
