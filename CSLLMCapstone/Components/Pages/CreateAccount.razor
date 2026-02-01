@@ -1,4 +1,9 @@
 ﻿@page "/create-account"
+@using CSLLMCapstone.Models
+@using CSLLMCapstone.Services
+@rendermode InteractiveServer
+@inject DbService Db
+@inject NavigationManager NavManager
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -14,21 +19,21 @@
     </div>
 
     <!--Create Account form-->
-    <form id="signupForm">
+    <EditForm Model="@newUser" OnValidSubmit="HandleCreateAccount" id="signupForm">
         <div class="signup-name-fields">
             <!--First/Last Name inputs-->
             <div class="signup-form-group">
                 <label class="signup-label" for="firstName">First Name</label>
                 <div class="signup-input-with-icon">
                     <i class="fas fa-user"></i>
-                    <input type="text" id="firstName" class="signup-input" placeholder="John" required>
+                    <InputText @bind-value="newUser.FName" type="text" id="firstName" class="signup-input" placeholder="John" required />
                 </div>
             </div>
             <div class="signup-form-group">
                 <label class="signup-label" for="lastName">Last Name</label>
                 <div class="signup-input-with-icon">
                     <i class="fas fa-user"></i>
-                    <input type="text" id="lastName" class="signup-input" placeholder="Doe" required>
+                    <InputText @bind-value="newUser.LName"  type="text" id="lastName" class="signup-input" placeholder="Doe" required />
                 </div>
             </div>
         </div>
@@ -38,7 +43,55 @@
             <label class="signup-label" for="email">CWU Email</label>
             <div class="signup-input-with-icon">
                 <i class="fas fa-envelope"></i>
-                <input type="email" id="email" class="signup-input" placeholder="student@cwu.edu" required>
+                <InputText @bind-value="newUser.CwuEmail"  type="email" id="email" class="signup-input" placeholder="student@cwu.edu" required />
+            </div>
+        </div>
+
+        <!--Major input-->
+        <div class=""signup-form-group">
+            <label class="signup-label" for="major">Major</label>
+            <div class="signup-input-with-icon">
+                <i class="fas fa-graduation-cap"></i>
+                <InputSelect @bind-value="newUser.Major" type="text" id="major" class="signup-input" placeholder="Computer Science" required >
+                    <option value="">-- Select Major --</option>
+                    @foreach (var m in MajorOptions)
+                    {
+                        <option value="@m">@m</option>
+                    }
+                </InputSelect>
+            </div>
+        </div>
+
+        <!--Minor input-->
+        <div class="signup-form-group">
+            <label class="signup-label" for="minor">Minor</label>
+            <div class="signup-input-with-icon">
+                <i class="fas fa-graduation-cap"></i>
+                <InputSelect @bind-value="newUser.Minor" type="text" id="minor" class="signup-input" placeholder="Applied Computer Science" required >
+                    <option value="">-- Select Minor --</option>
+                    @foreach (var m in MinorOptions)
+                    {
+                        <option value="@m">@m</option>
+                    }
+                </InputSelect>
+            </div>
+        </div>
+
+        <!--Graduation Date input-->
+        <div class="signup-form-group">
+            <label class="signup-label" for="graduationDate">Graduation Date</label>
+            <div class="signup-input-with-icon">
+                <i class="fas fa-calendar-alt"></i>
+                <InputNumber 
+                    @bind-value="newUser.GraduationDate" 
+                    type="number" 
+                    id="graduationDate" 
+                    class="signup-input" 
+                    placeholder="2026"
+                    min="2020"
+                    max="2030"
+                    required 
+                />
             </div>
         </div>
 
@@ -47,7 +100,7 @@
             <label class="signup-label" for="password">Password</label>
             <div class="signup-input-with-icon">
                 <i class="fas fa-lock"></i>
-                <input type="password" id="password" class="signup-input" placeholder="Create a strong password" required>
+                <InputText @bind-value="newUser.Password" type="password" id="password" class="signup-input" placeholder="Create a strong password" required />
             </div>
         </div>
 
@@ -67,5 +120,39 @@
         <div class="signup-login-link">
             Already have an account? <a href="/">Sign In</a>
         </div>
-    </form>
+    </EditForm>
 </div>
+
+<!--CreateAccount Logic-->
+@code {
+    // Initialize new user model
+    private User newUser = new User();
+
+    // Handle the account creation process
+    private async Task HandleCreateAccount()
+    {
+        // Input validation here...
+
+        // Save to DB here...
+
+        // Redirect to Sign In page
+        NavManager.NavigateTo("/");
+    }
+}
+
+<!--Major and Minor options for InputSelect-->
+@code {
+    private List<string> MajorOptions = new()
+    {
+        "Computer Science",
+        "Data Science",
+        "Other"
+    };
+
+    private List<string> MinorOptions = new()
+    {
+        "Computer Science",
+        "Applied Computer Science",
+        "Other"
+    };
+}
