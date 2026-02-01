@@ -1,0 +1,58 @@
+﻿@page "/dashboard/quiz"
+@rendermode InteractiveServer
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<PageTitle>CS Study Cat - Quiz Mode</PageTitle>
+
+<!--Quiz Modal-->
+<div class="modal" id="quizModal" style="display: flex !important; align-items: center; justify-content: center;">
+    <div class="study-session-modal">
+        <div class="study-session-header">
+            <h2><i class="fas fa-question-circle"></i> Quiz</h2>
+            <a href="/dashboard" class="close-modal">&times;</a>
+        </div>
+
+        <div class="study-session-body">
+            <div class="quiz-container">
+                <div class="quiz-header">
+                    <div class="quiz-title">Lorem Ipsum Quiz</div>
+                    <div class="quiz-progress">Question 5 of 12</div>
+                </div>
+
+                <!--HARDCODED BRUHHHHH-->
+                <div class="quiz-content">
+                    <div class="quiz-question-section">
+                        <h4>Question 5:</h4>
+                        <p>Lorem ipsum dolor sit amet consectetur adipiscing elit?</p>
+
+                        <div class="quiz-options">
+                            <div class="quiz-option">
+                                <div class="quiz-option-letter">A</div>
+                                <div class="quiz-option-text">Quisque faucibus ex sapien vitae pellentesque</div>
+                            </div>
+                            <div class="quiz-option">
+                                <div class="quiz-option-letter">B</div>
+                                <div class="quiz-option-text">In id cursus mi pretium tellus duis convallis</div>
+                            </div>
+                            <div class="quiz-option">
+                                <div class="quiz-option-letter">C</div>
+                                <div class="quiz-option-text">Tempus leo eu aenean sed diam urna tempor</div>
+                            </div>
+                            <div class="quiz-option">
+                                <div class="quiz-option-letter">D</div>
+                                <div class="quiz-option-text">Pulvinar vivamus fringilla lacus nec metus</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="quiz-answer-section">
+                        <h5>Correct answer: B</h5>
+                        <p class="quiz-answer-text">In id cursus mi pretium tellus duis convallis</p>
+                        <p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

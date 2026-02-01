@@ -1,4 +1,7 @@
-﻿<!--CourseID, CourseTitle, and OnClose input params-->
+﻿@using Microsoft.JSInterop
+@inject IJSRuntime JSRuntime
+
+<!--CourseID, CourseTitle, and OnClose input params-->
 @code {
     [Parameter] public string? CourseID { get; set; }
     [Parameter] public string? CourseTitle { get; set; }
@@ -18,7 +21,8 @@
         <div class="modal-body">
             <!--Left Column - Quiz, Flashcards, and Tutor Mode Buttons-->
             <div class="left-column">
-                <a href="#quizModal" class="study-button">
+                <!--HARDCODED HERE - Testing the local storage InstanceID-->
+                <a href="/dashboard/quiz" class="study-button" @onclick='() => HandleInstanceClick("TESTBOI")'>
                     <i class="fas fa-question-circle"></i>
                     <div class="button-label">
                         <div>Quiz</div>
@@ -98,5 +102,14 @@
     {
         isTopicClicked = true; // flip flag
         topicName = selectedTopicName; // set topicName
+    }
+}
+
+<!--HandleInstanceClick Logic-->
+@code {
+    // store InstanceID of clicked instance in local storage
+    private async Task HandleInstanceClick(string selectedInstanceID)
+    {
+        await JSRuntime.InvokeVoidAsync("localStorage.setItem", "SelectedInstanceID", selectedInstanceID);
     }
 }
