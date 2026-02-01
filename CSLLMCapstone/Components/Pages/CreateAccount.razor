@@ -27,14 +27,14 @@
                 <label class="signup-label" for="firstName">First Name</label>
                 <div class="signup-input-with-icon">
                     <i class="fas fa-user"></i>
-                    <InputText @bind-value="newUser.FName" type="text" id="firstName" class="signup-input" placeholder="John" required />
+                    <InputText @bind-Value="newUser.FName" type="text" id="firstName" class="signup-input" placeholder="John" required />
                 </div>
             </div>
             <div class="signup-form-group">
                 <label class="signup-label" for="lastName">Last Name</label>
                 <div class="signup-input-with-icon">
                     <i class="fas fa-user"></i>
-                    <InputText @bind-value="newUser.LName"  type="text" id="lastName" class="signup-input" placeholder="Doe" required />
+                    <InputText @bind-Value="newUser.LName" type="text" id="lastName" class="signup-input" placeholder="Doe" required />
                 </div>
             </div>
         </div>
@@ -44,16 +44,16 @@
             <label class="signup-label" for="email">CWU Email</label>
             <div class="signup-input-with-icon">
                 <i class="fas fa-envelope"></i>
-                <InputText @bind-value="newUser.CwuEmail"  type="email" id="email" class="signup-input" placeholder="student@cwu.edu" required />
+                <InputText @bind-Value="newUser.CwuEmail" type="email" id="email" class="signup-input" placeholder="student@cwu.edu" required />
             </div>
         </div>
 
         <!--Major input-->
-        <div class=""signup-form-group">
+        <div class="signup-form-group">
             <label class="signup-label" for="major">Major</label>
             <div class="signup-input-with-icon">
                 <i class="fas fa-graduation-cap"></i>
-                <InputSelect @bind-value="newUser.Major" type="text" id="major" class="signup-input" placeholder="Computer Science" required >
+                <InputSelect @bind-Value="newUser.Major" id="major" class="signup-input" placeholder="Computer Science" required>
                     <option value="">-- Select Major --</option>
                     @foreach (var m in MajorOptions)
                     {
@@ -68,7 +68,7 @@
             <label class="signup-label" for="minor">Minor</label>
             <div class="signup-input-with-icon">
                 <i class="fas fa-graduation-cap"></i>
-                <InputSelect @bind-value="newUser.Minor" type="text" id="minor" class="signup-input" placeholder="Applied Computer Science" >
+                <InputSelect @bind-Value="newUser.Minor" id="minor" class="signup-input" placeholder="Applied Computer Science" >
                     <option value="">-- Select Minor --</option>
                     @foreach (var m in MinorOptions)
                     {
@@ -83,7 +83,7 @@
             <label class="signup-label" for="graduationDate">Graduation Date</label>
             <div class="signup-input-with-icon">
                 <i class="fas fa-calendar-alt"></i>
-                <InputNumber 
+                <InputNumber
                     @bind-value="newUser.GraduationDate" 
                     type="number" 
                     id="graduationDate" 
@@ -205,6 +205,13 @@
         try
         {
             // ALSO CHECK IF CWU EMAIL IS ALREADY TAKEN...
+            bool isTaken = await Db.IsEmailRegisteredAsync(newUser.CwuEmail);
+
+            if (isTaken)
+            {
+                errorMessage = "This email is already registered. Please try signing in.";
+                return;
+            }
 
             // Attempt to create the user in the database
             await Db.CreateUserAsync(newUser);
@@ -212,7 +219,7 @@
             // Redirect to Sign In page upon successful account creation
             NavManager.NavigateTo("/");
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             errorMessage = "An error occurred while creating your account. Please try again.";
         }

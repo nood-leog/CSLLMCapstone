@@ -1,6 +1,7 @@
 ﻿using CSLLMCapstone.Data;
 using CSLLMCapstone.Models;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel;
 
 namespace CSLLMCapstone.Services
 {
@@ -26,6 +27,13 @@ namespace CSLLMCapstone.Services
             using var context = _contextFactory.CreateDbContext();
             context.Users.Add(newUser);
             await context.SaveChangesAsync();
+        }
+
+        public async Task<bool> IsEmailRegisteredAsync(string email)
+        {
+            using var context = _contextFactory.CreateDbContext();
+            // returns true if a user exists with that email, false otherwise
+            return await context.Users.AnyAsync(u => u.CwuEmail == email);
         }
 
         // --- COURSE METHODS ---
