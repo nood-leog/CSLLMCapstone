@@ -1,6 +1,7 @@
 ﻿@page "/create-account"
 @using CSLLMCapstone.Models
 @using CSLLMCapstone.Services
+@using System.Text.RegularExpressions
 @rendermode InteractiveServer
 @inject DbService Db
 @inject NavigationManager NavManager
@@ -67,7 +68,7 @@
             <label class="signup-label" for="minor">Minor</label>
             <div class="signup-input-with-icon">
                 <i class="fas fa-graduation-cap"></i>
-                <InputSelect @bind-value="newUser.Minor" type="text" id="minor" class="signup-input" placeholder="Applied Computer Science" required >
+                <InputSelect @bind-value="newUser.Minor" type="text" id="minor" class="signup-input" placeholder="Applied Computer Science" >
                     <option value="">-- Select Minor --</option>
                     @foreach (var m in MinorOptions)
                     {
@@ -88,7 +89,7 @@
                     id="graduationDate" 
                     class="signup-input" 
                     placeholder="2026"
-                    min="2020"
+                    min="2026"
                     max="2030"
                     required 
                 />
@@ -109,9 +110,17 @@
             <label class="signup-label" for="confirmPassword">Confirm Password</label>
             <div class="signup-input-with-icon">
                 <i class="fas fa-lock"></i>
-                <input type="password" id="confirmPassword" class="signup-input" placeholder="Confirm your password" required>
+                <InputText @bind-Value="confirmPassword" type="password" id="confirmPassword" class="signup-input" placeholder="Confirm your password" required />
             </div>
         </div>
+
+        <!--Input Validation Error Message-->
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <div class="alert alert-danger" style="color: red; background-color: #ffe6e6; padding: 10px; border-radius: 5px; margin-bottom: 15px; border: 1px solid red;">
+                <i class="fas fa-exclamation-circle"></i> @errorMessage
+            </div>
+        }
 
         <!--Create Account button-->
         <button type="submit" class="signup-btn">Create Account</button>
@@ -128,15 +137,85 @@
     // Initialize new user model
     private User newUser = new User();
 
+    // Store the input validation error message
+    private string errorMessage = "";
+
+    // Confirm Password field
+    private string confirmPassword = "";
+
     // Handle the account creation process
     private async Task HandleCreateAccount()
     {
+        // Reset error message
+        errorMessage = "";
+
         // Input validation here...
+        if (string.IsNullOrEmpty(newUser.FName) || newUser.FName.Length > 45)
+        {
+            errorMessage = "Please enter a valid First Name (max 45 chars).";
+            return;
+        }
+        if (string.IsNullOrEmpty(newUser.LName) || newUser.LName.Length > 45)
+        {
+            errorMessage = "Please enter a valid Last Name (max 45 chars).";
+            return;
+        }
+        if (string.IsNullOrEmpty(newUser.CwuEmail) || !newUser.CwuEmail.ToLower().EndsWith("@cwu.edu") || newUser.CwuEmail.Length > 100)
+        {
+            errorMessage = "You must use a valid CWU email ending in @cwu.edu.";
+            return;
+        }
+        if (string.IsNullOrEmpty(newUser.Major) || newUser.Major.Length > 45)
+        {
+            errorMessage = "You must select a valid Major from the major list.";
+            return;
+        }
+        if (newUser.GraduationDate < 2026 || newUser.GraduationDate > 2030)
+        {
+            errorMessage = "Please enter a realistic graduation year.";
+            return;
+        }
+
+        var hasUpper = new Regex(@"[A-Z]+");
+        var hasSpecial = new Regex(@"[!@#$%^&*()_+=\[{\]};:<>|./?,-]+");
+
+        if (string.IsNullOrEmpty(newUser.Password) || newUser.Password.Length < 7)
+        {
+            errorMessage = "Password must be at least 7 characters long.";
+            return;
+        }
+        else if (!hasUpper.IsMatch(newUser.Password))
+        {
+            errorMessage = "Password must contain at least one capital letter.";
+            return;
+        }
+        else if (!hasSpecial.IsMatch(newUser.Password))
+        {
+            errorMessage = "Password must contain at least one special character.";
+            return;
+        }
+
+        if (newUser.Password != confirmPassword)
+        {
+            errorMessage = "Passwords do not match. Please try again.";
+            return;
+        }
 
         // Save to DB here...
+        try
+        {
+            // ALSO CHECK IF CWU EMAIL IS ALREADY TAKEN...
 
-        // Redirect to Sign In page
-        NavManager.NavigateTo("/");
+            // Attempt to create the user in the database
+            await Db.CreateUserAsync(newUser);
+
+            // Redirect to Sign In page upon successful account creation
+            NavManager.NavigateTo("/");
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "An error occurred while creating your account. Please try again.";
+        }
     }
 }
 
@@ -155,4 +234,12 @@
         "Applied Computer Science",
         "Other"
     };
+}
+
+<!--Set Graduation Date to 2026 on component start-->
+@code {
+    protected override void OnInitialized()
+    {
+        newUser.GraduationDate = 2026;
+    }
 }
