@@ -1,0 +1,52 @@
+﻿@page "/dashboard/tutor"
+@rendermode InteractiveServer
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<PageTitle>CS Study Cat - Tutor Mode</PageTitle>
+
+<!--Tutor Modal-->
+<div class="modal" id="tutorModal" style="display: flex !important; align-items: center; justify-content: center;">
+    <div class="study-session-modal">
+        <div class="study-session-header">
+            <h2><i class="fas fa-chalkboard-teacher"></i> Tutor</h2>
+            <a href="/dashboard" class="close-modal">&times;</a>
+        </div>
+            
+        <div class="study-session-body">
+            <div class="tutor-container">
+                <div class="tutor-header">
+                    <div class="tutor-title">CS Study Tutor</div>
+                </div>
+                    
+                <div class="tutor-content">
+                    <div class="tutor-chat-container">
+                        <div class="tutor-message bot">
+                            <div class="tutor-avatar">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <div class="tutor-message-content">
+                                Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat.
+                            </div>
+                        </div>
+                        <div class="tutor-message user">
+                            <div class="tutor-avatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="tutor-message-content">
+                                In id cursus mi pretium tellus duis convallis?
+                            </div>
+                        </div>
+                    </div>
+                        
+                    <div class="tutor-input-container">
+                        <input type="text" class="tutor-input" placeholder="Ask anything about computer science..." value="Lorem ipsum dolor sit amet?">
+                        <button class="tutor-send-button">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

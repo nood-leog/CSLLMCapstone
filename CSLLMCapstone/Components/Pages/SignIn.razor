@@ -1,0 +1,51 @@
+﻿@page "/"
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<PageTitle>CS Study Cat - Sign In</PageTitle>
+
+<div class="login-container">
+    <div class="login-logo">
+        <h1>CS Study Cat</h1>
+    </div>
+
+    <div class="login-header">
+        <h2>Welcome Back</h2>
+        <p>Sign in to access your CS Study Cat dashboard</p>
+    </div>
+
+    <!--Sign In form-->
+    <form id="loginForm">
+        <!--CWU Email input-->
+        <div class="login-form-group">
+            <label class="login-label" for="email">CWU Email</label>
+            <div class="login-input-with-icon">
+                <i class="fas fa-user"></i>
+                <input type="text" id="email" class="login-input" placeholder="Enter your CWU email" required>
+            </div>
+        </div>
+
+        <!--Password input-->
+        <div class="login-form-group">
+            <label class="login-label" for="password">Password</label>
+            <div class="login-input-with-icon">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="password" class="login-input" placeholder="Enter your password" required>
+            </div>
+        </div>
+
+        <!--Forgot Password link-->
+        <div class="login-back-link" id="change-password">
+            Forgot your password? <a href="change-password">Change Password</a>
+        </div>
+
+        <!--Sign In button-->
+        <button type="submit" class="login-btn">Sign In</button>
+    </form>
+
+    <!--Create Account link-->
+    <div class="login-back-link" id="create-account">
+        Don't have an account? <a href="create-account">Create Account</a>
+    </div>
+</div>
+

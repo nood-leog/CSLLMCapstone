@@ -1,0 +1,117 @@
+﻿@using Microsoft.JSInterop
+@inject IJSRuntime JSRuntime
+
+<!--CourseID, CourseTitle, and OnClose input params-->
+@code {
+    [Parameter] public string? CourseID { get; set; }
+    [Parameter] public string? CourseTitle { get; set; }
+    [Parameter] public EventCallback OnClose { get; set; }
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<!--Course Modal-->
+<div class="modal" id="courseModal" style="display: flex !important; align-items: center; justify-content: center;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2><i class="fas fa-cat"></i> CS Study Cat</h2>
+            <a class="close-modal" @onclick="OnClose">&times;</a>
+        </div>
+
+        <div class="modal-body">
+            <!--Left Column - Quiz, Flashcards, and Tutor Mode Buttons-->
+            <div class="left-column">
+                <!--HARDCODED HERE - Testing the local storage InstanceID-->
+                <a href="/dashboard/quiz" class="study-button" @onclick='() => HandleInstanceClick("TESTBOI")'>
+                    <i class="fas fa-question-circle"></i>
+                    <div class="button-label">
+                        <div>Quiz</div>
+                        <span>Test your knowledge</span>
+                    </div>
+                </a>
+                
+                <!--HARDCODED HERE - Testing the local storage InstanceID-->
+                <a href="/dashboard/flash" class="study-button" @onclick='() => HandleInstanceClick("TESTBOI")'>
+                    <i class="fas fa-sticky-note"></i>
+                    <div class="button-label">
+                        <div>Flashcards</div>
+                        <span>Learn terms & concepts</span>
+                    </div>
+                </a>
+
+                <!--HARDCODED HERE - Testing the local storage InstanceID-->
+                <a href="/dashboard/tutor" class="study-button" @onclick='() => HandleInstanceClick("TESTBOI")'>
+                    <i class="fas fa-chalkboard-teacher"></i>
+                    <div class="button-label">
+                        <div>Tutor</div>
+                        <span>Interactive AI tutoring</span>
+                    </div>
+                </a>
+            </div>
+
+            <!--Right Column - Course Info-->
+            <!--HARDCODED - Change later with courses data from DB-->
+            <div class="right-column">
+                <div class="course-title-section">
+                    <div class="course-title-icon">CS</div>
+                    <div class="course-title-text">
+                        <h2>@CourseID</h2>
+                        <p>@CourseTitle</p>
+                    </div>
+                </div>
+
+                <div class="course-description">
+                    <h3>Course Description</h3>
+                    <p>
+                        Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.
+                    </p>
+                </div>
+            </div>
+
+            <!--Topics Section-->
+            <!--HARDCODED - Change later with topics data from DB-->
+            <div class="topics-section">
+                <h3>Topics</h3>
+                <div>
+                    <a class="topic-row" @onclick='() => HandleTopicClick("Object-Oriented Programming")'>
+                        <div class="topic-name">Object-Oriented Programming - Lorem ipsum dolor sit amet consectetur...</div>
+                        <div class="topic-arrow"><i class="fas fa-chevron-right"></i></div>
+                    </a>
+                    <a class="topic-row" @onclick='() => HandleTopicClick("Binary Trees")'>
+                        <div class="topic-name">Binary Trees - Quisque faucibus ex sapien vitae pellentesque...</div>
+                        <div class="topic-arrow"><i class="fas fa-chevron-right"></i></div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Display Topic Overview if topic is clicked-->
+    @if (isTopicClicked)
+    {
+        <TopicOverview TopicName="@topicName" CourseID="@CourseID" OnClose="() => isTopicClicked = false" />
+    }
+</div>
+
+<!--HandleTopicClick Logic-->
+@code {
+    // isTopicClicked flag
+    private bool isTopicClicked = false;
+    // topicName to hold clicked topic name
+    private string? topicName;
+
+    private void HandleTopicClick(string selectedTopicName)
+    {
+        isTopicClicked = true; // flip flag
+        topicName = selectedTopicName; // set topicName
+    }
+}
+
+<!--HandleInstanceClick Logic-->
+@code {
+    // store InstanceID of clicked instance in local storage
+    private async Task HandleInstanceClick(string selectedInstanceID)
+    {
+        await JSRuntime.InvokeVoidAsync("localStorage.setItem", "SelectedInstanceID", selectedInstanceID);
+    }
+}

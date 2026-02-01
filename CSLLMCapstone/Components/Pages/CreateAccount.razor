@@ -1,0 +1,71 @@
+﻿@page "/create-account"
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<PageTitle>CS Study Cat - Create Account</PageTitle>
+
+<div class="signup-container">
+    <div class="signup-logo">
+        <h1>CS Study Cat</h1>
+    </div>
+
+    <div class="signup-header">
+        <h2>Create Account</h2>
+    </div>
+
+    <!--Create Account form-->
+    <form id="signupForm">
+        <div class="signup-name-fields">
+            <!--First/Last Name inputs-->
+            <div class="signup-form-group">
+                <label class="signup-label" for="firstName">First Name</label>
+                <div class="signup-input-with-icon">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="firstName" class="signup-input" placeholder="John" required>
+                </div>
+            </div>
+            <div class="signup-form-group">
+                <label class="signup-label" for="lastName">Last Name</label>
+                <div class="signup-input-with-icon">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="lastName" class="signup-input" placeholder="Doe" required>
+                </div>
+            </div>
+        </div>
+
+        <!--CWU Email input-->
+        <div class="signup-form-group">
+            <label class="signup-label" for="email">CWU Email</label>
+            <div class="signup-input-with-icon">
+                <i class="fas fa-envelope"></i>
+                <input type="email" id="email" class="signup-input" placeholder="student@cwu.edu" required>
+            </div>
+        </div>
+
+        <!--Password input-->
+        <div class="signup-form-group">
+            <label class="signup-label" for="password">Password</label>
+            <div class="signup-input-with-icon">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="password" class="signup-input" placeholder="Create a strong password" required>
+            </div>
+        </div>
+
+        <!--Confirm Password input-->
+        <div class="signup-form-group">
+            <label class="signup-label" for="confirmPassword">Confirm Password</label>
+            <div class="signup-input-with-icon">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="confirmPassword" class="signup-input" placeholder="Confirm your password" required>
+            </div>
+        </div>
+
+        <!--Create Account button-->
+        <button type="submit" class="signup-btn">Create Account</button>
+
+        <!--Sign In link-->
+        <div class="signup-login-link">
+            Already have an account? <a href="/">Sign In</a>
+        </div>
+    </form>
+</div>
