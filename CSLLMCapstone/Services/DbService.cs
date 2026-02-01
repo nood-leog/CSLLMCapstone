@@ -36,6 +36,12 @@ namespace CSLLMCapstone.Services
             return await context.Users.AnyAsync(u => u.CwuEmail == email);
         }
 
+        public async Task<User?> SignInUserAsync(string email, string password)
+        {
+            using var context = _contextFactory.CreateDbContext();
+            return await context.Users.FirstOrDefaultAsync(u => u.CwuEmail == email && u.Password == password);
+        }
+
         // --- COURSE METHODS ---
         public async Task<List<Course>> GetAllCoursesAsync()
         {
