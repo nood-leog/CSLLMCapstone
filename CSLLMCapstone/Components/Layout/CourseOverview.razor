@@ -1,12 +1,25 @@
-﻿@using Microsoft.JSInterop
+﻿@using CSLLMCapstone.Services
+@inject DbService DbService
 @inject IJSRuntime JSRuntime
 
-<!--CourseID, CourseTitle, and OnClose input params-->
+<!--CourseID, CourseTitle, CourseDesc, and OnClose input params-->
 @code {
-    [Parameter] public string? CourseID { get; set; }
+    [Parameter] public int CourseID { get; set; }
     [Parameter] public string? CourseTitle { get; set; }
     [Parameter] public string? CourseDesc { get; set; }
     [Parameter] public EventCallback OnClose { get; set; }
+
+    // List of topics for the selected course
+    private List<string> topics = new();
+    private bool isLoading = true;
+
+    // Fetch topics on component initialization
+    protected override async Task OnInitializedAsync()
+    {
+        isLoading = true;
+        topics = await DbService.GetTopicNamesByCourseIDAsync(CourseID);
+        isLoading = false;
+    }
 }
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -51,7 +64,6 @@
             </div>
 
             <!--Right Column - Course Info-->
-            <!--HARDCODED - Change later with courses data from DB-->
             <div class="right-column">
                 <div class="course-title-section">
                     <div class="course-title-icon">CS</div>
@@ -67,19 +79,28 @@
                 </div>
             </div>
 
-            <!--Topics Section-->
-            <!--HARDCODED - Change later with topics data from DB-->
+            <!--Dynamic Topics Section-->
             <div class="topics-section">
                 <h3>Topics</h3>
                 <div>
-                    <a class="topic-row" @onclick='() => HandleTopicClick("Object-Oriented Programming")'>
-                        <div class="topic-name">Object-Oriented Programming - Lorem ipsum dolor sit amet consectetur...</div>
-                        <div class="topic-arrow"><i class="fas fa-chevron-right"></i></div>
-                    </a>
-                    <a class="topic-row" @onclick='() => HandleTopicClick("Binary Trees")'>
-                        <div class="topic-name">Binary Trees - Quisque faucibus ex sapien vitae pellentesque...</div>
-                        <div class="topic-arrow"><i class="fas fa-chevron-right"></i></div>
-                    </a>
+                    @if (isLoading)
+                    {
+                        <p>Loading topics...</p>
+                    }
+                    else if (topics == null || !topics.Any())
+                    {
+                        <p>No topics found for this course.</p>
+                    }
+                    else
+                    {
+                        @foreach (var topic in topics)
+                        {
+                            <a class="topic-row" @onclick='() => HandleTopicClick(topic)'>
+                                <div class="topic-name">@topic</div>
+                                <div class="topic-arrow"><i class="fas fa-chevron-right"></i></div>
+                            </a>
+                        }
+                    }
                 </div>
             </div>
         </div>

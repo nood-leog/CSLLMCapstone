@@ -37,7 +37,7 @@
             <div class="courses-grid">
                 @if (courses == null || !courses.Any())
                 {
-                    <p><em>Loading courses...</em></p>
+                    <p>Loading courses...</p>
                 }
                 else
                 {
@@ -67,7 +67,7 @@
     @if (isCourseClicked && selectedCourse != null)
     {
         <CourseOverview 
-            CourseID="@selectedCourse.CourseId.ToString()"
+            CourseID="@selectedCourse.CourseId"
             CourseTitle="@selectedCourse.Title"
             CourseDesc="@selectedCourse.CourseDesc"
             OnClose="() => isCourseClicked = false"
