@@ -42,6 +42,28 @@ namespace CSLLMCapstone.Services
             return await context.Users.FirstOrDefaultAsync(u => u.CwuEmail == email && u.Password == password);
         }
 
+        public async Task<bool> IsPasswordSameAsOldAsync(string email, string newPassword)
+        {
+            using var context = _contextFactory.CreateDbContext();
+            var user = await context.Users.FirstOrDefaultAsync(u => u.CwuEmail == email);
+            if (user == null)
+            {
+                return false;
+            }
+            return user.Password == newPassword;
+        }
+
+        public async Task UpdateUserPasswordAsync(string email, string newPassword)
+        {
+            using var context = _contextFactory.CreateDbContext();
+            var user = await context.Users.FirstOrDefaultAsync(u => u.CwuEmail == email);
+            if (user != null)
+            {
+                user.Password = newPassword;
+                await context.SaveChangesAsync();
+            }
+        }
+
         // --- COURSE METHODS ---
         public async Task<List<Course>> GetAllCoursesAsync()
         {
