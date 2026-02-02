@@ -1,5 +1,6 @@
-﻿@using CSLLMCapstone.Services
-@inject DbService DbService
+﻿@using CSLLMCapstone.Models 
+@using CSLLMCapstone.Services
+@inject DbService Db
 @inject IJSRuntime JSRuntime
 
 <!--CourseID, CourseTitle, CourseDesc, and OnClose input params-->
@@ -10,14 +11,14 @@
     [Parameter] public EventCallback OnClose { get; set; }
 
     // List of topics for the selected course
-    private List<string> topics = new();
+    private List<Topic> topics = new();
     private bool isLoading = true;
 
     // Fetch topics on component initialization
     protected override async Task OnInitializedAsync()
     {
         isLoading = true;
-        topics = await DbService.GetTopicNamesByCourseIDAsync(CourseID);
+        topics = await Db.GetTopicsByCourseIDAsync(CourseID);
         isLoading = false;
     }
 }
@@ -96,7 +97,7 @@
                         @foreach (var topic in topics)
                         {
                             <a class="topic-row" @onclick='() => HandleTopicClick(topic)'>
-                                <div class="topic-name">@topic</div>
+                                <div class="topic-name">@topic.Name</div>
                                 <div class="topic-arrow"><i class="fas fa-chevron-right"></i></div>
                             </a>
                         }
@@ -109,7 +110,7 @@
     <!--Display Topic Overview if topic is clicked-->
     @if (isTopicClicked)
     {
-        <TopicOverview TopicName="@topicName" CourseID="@CourseID" OnClose="() => isTopicClicked = false" />
+        <TopicOverview Topic="@topic" CourseID="@CourseID" OnClose="() => isTopicClicked = false" />
     }
 </div>
 
@@ -118,12 +119,12 @@
     // isTopicClicked flag
     private bool isTopicClicked = false;
     // topicName to hold clicked topic name
-    private string? topicName;
+    private Topic? topic;
 
-    private void HandleTopicClick(string selectedTopicName)
+    private void HandleTopicClick(Topic selectedTopic)
     {
         isTopicClicked = true; // flip flag
-        topicName = selectedTopicName; // set topicName
+        topic = selectedTopic; // set topic
     }
 }
 

@@ -101,11 +101,20 @@ namespace CSLLMCapstone.Services
 
         // --- TOPIC METHODS ---
 
-        public async Task<List<string>> GetTopicNamesByCourseIDAsync(int courseId)
+        public async Task<List<Topic>> GetTopicsByCourseIDAsync(int courseId)
         {
             using var context = _contextFactory.CreateDbContext();
-            // takes courseId, returns list of d of that course.
-            return await context.Topics.Where(t => t.CourseId == courseId).Select(t => t.Name).ToListAsync();
+            // takes courseId, returns list of topics
+            return await context.Topics.Where(t => t.CourseId == courseId).ToListAsync();
+        }
+
+        public async Task<List<string>> GetTopicNamesByCourseIDAsnyc(int courseId)
+        {
+            using var context = _contextFactory.CreateDbContext();
+            return await context.Topics
+                .Where(t => t.CourseId == courseId)
+                .Select(t => t.Name)
+                .ToListAsync();
         }
 
 
