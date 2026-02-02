@@ -109,12 +109,20 @@ namespace CSLLMCapstone.Services
             await context.SaveChangesAsync();
         }
 
+        public async Task<Instance?> GetInstanceByIdAsync(string instanceId)
+        {
+            using var context = _contextFactory.CreateDbContext();
+            return await context.Instances
+                .Include(i => i.User)
+                .FirstOrDefaultAsync(i => i.InstanceId == instanceId);
+        }
+
         public async Task<List<Instance>> GetUserHistoryAsync(int userId)
         {
             using var context = _contextFactory.CreateDbContext();
             return await context.Instances
                 .Where(i => i.UserId == userId)
-                .OrderByDescending(i => i.InstanceId) // Or add a CreatedAt date
+                .OrderByDescending(i => i.InstanceId)
                 .ToListAsync();
         }
     }

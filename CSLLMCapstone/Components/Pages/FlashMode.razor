@@ -1,5 +1,9 @@
-﻿@page "/dashboard/flash"
+﻿@page "/dashboard/flash/{instanceId}"
+@using CSLLMCapstone.Services
+@using CSLLMCapstone.Models
 @rendermode InteractiveServer
+@inject DbService Db
+@inject NavigationManager NavManager
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -8,7 +12,7 @@
 <div class="dashboard-body">
     <!--Sidebar component-->
     <Sidebar />
-
+    
     <!--Main Content-->
     <div class="main-content">
         <!--Top Bar-->
@@ -19,8 +23,12 @@
 
             <div class="page-title">
                 <h2><i class="fas fa-sticky-note"></i> Flashcards Mode</h2>
+                @if (!string.IsNullOrEmpty(InstanceId))
+                {
+                    <span class="instance-id-badge">Instance: @InstanceId</span>
+                }
             </div>
-
+            
             <a href="/dashboard" class="close-modal">&times;</a>
         </div>
 
@@ -37,22 +45,22 @@
                     <input type="checkbox" id="flashcard-toggle" style="display: none;">
 
                     <!-- Label that toggles the checkbox when clicked -->
-                    <button type="button" class="flashcard" @onclick="ToggleFlashcard">
-                        <span class="flashcard-inner">
-                            <span class="flashcard-front">
-                                <span class="flashcard-label">Term</span>
-                                <span class="flashcard-content">
+                    <label for="flashcard-toggle" class="flashcard">
+                        <div class="flashcard-inner">
+                            <div class="flashcard-front">
+                                <div class="flashcard-label">Term</div>
+                                <div class="flashcard-content">
                                     Lorem ipsum dolor sit amet
-                                </span>
-                            </span>
-                            <span class="flashcard-back">
-                                <span class="flashcard-label back">Definition</span>
-                                <span class="flashcard-content">
+                                </div>
+                            </div>
+                            <div class="flashcard-back">
+                                <div class="flashcard-label back">Definition</div>
+                                <div class="flashcard-content">
                                     Consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis.
-                                </span>
-                            </span>
-                        </span>
-                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </label>
 
                     <div class="flashcard-controls">
                         <button class="flashcard-nav-button">
@@ -93,9 +101,23 @@
 </div>
 
 @code {
+    [Parameter]
+    public string? InstanceId { get; set; }
+
+    private bool isFlipped = false;
+
     private void ToggleFlashcard()
     {
-        // Implement your flashcard flip logic here
-        // For now, this is just a placeholder
+        isFlipped = !isFlipped;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Load instance data here if needed
+        if (!string.IsNullOrEmpty(InstanceId))
+        {
+            // TODO: Load flashcard data based on InstanceId from database
+            Console.WriteLine($"Flashcard instance loaded: {InstanceId}");
+        }
     }
 }

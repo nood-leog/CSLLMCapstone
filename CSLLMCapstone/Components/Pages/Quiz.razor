@@ -17,13 +17,10 @@
     private int currentCount = 0;
 
     [Parameter]
-    public string InstanceID { get; set;}
-
+    public string? InstanceID { get; set; }
 
     private void IncrementCount()
     {
         currentCount++;
-
-
     }
 }

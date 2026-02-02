@@ -2222,3 +2222,14 @@ label {
     display: inline-block;
     pointer-events: none;
 }
+
+.instance-id-badge {
+    display: inline-block;
+    background-color: rgba(211, 47, 47, 0.1);
+    color: var(--primary-red);
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-left: 10px;
+}

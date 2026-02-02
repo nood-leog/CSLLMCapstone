@@ -6,6 +6,7 @@
 @inject DbService Db
 @inject NavigationManager NavManager
 @inject IJSRuntime JSRuntime
+@inject UserSessionService UserSession
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -124,31 +125,20 @@
 
             if (user == null)
             {
-                errorMessage = "Invalid email or password.";
+                errorMessage = "Invalid email or password. Please try again.";
                 return;
             }
 
-            // Save UserId to local storage upon successful sign in
-            await JSRuntime.InvokeVoidAsync("localStorage.setItem", "UserId", user.UserId.ToString());
+            // Store user info in session
+            UserSession.SetUser(user.UserId, user.CwuEmail, $"{user.FName} {user.LName}");
 
             // Redirect to dashboard
             NavManager.NavigateTo("/dashboard");
         }
         catch (Exception)
         {
-            errorMessage = "An error occurred during sign in. Please try again.";
-        }
-    }
-}
-
-<!--Clear UserId from local storage on component start-->
-@code {
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            // This ensures the code only runs once, and only on the client-side browser
-            await JSRuntime.InvokeVoidAsync("localStorage.removeItem", "UserId");
+            errorMessage = "An error occurred while signing in. Please try again later.";
+            return;
         }
     }
 }
