@@ -22,6 +22,12 @@ namespace CSLLMCapstone.Services
             return await context.Users.FirstOrDefaultAsync(u => u.CwuEmail == email);
         }
 
+        public async Task<User?> GetUserByIdAsync(int userId)
+        {
+            using var context = _contextFactory.CreateDbContext();
+            return await context.Users.FirstOrDefaultAsync(u => u.UserId == userId);
+        }
+
         public async Task CreateUserAsync(User newUser)
         {
             using var context = _contextFactory.CreateDbContext();
