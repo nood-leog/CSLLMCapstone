@@ -5,6 +5,12 @@
 
 launchSettings.json
 
+# Ignore SQLite sidecar files
+*.db-wal
+*.db-shm
+
+# Optional: if you ever use journal mode instead of WAL
+*.db-journal
 
 # User-specific files
 *.rsuser

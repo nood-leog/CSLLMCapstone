@@ -1,6 +1,7 @@
 ﻿using CSLLMCapstone.Data;
 using CSLLMCapstone.Models;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel;
 
 namespace CSLLMCapstone.Services
 {
@@ -26,6 +27,41 @@ namespace CSLLMCapstone.Services
             using var context = _contextFactory.CreateDbContext();
             context.Users.Add(newUser);
             await context.SaveChangesAsync();
+        }
+
+        public async Task<bool> IsEmailRegisteredAsync(string email)
+        {
+            using var context = _contextFactory.CreateDbContext();
+            // returns true if a user exists with that email, false otherwise
+            return await context.Users.AnyAsync(u => u.CwuEmail == email);
+        }
+
+        public async Task<User?> SignInUserAsync(string email, string password)
+        {
+            using var context = _contextFactory.CreateDbContext();
+            return await context.Users.FirstOrDefaultAsync(u => u.CwuEmail == email && u.Password == password);
+        }
+
+        public async Task<bool> IsPasswordSameAsOldAsync(string email, string newPassword)
+        {
+            using var context = _contextFactory.CreateDbContext();
+            var user = await context.Users.FirstOrDefaultAsync(u => u.CwuEmail == email);
+            if (user == null)
+            {
+                return false;
+            }
+            return user.Password == newPassword;
+        }
+
+        public async Task UpdateUserPasswordAsync(string email, string newPassword)
+        {
+            using var context = _contextFactory.CreateDbContext();
+            var user = await context.Users.FirstOrDefaultAsync(u => u.CwuEmail == email);
+            if (user != null)
+            {
+                user.Password = newPassword;
+                await context.SaveChangesAsync();
+            }
         }
 
         // --- COURSE METHODS ---

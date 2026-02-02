@@ -1,4 +1,11 @@
 ﻿@page "/"
+@using CSLLMCapstone.Models
+@using CSLLMCapstone.Services
+@using System.Text.RegularExpressions
+@rendermode InteractiveServer
+@inject DbService Db
+@inject NavigationManager NavManager
+@inject IJSRuntime JSRuntime
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -15,13 +22,13 @@
     </div>
 
     <!--Sign In form-->
-    <form id="loginForm">
+    <EditForm Model="this" OnValidSubmit="HandleSignIn" id="loginForm">
         <!--CWU Email input-->
         <div class="login-form-group">
             <label class="login-label" for="email">CWU Email</label>
             <div class="login-input-with-icon">
                 <i class="fas fa-user"></i>
-                <input type="text" id="email" class="login-input" placeholder="Enter your CWU email" required>
+                <InputText @bind-Value="cwuEmail" type="text" id="email" class="login-input" placeholder="Enter your CWU email" required />
             </div>
         </div>
 
@@ -30,22 +37,116 @@
             <label class="login-label" for="password">Password</label>
             <div class="login-input-with-icon">
                 <i class="fas fa-lock"></i>
-                <input type="password" id="password" class="login-input" placeholder="Enter your password" required>
+                <InputText @bind-Value="password" type="password" id="password" class="login-input" placeholder="Enter your password" required />
             </div>
         </div>
 
+        <!--Input Validation Error Message-->
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <div class="alert alert-danger" style="color: red; background-color: #ffe6e6; padding: 10px; border-radius: 5px; margin-bottom: 15px; border: 1px solid red;">
+                <i class="fas fa-exclamation-circle"></i> @errorMessage
+            </div>
+        }
+
         <!--Forgot Password link-->
         <div class="login-back-link" id="change-password">
-            Forgot your password? <a href="change-password">Change Password</a>
+            Forgot your password? <a href="/change-password">Change Password</a>
         </div>
 
         <!--Sign In button-->
         <button type="submit" class="login-btn">Sign In</button>
-    </form>
+    </EditForm>
 
     <!--Create Account link-->
     <div class="login-back-link" id="create-account">
-        Don't have an account? <a href="create-account">Create Account</a>
+        Don't have an account? <a href="/create-account">Create Account</a>
     </div>
 </div>
 
+<!--SignIn Logic-->
+@code {
+    // Declare sign in variables
+    private string cwuEmail = "";
+    private string password = "";
+
+    // Store the input validation error message
+    private string errorMessage = "";
+
+    // Handle the sign in process
+    private async Task HandleSignIn()
+    {
+        // Reset error message
+        errorMessage = "";
+
+        // Input validation here...
+        if (string.IsNullOrEmpty(cwuEmail) || !cwuEmail.ToLower().EndsWith("@cwu.edu") || cwuEmail.Length > 100)
+        {
+            errorMessage = "You must use a valid CWU email ending in @cwu.edu.";
+            return;
+        }
+
+        var hasUpper = new Regex(@"[A-Z]+");
+        var hasSpecial = new Regex(@"[!@#$%^&*()_+=\[{\]};:<>|./?,-]+");
+
+        if (string.IsNullOrEmpty(password) || password.Length < 7)
+        {
+            errorMessage = "Password must be at least 7 characters long.";
+            return;
+        }
+        else if (!hasUpper.IsMatch(password))
+        {
+            errorMessage = "Password must contain at least one capital letter.";
+            return;
+        }
+        else if (!hasSpecial.IsMatch(password))
+        {
+            errorMessage = "Password must contain at least one special character.";
+            return;
+        }
+
+        // Attempt to sign in the user
+        try
+        {
+            // First check if cwu email exists
+            bool isTaken = await Db.IsEmailRegisteredAsync(cwuEmail);
+
+            if (!isTaken)
+            {
+                errorMessage = "This email is not registered. Please try creating an account.";
+                return;
+            }
+
+            // Now attempt to sign in
+            var user = await Db.SignInUserAsync(cwuEmail, password);
+
+            if (user == null)
+            {
+                errorMessage = "Invalid email or password.";
+                return;
+            }
+
+            // Save UserId to local storage upon successful sign in
+            await JSRuntime.InvokeVoidAsync("localStorage.setItem", "UserId", user.UserId.ToString());
+
+            // Redirect to dashboard
+            NavManager.NavigateTo("/dashboard");
+        }
+        catch (Exception)
+        {
+            errorMessage = "An error occurred during sign in. Please try again.";
+        }
+    }
+}
+
+<!--Clear UserId from local storage on component start-->
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // This ensures the code only runs once, and only on the client-side browser
+            await JSRuntime.InvokeVoidAsync("localStorage.removeItem", "UserId");
+        }
+    }
+}
