@@ -1,5 +1,9 @@
 ﻿@page "/dashboard"
+@using CSLLMCapstone.Models
+@using CSLLMCapstone.Services
 @rendermode InteractiveServer
+@inject DbService Db
+@inject NavigationManager NavManager
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -29,29 +33,28 @@
                 <p>Click on a course to view details and study materials</p>
             </div>
 
-            <!--HARDCODED - Change later with courses data from DB-->
+            <!--Dynamic logic for displaying course modals-->
             <div class="courses-grid">
-                <!-- CS111 Course Card -->
-                <div class="course-card" @onclick='() => HandleCourseClick("CS 111", "Programming Fundamentals I")'>
-                    <div class="course-content">
-                        <div class="course-number">CS 111</div>
-                        <div class="course-name">Programming Fundamentals I</div>
-                    </div>
-                    <div class="course-footer">
-                        <div class="course-action">View Details</div>
-                    </div>
-                </div>
-
-                <!-- CS301 Course Card -->
-                <div class="course-card" @onclick='() => HandleCourseClick("CS 301", "Data Structures")'>
-                    <div class="course-content">
-                        <div class="course-number">CS 301</div>
-                        <div class="course-name">Data Structures</div>
-                    </div>
-                    <div class="course-footer">
-                        <div class="course-action">View Details</div>
-                    </div>
-                </div>
+                @if (courses == null || !courses.Any())
+                {
+                    <p><em>Loading courses...</em></p>
+                }
+                else
+                {
+                    @foreach (var course in courses)
+                    {
+                        <!--Course Card-->
+                        <div class="course-card" @onclick="() => HandleCourseClick(course)">
+                            <div class="course-content">
+                                <div class="course-number">@course.CourseId</div>
+                                <div class="course-name">@course.Title</div>
+                            </div>
+                            <div class="course-footer">
+                                <div class="course-action">View Details</div>
+                            </div>
+                        </div>
+                    }
+                }
             </div>
         </div>
 
@@ -61,25 +64,38 @@
     </div>
 
     <!--Display Course Overview if course is clicked-->
-    @if (isCourseClicked)
+    @if (isCourseClicked && selectedCourse != null)
     {
-        <CourseOverview CourseID="@courseID" CourseTitle="@courseTitle" OnClose="() => isCourseClicked = false"/>
+        <CourseOverview 
+            CourseID="@selectedCourse.CourseId.ToString()"
+            CourseTitle="@selectedCourse.Title"
+            CourseDesc="@selectedCourse.CourseDesc"
+            OnClose="() => isCourseClicked = false"
+        />
     }
 </div>
 
 <!--HandleCourseClick Logic - Set flag to true when course clicked and false if not-->
+<!--Fetch course data on component mount-->
 @code {
+    // List of courses - to be fetched from DB
+    private List<Course> courses = new List<Course>();
+
     // isCourseClicked flag
     private bool isCourseClicked = false;
-    // courseID to hold clicked course ID
-    private string? courseID;
-    // courseTitle to hold clicked course title
-    private string? courseTitle;
 
-    private void HandleCourseClick(string selectedCourseID, string selectedCourseTitle)
+    // The selected course
+    private Course? selectedCourse;
+
+    // Fetch all the course data when the component is first initialized
+    protected override async Task OnInitializedAsync()
     {
-        isCourseClicked = true; // flip flag
-        courseID = selectedCourseID; // set courseID
-        courseTitle = selectedCourseTitle; // set courseTitle
+        courses = await Db.GetAllCoursesAsync();
+    }
+
+    private void HandleCourseClick(Course course)
+    {
+        selectedCourse = course; // set selected course
+        isCourseClicked = true; //  flip flag
     }
 }

@@ -68,9 +68,17 @@ namespace CSLLMCapstone.Services
         public async Task<List<Course>> GetAllCoursesAsync()
         {
             using var context = _contextFactory.CreateDbContext();
-            // Include Topics so we get the nested data
-            return await context.Courses.Include(c => c.Topics).ToListAsync();
+            return await context.Courses
+                .Include(c => c.Topics)
+                .ToListAsync();
         }
+
+        //public async Task<List<Course>> GetAllCoursesAsync()
+        //{
+        //    using var context = _contextFactory.CreateDbContext();
+        //    // Include Topics so we get the nested data
+        //    return await context.Courses.Include(c => c.Topics).ToListAsync();
+        //}
 
         public async Task AddCourseAsync(Course course)
         {
