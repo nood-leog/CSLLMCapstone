@@ -339,16 +339,17 @@ h1:focus {
 
 /* ========== SIGNUP PAGE STYLES ========== */
 .signup-body {
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
     background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
     color: var(--text-dark);
+    padding: 20px;
 }
 
 .signup-container {
-    width: 100%;
+    width: 100%;                
     max-width: 450px;
     background-color: var(--white);
     border-radius: 12px;
@@ -358,11 +359,12 @@ h1:focus {
     position: relative;
     overflow: hidden;
     transition: transform 0.3s ease;
+    margin: auto;
 }
 
-/*.signup-container:hover {
+.signup-container:hover {
     transform: translateY(-5px);
-}*/
+}
 
 .signup-container::before {
     content: '';
@@ -539,12 +541,14 @@ h1:focus {
 
 /* ========== FORGOT PASSWORD PAGE STYLES ========== */
 .forgot-body {
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
     background: linear-gradient(135deg, #fafafa 0%, #f0f0f0 100%);
     color: var(--text-dark);
+    padding: 20px;
+    overflow-y: auto;
 }
 
 .forgot-container {
@@ -557,6 +561,7 @@ h1:focus {
     box-shadow: 0 10px 30px rgba(0,0,0,0.08);
     position: relative;
     overflow: hidden;
+    margin: 20px auto;
 }
 
 .forgot-container::before {
@@ -701,8 +706,8 @@ h1:focus {
     margin-top: 20px;
     padding: 25px;
     border-radius: 8px;
-    border: 2px solid rgba(76, 175, 80, 0.3);
-    background-color: rgba(76, 175, 80, 0.08);
+    border: 2px solid rgba(76,175,80,0.3);
+    background-color: rgba(76,175,80,0.08);
     animation: fadeIn 0.5s ease-out;
 }
 
@@ -1904,7 +1909,7 @@ h1:focus {
 }
 
 .tutor-send-button {
-    background: linear-gradient(135deg, var(--primary-red), var(--dark-red));
+    background: linear-gradient(135deg, var(--primary-red), var (--dark-red));
     color: white;
     border: none;
     width: 50px;

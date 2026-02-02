@@ -5,14 +5,26 @@
 
 <PageTitle>CS Study Cat - Flashcards Mode</PageTitle>
 
-<!--Flashcards Modal-->
-<div class="modal" id="flashcardsModal" style="display: flex !important; align-items: center; justify-content: center;">
-    <div class="study-session-modal">
-        <div class="study-session-header">
-            <h2><i class="fas fa-sticky-note"></i> Flashcards</h2>
+<div class="dashboard-body">
+    <!--Sidebar component-->
+    <Sidebar />
+
+    <!--Main Content-->
+    <div class="main-content">
+        <!--Top Bar-->
+        <div class="top-bar">
+            <label for="sidebar-toggle" class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </label>
+
+            <div class="page-title">
+                <h2><i class="fas fa-sticky-note"></i> Flashcards Mode</h2>
+            </div>
+
             <a href="/dashboard" class="close-modal">&times;</a>
         </div>
 
+        <!--Flashcards Content-->
         <div class="study-session-body">
             <div class="flashcards-container">
                 <div class="flashcards-header">
@@ -25,22 +37,22 @@
                     <input type="checkbox" id="flashcard-toggle" style="display: none;">
 
                     <!-- Label that toggles the checkbox when clicked -->
-                    <label for="flashcard-toggle" class="flashcard">
-                        <div class="flashcard-inner">
-                            <div class="flashcard-front">
-                                <div class="flashcard-label">Term</div>
-                                <div class="flashcard-content">
+                    <button type="button" class="flashcard" @onclick="ToggleFlashcard">
+                        <span class="flashcard-inner">
+                            <span class="flashcard-front">
+                                <span class="flashcard-label">Term</span>
+                                <span class="flashcard-content">
                                     Lorem ipsum dolor sit amet
-                                </div>
-                            </div>
-                            <div class="flashcard-back">
-                                <div class="flashcard-label back">Definition</div>
-                                <div class="flashcard-content">
+                                </span>
+                            </span>
+                            <span class="flashcard-back">
+                                <span class="flashcard-label back">Definition</span>
+                                <span class="flashcard-content">
                                     Consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis.
-                                </div>
-                            </div>
-                        </div>
-                    </label>
+                                </span>
+                            </span>
+                        </span>
+                    </button>
 
                     <div class="flashcard-controls">
                         <button class="flashcard-nav-button">
@@ -73,5 +85,17 @@
                 </div>
             </div>
         </div>
+
+        <!--Footer-->
+        <div class="footer">
+        </div>
     </div>
 </div>
+
+@code {
+    private void ToggleFlashcard()
+    {
+        // Implement your flashcard flip logic here
+        // For now, this is just a placeholder
+    }
+}

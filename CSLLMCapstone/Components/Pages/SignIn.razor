@@ -11,56 +11,58 @@
 
 <PageTitle>CS Study Cat - Sign In</PageTitle>
 
-<div class="login-container">
-    <div class="login-logo">
-        <h1>CS Study Cat</h1>
-    </div>
-
-    <div class="login-header">
-        <h2>Welcome Back</h2>
-        <p>Sign in to access your CS Study Cat dashboard</p>
-    </div>
-
-    <!--Sign In form-->
-    <EditForm Model="this" OnValidSubmit="HandleSignIn" id="loginForm">
-        <!--CWU Email input-->
-        <div class="login-form-group">
-            <label class="login-label" for="email">CWU Email</label>
-            <div class="login-input-with-icon">
-                <i class="fas fa-user"></i>
-                <InputText @bind-Value="cwuEmail" type="text" id="email" class="login-input" placeholder="Enter your CWU email" required />
-            </div>
+<div class="login-body">
+    <div class="login-container">
+        <div class="login-logo">
+            <h1>CS Study Cat</h1>
         </div>
 
-        <!--Password input-->
-        <div class="login-form-group">
-            <label class="login-label" for="password">Password</label>
-            <div class="login-input-with-icon">
-                <i class="fas fa-lock"></i>
-                <InputText @bind-Value="password" type="password" id="password" class="login-input" placeholder="Enter your password" required />
-            </div>
+        <div class="login-header">
+            <h2>Welcome Back</h2>
+            <p>Sign in to access your CS Study Cat dashboard</p>
         </div>
 
-        <!--Input Validation Error Message-->
-        @if (!string.IsNullOrEmpty(errorMessage))
-        {
-            <div class="alert alert-danger" style="color: red; background-color: #ffe6e6; padding: 10px; border-radius: 5px; margin-bottom: 15px; border: 1px solid red;">
-                <i class="fas fa-exclamation-circle"></i> @errorMessage
+        <!--Sign In form-->
+        <EditForm Model="this" OnValidSubmit="HandleSignIn" id="loginForm">
+            <!--CWU Email input-->
+            <div class="login-form-group">
+                <label class="login-label" for="email">CWU Email</label>
+                <div class="login-input-with-icon">
+                    <i class="fas fa-user"></i>
+                    <InputText @bind-Value="cwuEmail" type="text" id="email" class="login-input" placeholder="Enter your CWU email" required />
+                </div>
             </div>
-        }
 
-        <!--Forgot Password link-->
-        <div class="login-back-link" id="change-password">
-            Forgot your password? <a href="/change-password">Change Password</a>
+            <!--Password input-->
+            <div class="login-form-group">
+                <label class="login-label" for="password">Password</label>
+                <div class="login-input-with-icon">
+                    <i class="fas fa-lock"></i>
+                    <InputText @bind-Value="password" type="password" id="password" class="login-input" placeholder="Enter your password" required />
+                </div>
+            </div>
+
+            <!--Input Validation Error Message-->
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <div class="alert alert-danger" style="color: red; background-color: #ffe6e6; padding: 10px; border-radius: 5px; margin-bottom: 15px; border: 1px solid red;">
+                    <i class="fas fa-exclamation-circle"></i> @errorMessage
+                </div>
+            }
+
+            <!--Forgot Password link-->
+            <div class="login-back-link" id="change-password">
+                Forgot your password? <a href="/change-password">Change Password</a>
+            </div>
+
+            <!--Sign In button-->
+            <button type="submit" class="login-btn">Sign In</button>
+        </EditForm>
+
+        <!--Create Account link-->
+        <div class="login-back-link" id="create-account">
+            Don't have an account? <a href="/create-account">Create Account</a>
         </div>
-
-        <!--Sign In button-->
-        <button type="submit" class="login-btn">Sign In</button>
-    </EditForm>
-
-    <!--Create Account link-->
-    <div class="login-back-link" id="create-account">
-        Don't have an account? <a href="/create-account">Create Account</a>
     </div>
 </div>
 
