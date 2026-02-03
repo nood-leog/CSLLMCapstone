@@ -29,6 +29,7 @@ namespace CSLLMCapstone.Models
         public int GraduationDate { get; set; } // Storing as Year (2025, 2026)
 
         [Required]
+        [MaxLength(255)]
         public string Password { get; set; } = string.Empty; //!TODO hash this!
 
         // Navigation property for relationships
