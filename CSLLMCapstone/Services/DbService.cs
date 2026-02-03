@@ -2,12 +2,14 @@
 using CSLLMCapstone.Models;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel;
+using Microsoft.AspNetCore.Identity;
 
 namespace CSLLMCapstone.Services
 {
     public class DbService
     {
         private readonly IDbContextFactory<StudyContext> _contextFactory;
+        private readonly PasswordHasher<User> _passwordHasher = new(); // Initialize the hasher
 
         // We use Factory pattern for Blazor Server to avoid threading issues
         public DbService(IDbContextFactory<StudyContext> contextFactory)
@@ -31,6 +33,8 @@ namespace CSLLMCapstone.Services
         public async Task CreateUserAsync(User newUser)
         {
             using var context = _contextFactory.CreateDbContext();
+            // HASH THE PASSWORD BEFORE SAVING
+            newUser.Password = _passwordHasher.HashPassword(newUser, newUser.Password);
             context.Users.Add(newUser);
             await context.SaveChangesAsync();
         }
@@ -45,7 +49,18 @@ namespace CSLLMCapstone.Services
         public async Task<User?> SignInUserAsync(string email, string password)
         {
             using var context = _contextFactory.CreateDbContext();
-            return await context.Users.FirstOrDefaultAsync(u => u.CwuEmail == email && u.Password == password);
+
+            // 1. Await the database call and find by email ONLY
+            var user = await context.Users.FirstOrDefaultAsync(u => u.CwuEmail == email);
+
+            // 2. If no user found, return null
+            if (user == null) return null;
+
+            // 3. Verify the plain-text 'password' against the stored 'user.Password' (the hash)
+            var result = _passwordHasher.VerifyHashedPassword(user, user.Password, password);
+
+            // 4. Return user if success, otherwise null
+            return result == PasswordVerificationResult.Success ? user : null;
         }
 
         public async Task<bool> IsPasswordSameAsOldAsync(string email, string newPassword)
@@ -56,7 +71,10 @@ namespace CSLLMCapstone.Services
             {
                 return false;
             }
-            return user.Password == newPassword;
+
+            // Use the hasher to compare the new plain-text password with the stored hash
+            var result = _passwordHasher.VerifyHashedPassword(user, user.Password, newPassword);
+            return result == PasswordVerificationResult.Success;
         }
 
         public async Task UpdateUserPasswordAsync(string email, string newPassword)
@@ -66,6 +84,8 @@ namespace CSLLMCapstone.Services
             if (user != null)
             {
                 user.Password = newPassword;
+                // HASH THE NEW PASSWORD
+                user.Password = _passwordHasher.HashPassword(user, newPassword);
                 await context.SaveChangesAsync();
             }
         }
