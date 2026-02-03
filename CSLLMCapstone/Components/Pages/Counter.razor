@@ -2,10 +2,10 @@
 @page "/counter2"
 
 @rendermode InteractiveServer
-@using Models;
+@using CSLLMCapstone.Models
+@using CSLLMCapstone.Services
 @using System.Threading.Tasks
-@using Services
-@inject DbService dbService
+@inject DbService Db
 
 <PageTitle>Counter</PageTitle>
 
@@ -34,7 +34,7 @@
     private async Task Query()
     {
         int courseId = 427;
-        List<string> str = await dbService.GetTopicNamesByCourseIDAsync(courseId);
+        List<string> str = await Db.GetTopicNamesByCourseIDAsnyc(courseId);
         LLM llm = new LLM(InstanceType.Flash, str);
 
         response = await llm.AskSync("generate flashcards as initial prompt. Each keyword sould be seperated by line-space");
