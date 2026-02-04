@@ -23,6 +23,8 @@
 
 <button class="btn btn-primary" @onclick="Query">Click me</button>
 
+<p>No description available.</p>
+
 @code {
 
     private string queryText = "";
@@ -34,7 +36,7 @@
     private async Task Query()
     {
         int courseId = 427;
-        List<string> str = await Db.GetTopicNamesByCourseIDAsnyc(courseId);
+        List<string> str = await Db.GetTopicNamesByCourseIDAsync(courseId);
         LLM llm = new LLM(InstanceType.Flash, str);
 
         response = await llm.AskSync("generate flashcards as initial prompt. Each keyword sould be seperated by line-space");
