@@ -27,6 +27,7 @@ builder.Services.AddDbContextFactory<StudyContext>(options =>
 
 builder.Services.AddScoped<DbService>();
 builder.Services.AddScoped<LLMService>();   
+builder.Services.AddScoped<UserSessionService>();
 
 var app = builder.Build();
 

@@ -2,11 +2,10 @@
 @page "/counter2"
 
 @rendermode InteractiveServer
-@using Models;
+@using CSLLMCapstone.Models
+@using CSLLMCapstone.Services
 @using System.Threading.Tasks
-@using Services
-@inject DbService dbService
-@inject LLMService llmService
+@inject DbService Db
 
 <PageTitle>Counter</PageTitle>
 

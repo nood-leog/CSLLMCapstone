@@ -1,4 +1,17 @@
-﻿<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+﻿<!--FName and LName input params-->
+@code {
+    [Parameter] public string? FName { get; set; }
+    [Parameter] public string? LName { get; set; }
+
+    // Computed property for the initials
+    private string UserInitials =>
+        $"{(string.IsNullOrEmpty(FName) ? "" : FName[0].ToString())}{(string.IsNullOrEmpty(LName) ? "" : LName[0].ToString())}".ToUpper();
+
+    // Fallback if both are empty
+    private string DisplayInitials => string.IsNullOrWhiteSpace(UserInitials) ? "SC" : UserInitials;
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <div>
     <!--Sidebar-->
@@ -8,17 +21,16 @@
             <h1>CS Study Cat</h1>
         </div>
 
-        <!--HARDCODED - Change later with user data from DB-->
         <div class="sidebar-user-section">
-            <!--User Details-->
+            <!--Dynamic User Details-->
             <div class="sidebar-user-info">
-                <div class="sidebar-user-avatar">JD</div>
+                <div class="sidebar-user-avatar">@DisplayInitials</div>
                 <div class="sidebar-user-details">
-                    <h3>John Doe</h3>
+                    <h3>@FName @LName</h3>
                 </div>
             </div>
 
-            <!--Instance History-->
+            <!--HARDCODED - Instance History-->
             <div class="sidebar-instance-section">
                 <h4>Instance History</h4>
                 <a href="#tutorModal" class="sidebar-instance-item">
