@@ -6,6 +6,7 @@
 @using System.Threading.Tasks
 @using Services
 @inject DbService dbService
+@inject LLMService llmService
 
 <PageTitle>Counter</PageTitle>
 
@@ -17,8 +18,13 @@
 </div>
 
 <div class="mb-3">
-    <label>Result:</label>
-    <label>@response</label>
+    <label>Keyword:</label>
+    <label>@res</label>
+</div>
+
+<div class="mb-3">
+    <label>Description:</label>
+    <label>@test2</label>
 </div>
 
 <button class="btn btn-primary" @onclick="Query">Click me</button>
@@ -27,17 +33,24 @@
 
     private string queryText = "";
 
-    private string response = "";
+    private List<Tuple<string, string>> response = new List<Tuple<string, string>>();
+    private string res = "";
 
-
+    private string test1 = "";
+    private string test2 = "";
 
     private async Task Query()
     {
         int courseId = 427;
-        List<string> str = await dbService.GetTopicNamesByCourseIDAsync(courseId);
-        LLM llm = new LLM(InstanceType.Flash, str);
+        List<string> topics = await dbService.GetTopicNamesByCourseIDAsync(courseId);
+        string? courseName = await dbService.GetCourseNameByCourseIdAsync(courseId);
+        LLM llm = new LLM(InstanceType.Quiz);
+        string? history = null;
 
-        response = await llm.AskSync("generate flashcards as initial prompt. Each keyword sould be seperated by line-space");
+        res = await llmService.GenerateQuizDataValidatedJSONAsync(llm, courseName ?? "No Course Name", topics, history ?? null);
+
+        //test1 = response[0].Item1;
+        //test2 = response[0].Item2;
 
 
     }
