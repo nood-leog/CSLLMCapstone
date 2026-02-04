@@ -1,4 +1,4 @@
-﻿@using CSLLMCapstone.Models
+@using CSLLMCapstone.Models
 @using CSLLMCapstone.Services
 
 <!--TopicName, CourseID, and OnClose input params-->
@@ -21,7 +21,7 @@
         <div class="topic-modal-body">
             <!--Left Column - Quiz, Flashcards, and Tutor Mode Buttons-->
             <div class="topic-left-column">
-                <a href="#quizModal" class="topic-study-button">
+                <a class="topic-study-button" @onclick='() => HandleInstanceClick(InstanceType.Quiz)'>
                     <i class="fas fa-question-circle"></i>
                     <div class="topic-button-label">
                         <div>Quiz</div>
@@ -29,7 +29,7 @@
                     </div>
                 </a>
 
-                <a href="#flashcardsModal" class="topic-study-button">
+                <a class="topic-study-button" @onclick='() => HandleInstanceClick(InstanceType.Flash)'>
                     <i class="fas fa-sticky-note"></i>
                     <div class="topic-button-label">
                         <div>Flashcards</div>
@@ -37,7 +37,7 @@
                     </div>
                 </a>
 
-                <a href="#tutorModal" class="topic-study-button">
+                <a class="topic-study-button" @onclick='() => HandleInstanceClick(InstanceType.Tutor)'>
                     <i class="fas fa-chalkboard-teacher"></i>
                     <div class="topic-button-label">
                         <div>Tutor</div>
@@ -72,3 +72,45 @@
         </div>
     </div>
 </div>
+
+@code {
+    private async Task HandleInstanceClick(InstanceType type)
+    {
+        // Check if user is logged in
+        if (!UserSession.IsLoggedIn)
+        {
+            Console.WriteLine("User not logged in");
+            NavManager.NavigateTo("/");
+            return;
+        }
+
+        try
+        {
+            // Create new instance with topic information
+            var newInstance = new Instance
+            {
+                UserId = UserSession.UserId!.Value,
+                Type = type,
+                Data = $"{{\"courseId\":\"{CourseID}\",\"topicName\":\"{TopicName}\"}}" // Store course and topic info
+            };
+
+            // Save to database
+            await Db.SaveInstanceAsync(newInstance);
+
+            // Navigate to the appropriate route with the instance ID
+            string route = type switch
+            {
+                InstanceType.Quiz => $"/dashboard/quiz/{newInstance.InstanceId}",
+                InstanceType.Flash => $"/dashboard/flash/{newInstance.InstanceId}",
+                InstanceType.Tutor => $"/dashboard/tutor/{newInstance.InstanceId}",
+                _ => "/dashboard"
+            };
+
+            NavManager.NavigateTo(route);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error creating instance: {ex.Message}");
+        }
+    }
+}

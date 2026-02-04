@@ -1,7 +1,10 @@
-﻿@using CSLLMCapstone.Models 
+@using CSLLMCapstone.Models 
 @using CSLLMCapstone.Services
 @inject DbService Db
 @inject IJSRuntime JSRuntime
+@inject DbService Db
+@inject NavigationManager NavManager
+@inject UserSessionService UserSession
 
 <!--CourseID, CourseTitle, CourseDesc, and OnClose input params-->
 @code {
@@ -36,8 +39,7 @@
         <div class="modal-body">
             <!--Left Column - Quiz, Flashcards, and Tutor Mode Buttons-->
             <div class="left-column">
-                <!--HARDCODED HERE - Testing the local storage InstanceID-->
-                <a href="/dashboard/quiz" class="study-button" @onclick='() => HandleInstanceClick("TESTBOI")'>
+                <a class="study-button" @onclick='() => HandleInstanceClick(InstanceType.Quiz)'>
                     <i class="fas fa-question-circle"></i>
                     <div class="button-label">
                         <div>Quiz</div>
@@ -45,8 +47,7 @@
                     </div>
                 </a>
                 
-                <!--HARDCODED HERE - Testing the local storage InstanceID-->
-                <a href="/dashboard/flash" class="study-button" @onclick='() => HandleInstanceClick("TESTBOI")'>
+                <a class="study-button" @onclick='() => HandleInstanceClick(InstanceType.Flash)'>
                     <i class="fas fa-sticky-note"></i>
                     <div class="button-label">
                         <div>Flashcards</div>
@@ -54,8 +55,7 @@
                     </div>
                 </a>
 
-                <!--HARDCODED HERE - Testing the local storage InstanceID-->
-                <a href="/dashboard/tutor" class="study-button" @onclick='() => HandleInstanceClick("TESTBOI")'>
+                <a class="study-button" @onclick='() => HandleInstanceClick(InstanceType.Tutor)'>
                     <i class="fas fa-chalkboard-teacher"></i>
                     <div class="button-label">
                         <div>Tutor</div>
@@ -116,7 +116,6 @@
 
 <!--HandleTopicClick Logic-->
 @code {
-    // isTopicClicked flag
     private bool isTopicClicked = false;
     // topicName to hold clicked topic name
     private Topic? topic;
@@ -130,9 +129,43 @@
 
 <!--HandleInstanceClick Logic-->
 @code {
-    // store InstanceID of clicked instance in local storage
-    private async Task HandleInstanceClick(string selectedInstanceID)
+    private async Task HandleInstanceClick(InstanceType type)
     {
-        await JSRuntime.InvokeVoidAsync("localStorage.setItem", "SelectedInstanceID", selectedInstanceID);
+        // Check if user is logged in
+        if (!UserSession.IsLoggedIn)
+        {
+            Console.WriteLine("User not logged in");
+            NavManager.NavigateTo("/");
+            return;
+        }
+
+        try
+        {
+            // Create new instance
+            var newInstance = new Instance
+            {
+                UserId = UserSession.UserId!.Value,
+                Type = type,
+                Data = "{}" // Initialize with empty JSON
+            };
+
+            // Save to database
+            await Db.SaveInstanceAsync(newInstance);
+
+            // Navigate to the appropriate route with the instance ID
+            string route = type switch
+            {
+                InstanceType.Quiz => $"/dashboard/quiz/{newInstance.InstanceId}",
+                InstanceType.Flash => $"/dashboard/flash/{newInstance.InstanceId}",
+                InstanceType.Tutor => $"/dashboard/tutor/{newInstance.InstanceId}",
+                _ => "/dashboard"
+            };
+
+            NavManager.NavigateTo(route);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error creating instance: {ex.Message}");
+        }
     }
 }

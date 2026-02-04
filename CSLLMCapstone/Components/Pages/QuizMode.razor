@@ -1,18 +1,38 @@
-﻿@page "/dashboard/quiz"
+﻿@page "/dashboard/quiz/{instanceId}"
+@using CSLLMCapstone.Services
+@using CSLLMCapstone.Models
 @rendermode InteractiveServer
+@inject DbService Db
+@inject NavigationManager NavManager
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <PageTitle>CS Study Cat - Quiz Mode</PageTitle>
 
-<!--Quiz Modal-->
-<div class="modal" id="quizModal" style="display: flex !important; align-items: center; justify-content: center;">
-    <div class="study-session-modal">
-        <div class="study-session-header">
-            <h2><i class="fas fa-question-circle"></i> Quiz</h2>
+<div class="dashboard-body">
+    <!--Sidebar component-->
+    <Sidebar />
+    
+    <!--Main Content-->
+    <div class="main-content">
+        <!--Top Bar-->
+        <div class="top-bar">
+            <label for="sidebar-toggle" class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </label>
+
+            <div class="page-title">
+                <h2><i class="fas fa-question-circle"></i> Quiz Mode</h2>
+                @if (!string.IsNullOrEmpty(InstanceId))
+                {
+                    <span class="instance-id-badge">Instance: @InstanceId</span>
+                }
+            </div>
+            
             <a href="/dashboard" class="close-modal">&times;</a>
         </div>
 
+        <!--Quiz Content-->
         <div class="study-session-body">
             <div class="quiz-container">
                 <div class="quiz-header">
@@ -54,5 +74,24 @@
                 </div>
             </div>
         </div>
+
+        <!--Footer-->
+        <div class="footer">
+        </div>
     </div>
 </div>
+
+@code {
+    [Parameter]
+    public string? InstanceId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Load instance data here if needed
+        if (!string.IsNullOrEmpty(InstanceId))
+        {
+            // TODO: Load quiz data based on InstanceId from database
+            Console.WriteLine($"Quiz instance loaded: {InstanceId}");
+        }
+    }
+}   

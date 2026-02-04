@@ -10,126 +10,128 @@
 
 <PageTitle>CS Study Cat - Create Account</PageTitle>
 
-<div class="signup-container">
-    <div class="signup-logo">
-        <h1>CS Study Cat</h1>
-    </div>
+<div class="signup-body">
+    <div class="signup-container">
+        <div class="signup-logo">
+            <h1>CS Study Cat</h1>
+        </div>
 
-    <div class="signup-header">
-        <h2>Create Account</h2>
-    </div>
+        <div class="signup-header">
+            <h2>Create Account</h2>
+        </div>
 
-    <!--Create Account form-->
-    <EditForm Model="@newUser" OnValidSubmit="HandleCreateAccount" id="signupForm">
-        <div class="signup-name-fields">
-            <!--First/Last Name inputs-->
-            <div class="signup-form-group">
-                <label class="signup-label" for="firstName">First Name</label>
-                <div class="signup-input-with-icon">
-                    <i class="fas fa-user"></i>
-                    <InputText @bind-Value="newUser.FName" type="text" id="firstName" class="signup-input" placeholder="John" required />
+        <!--Create Account form-->
+        <EditForm Model="@newUser" OnValidSubmit="HandleCreateAccount" id="signupForm">
+            <div class="signup-name-fields">
+                <!--First/Last Name inputs-->
+                <div class="signup-form-group">
+                    <label class="signup-label" for="firstName">First Name</label>
+                    <div class="signup-input-with-icon">
+                        <i class="fas fa-user"></i>
+                        <InputText @bind-Value="newUser.FName" type="text" id="firstName" class="signup-input" placeholder="John" required />
+                    </div>
+                </div>
+                <div class="signup-form-group">
+                    <label class="signup-label" for="lastName">Last Name</label>
+                    <div class="signup-input-with-icon">
+                        <i class="fas fa-user"></i>
+                        <InputText @bind-Value="newUser.LName" type="text" id="lastName" class="signup-input" placeholder="Doe" required />
+                    </div>
                 </div>
             </div>
+
+            <!--CWU Email input-->
             <div class="signup-form-group">
-                <label class="signup-label" for="lastName">Last Name</label>
+                <label class="signup-label" for="email">CWU Email</label>
                 <div class="signup-input-with-icon">
-                    <i class="fas fa-user"></i>
-                    <InputText @bind-Value="newUser.LName" type="text" id="lastName" class="signup-input" placeholder="Doe" required />
+                    <i class="fas fa-envelope"></i>
+                    <InputText @bind-Value="newUser.CwuEmail" type="email" id="email" class="signup-input" placeholder="student@cwu.edu" required />
                 </div>
             </div>
-        </div>
 
-        <!--CWU Email input-->
-        <div class="signup-form-group">
-            <label class="signup-label" for="email">CWU Email</label>
-            <div class="signup-input-with-icon">
-                <i class="fas fa-envelope"></i>
-                <InputText @bind-Value="newUser.CwuEmail" type="email" id="email" class="signup-input" placeholder="student@cwu.edu" required />
+            <!--Major input-->
+            <div class="signup-form-group">
+                <label class="signup-label" for="major">Major</label>
+                <div class="signup-input-with-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                    <InputSelect @bind-Value="newUser.Major" id="major" class="signup-input" placeholder="Computer Science" required>
+                        <option value="">-- Select Major --</option>
+                        @foreach (var m in MajorOptions)
+                        {
+                            <option value="@m">@m</option>
+                        }
+                    </InputSelect>
+                </div>
             </div>
-        </div>
 
-        <!--Major input-->
-        <div class="signup-form-group">
-            <label class="signup-label" for="major">Major</label>
-            <div class="signup-input-with-icon">
-                <i class="fas fa-graduation-cap"></i>
-                <InputSelect @bind-Value="newUser.Major" id="major" class="signup-input" placeholder="Computer Science" required>
-                    <option value="">-- Select Major --</option>
-                    @foreach (var m in MajorOptions)
-                    {
-                        <option value="@m">@m</option>
-                    }
-                </InputSelect>
+            <!--Minor input-->
+            <div class="signup-form-group">
+                <label class="signup-label" for="minor">Minor</label>
+                <div class="signup-input-with-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                    <InputSelect @bind-Value="newUser.Minor" id="minor" class="signup-input" placeholder="Applied Computer Science" >
+                        <option value="">-- Select Minor --</option>
+                        @foreach (var m in MinorOptions)
+                        {
+                            <option value="@m">@m</option>
+                        }
+                    </InputSelect>
+                </div>
             </div>
-        </div>
 
-        <!--Minor input-->
-        <div class="signup-form-group">
-            <label class="signup-label" for="minor">Minor</label>
-            <div class="signup-input-with-icon">
-                <i class="fas fa-graduation-cap"></i>
-                <InputSelect @bind-Value="newUser.Minor" id="minor" class="signup-input" placeholder="Applied Computer Science" >
-                    <option value="">-- Select Minor --</option>
-                    @foreach (var m in MinorOptions)
-                    {
-                        <option value="@m">@m</option>
-                    }
-                </InputSelect>
+            <!--Graduation Date input-->
+            <div class="signup-form-group">
+                <label class="signup-label" for="graduationDate">Graduation Date</label>
+                <div class="signup-input-with-icon">
+                    <i class="fas fa-calendar-alt"></i>
+                    <InputNumber
+                        @bind-value="newUser.GraduationDate" 
+                        type="number" 
+                        id="graduationDate" 
+                        class="signup-input" 
+                        placeholder="2026"
+                        min="2026"
+                        max="2030"
+                        required 
+                    />
+                </div>
             </div>
-        </div>
 
-        <!--Graduation Date input-->
-        <div class="signup-form-group">
-            <label class="signup-label" for="graduationDate">Graduation Date</label>
-            <div class="signup-input-with-icon">
-                <i class="fas fa-calendar-alt"></i>
-                <InputNumber
-                    @bind-value="newUser.GraduationDate" 
-                    type="number" 
-                    id="graduationDate" 
-                    class="signup-input" 
-                    placeholder="2026"
-                    min="2026"
-                    max="2030"
-                    required 
-                />
+            <!--Password input-->
+            <div class="signup-form-group">
+                <label class="signup-label" for="password">Password</label>
+                <div class="signup-input-with-icon">
+                    <i class="fas fa-lock"></i>
+                    <InputText @bind-value="newUser.Password" type="password" id="password" class="signup-input" placeholder="Create a strong password" required />
+                </div>
             </div>
-        </div>
 
-        <!--Password input-->
-        <div class="signup-form-group">
-            <label class="signup-label" for="password">Password</label>
-            <div class="signup-input-with-icon">
-                <i class="fas fa-lock"></i>
-                <InputText @bind-value="newUser.Password" type="password" id="password" class="signup-input" placeholder="Create a strong password" required />
+            <!--Confirm Password input-->
+            <div class="signup-form-group">
+                <label class="signup-label" for="confirmPassword">Confirm Password</label>
+                <div class="signup-input-with-icon">
+                    <i class="fas fa-lock"></i>
+                    <InputText @bind-Value="confirmPassword" type="password" id="confirmPassword" class="signup-input" placeholder="Confirm your password" required />
+                </div>
             </div>
-        </div>
 
-        <!--Confirm Password input-->
-        <div class="signup-form-group">
-            <label class="signup-label" for="confirmPassword">Confirm Password</label>
-            <div class="signup-input-with-icon">
-                <i class="fas fa-lock"></i>
-                <InputText @bind-Value="confirmPassword" type="password" id="confirmPassword" class="signup-input" placeholder="Confirm your password" required />
+            <!--Input Validation Error Message-->
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <div class="alert alert-danger" style="color: red; background-color: #ffe6e6; padding: 10px; border-radius: 5px; margin-bottom: 15px; border: 1px solid red;">
+                    <i class="fas fa-exclamation-circle"></i> @errorMessage
+                </div>
+            }
+
+            <!--Create Account button-->
+            <button type="submit" class="signup-btn">Create Account</button>
+
+            <!--Sign In link-->
+            <div class="signup-login-link">
+                Already have an account? <a href="/">Sign In</a>
             </div>
-        </div>
-
-        <!--Input Validation Error Message-->
-        @if (!string.IsNullOrEmpty(errorMessage))
-        {
-            <div class="alert alert-danger" style="color: red; background-color: #ffe6e6; padding: 10px; border-radius: 5px; margin-bottom: 15px; border: 1px solid red;">
-                <i class="fas fa-exclamation-circle"></i> @errorMessage
-            </div>
-        }
-
-        <!--Create Account button-->
-        <button type="submit" class="signup-btn">Create Account</button>
-
-        <!--Sign In link-->
-        <div class="signup-login-link">
-            Already have an account? <a href="/">Sign In</a>
-        </div>
-    </EditForm>
+        </EditForm>
+    </div>
 </div>
 
 <!--CreateAccount Logic-->
@@ -142,6 +144,25 @@
 
     // Confirm Password field
     private string confirmPassword = "";
+
+    // Major and Minor options
+    private readonly string[] MajorOptions = new[]
+    {
+        "Computer Science",
+        "Information Technology",
+        "Software Engineering",
+        "Data Science",
+        "Cybersecurity"
+    };
+
+    private readonly string[] MinorOptions = new[]
+    {
+        "Applied Computer Science",
+        "Web Development",
+        "Mobile Development",
+        "Database Management",
+        "Network Security"
+    };
 
     // Handle the account creation process
     private async Task HandleCreateAccount()
@@ -204,16 +225,16 @@
         // Save to DB here...
         try
         {
-            // ALSO CHECK IF CWU EMAIL IS ALREADY TAKEN...
+            // Check if email already taken
             bool isTaken = await Db.IsEmailRegisteredAsync(newUser.CwuEmail);
 
             if (isTaken)
             {
-                errorMessage = "This email is already registered. Please try signing in.";
+                errorMessage = "This email is already registered. Please sign in or use a different email.";
                 return;
             }
 
-            // Attempt to create the user in the database
+            // Add user to the database
             await Db.CreateUserAsync(newUser);
 
             // Redirect to Sign In page upon successful account creation
@@ -221,32 +242,8 @@
         }
         catch (Exception)
         {
-            errorMessage = "An error occurred while creating your account. Please try again.";
+            errorMessage = "An error occurred while creating your account. Please try again later.";
+            return;
         }
-    }
-}
-
-<!--Major and Minor options for InputSelect-->
-@code {
-    private List<string> MajorOptions = new()
-    {
-        "Computer Science",
-        "Data Science",
-        "Other"
-    };
-
-    private List<string> MinorOptions = new()
-    {
-        "Computer Science",
-        "Applied Computer Science",
-        "Other"
-    };
-}
-
-<!--Set Graduation Date to 2026 on component start-->
-@code {
-    protected override void OnInitialized()
-    {
-        newUser.GraduationDate = 2026;
     }
 }
