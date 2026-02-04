@@ -5,7 +5,8 @@
 @using CSLLMCapstone.Models
 @using CSLLMCapstone.Services
 @using System.Threading.Tasks
-@inject DbService Db
+@inject DbService dbService
+@inject LLMService llmService
 
 <PageTitle>Counter</PageTitle>
 
@@ -41,7 +42,7 @@
     private async Task Query()
     {
         int courseId = 427;
-        List<string> topics = await dbService.GetTopicNamesByCourseIDAsync(courseId);
+        List<string> topics = await dbService.GetTopicNamesByCourseIDAsnyc(courseId);
         string? courseName = await dbService.GetCourseNameByCourseIdAsync(courseId);
         LLM llm = new LLM(InstanceType.Quiz);
         string? history = null;
