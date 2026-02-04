@@ -4,6 +4,7 @@
 @rendermode InteractiveServer
 @inject DbService Db
 @inject NavigationManager NavManager
+@inject IJSRuntime JSRuntime
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -11,7 +12,15 @@
 
 <div class="dashboard-body">
     <!--Sidebar component-->
-    <Sidebar />
+    @if (user != null)
+    {
+        <Sidebar FName="@(user.FName ?? "")" LName="@(user.LName ?? "")" />
+    }
+    else
+    {
+        <!--Pass Study Cat if user not found-->
+        <Sidebar FName="Study" LName="Cat" />
+    }
     
     <!--Main Content-->
     <div class="main-content">
@@ -95,3 +104,30 @@
         }
     }
 }   
+
+@code {
+    // User details - to be fetched from DB
+    private User? user;
+
+    // Checking if user is authenticated
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // 1. Check local storage for the UserID
+            var userId = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "UserId");
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                // 2. If no user found, boot them to login
+                NavManager.NavigateTo("/");
+            }
+            else
+            {
+                // 3. User is valid, fetch the user details and show the UI
+                user = await Db.GetUserByIdAsync(int.Parse(userId));
+                StateHasChanged(); // Force a re-render now that we have data
+            }
+        }
+    }
+}

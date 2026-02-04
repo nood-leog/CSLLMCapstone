@@ -1,4 +1,11 @@
-﻿<!--FName and LName input params-->
+﻿@using CSLLMCapstone.Models
+@using CSLLMCapstone.Services
+@rendermode InteractiveServer
+@inject DbService Db
+@inject NavigationManager NavManager
+@inject IJSRuntime JSRuntime
+
+<!--FName and LName input params-->
 @code {
     [Parameter] public string? FName { get; set; }
     [Parameter] public string? LName { get; set; }
@@ -9,9 +16,26 @@
 
     // Fallback if both are empty
     private string DisplayInitials => string.IsNullOrWhiteSpace(UserInitials) ? "SC" : UserInitials;
+
+    // Helper to map Enum types to FontAwesome icons
+    private string GetInstanceIcon(InstanceType type) => type switch
+    {
+        InstanceType.Tutor => "fa-chalkboard-teacher",
+        InstanceType.Flash => "fa-sticky-note",
+        InstanceType.Quiz => "fa-question-circle",
+        _ => "fa-history"
+    };
 }
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<!--Loading Screen-->
+@if (isLoading)
+{
+    <div class="loading-screen">
+        <p>Loading your instance history...</p>
+    </div>
+}
 
 <div>
     <!--Sidebar-->
@@ -30,37 +54,85 @@
                 </div>
             </div>
 
-            <!--HARDCODED - Instance History-->
+            <!--DYNAMIC - Instance History-->
             <div class="sidebar-instance-section">
                 <h4>Instance History</h4>
-                <a href="#tutorModal" class="sidebar-instance-item">
-                    <div class="sidebar-instance-icon">
-                        <i class="fas fa-chalkboard-teacher"></i>
-                    </div>
-                    <div class="sidebar-instance-info">
-                        <h5>Tutor Session</h5>
-                        <p>CS 111 - OOP</p>
-                    </div>
-                </a>
-                <a href="#flashcardsModal" class="sidebar-instance-item">
-                    <div class="sidebar-instance-icon">
-                        <i class="fas fa-sticky-note"></i>
-                    </div>
-                    <div class="sidebar-instance-info">
-                        <h5>Flashcards</h5>
-                        <p>Algorithms</p>
-                    </div>
-                </a>
-                <a href="#quizModal" class="sidebar-instance-item">
-                    <div class="sidebar-instance-icon">
-                        <i class="fas fa-question-circle"></i>
-                    </div>
-                    <div class="sidebar-instance-info">
-                        <h5>Quiz</h5>
-                        <p>Data Structures</p>
-                    </div>
-                </a>
+                @if (instances != null && instances.Any())
+                {
+                    @foreach (var instance in instances)
+                    {
+                        // NEED TO ADJUST ROUTING HERE
+                        <a class="sidebar-instance-item" @onclick='() => HandleInstanceClick(instance)'>
+                            <div class="sidebar-instance-icon">
+                                <i class="fas @GetInstanceIcon(instance.Type)"></i>
+                            </div>
+                            <div class="sidebar-instance-info">
+                                <h5>@instance.Type</h5>
+                                <p>@instance.InstanceId</p>
+                            </div>
+                        </a>
+                    }
+                }
+                else if (!isLoading)
+                {
+                    <p style="padding: 10px; font-size: 0.8rem; color: black;">No history found</p>
+                }
             </div>
         </div>
     </div>
 </div>
+
+@code {
+    // List of instances - to be fetched from DB
+    private List<Instance> instances = new List<Instance>();
+
+    // Loading state for dashboard
+    private bool isLoading = true;
+
+    // Checking if user is authenticated
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // 1. Check local storage for the UserID
+            var userId = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "UserId");
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                // 2. If no user found, boot them to login
+                NavManager.NavigateTo("/");
+            }
+            else
+            {
+                // 3. User is valid, fetch the instances show the UI
+                instances = await Db.GetUserHistoryAsync(int.Parse(userId));
+                isLoading = false;
+                StateHasChanged(); // Force a re-render now that we have data
+            }
+        }
+    }
+}
+
+<!--HandleInstanceClick Logic for the instance history-->
+@code {
+    private async Task HandleInstanceClick(Instance instance)
+    {
+        try
+        {
+            // Navigate to the appropriate route with the instance ID
+            string route = instance.Type switch
+            {
+                InstanceType.Quiz => $"/dashboard/quiz/{instance.InstanceId}",
+                InstanceType.Flash => $"/dashboard/flash/{instance.InstanceId}",
+                InstanceType.Tutor => $"/dashboard/tutor/{instance.InstanceId}",
+                _ => "/dashboard"
+            };
+
+            NavManager.NavigateTo(route);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error creating instance: {ex.Message}");
+        }
+    }
+}
