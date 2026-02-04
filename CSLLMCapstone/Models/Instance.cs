@@ -14,6 +14,9 @@ namespace CSLLMCapstone.Models
     public class Instance
     {
 
+        // LLM is not mapped to the database, it's only used in memory
+        // This is easier to make a LLM service methods because the instance type is already known when user creates an instance
+        // So we can just create the LLM object on the fly when needed
         [NotMapped]
         public LLM? llm { get; set; }
 

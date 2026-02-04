@@ -132,9 +132,6 @@
             // Store user info in session
             UserSession.SetUser(user.UserId, user.CwuEmail, $"{user.FName} {user.LName}");
 
-            // Store UserId in local storage
-            await JSRuntime.InvokeVoidAsync("localStorage.setItem", "UserId", user.UserId.ToString());
-
             // Redirect to dashboard
             NavManager.NavigateTo("/dashboard");
         }

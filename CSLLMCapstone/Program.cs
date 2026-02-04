@@ -1,8 +1,20 @@
 using CSLLMCapstone.Components;
 using CSLLMCapstone.Data;
+using CSLLMCapstone.Models;
 using CSLLMCapstone.Services;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Components.Server.Circuits; // <-- Add this using directive
+
+
+/*
+Dearest group members, 
+
+Please be extra careful with this file.
+
+Thanks!
+ 
+ */
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,16 +22,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-// Register DbContext factory
 builder.Services.AddDbContextFactory<StudyContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Register DbService as scoped
 builder.Services.AddScoped<DbService>();
-
-// Register UserSessionService as a Circuit Handler (keeps state per user connection)
+builder.Services.AddScoped<LLMService>();   
 builder.Services.AddScoped<UserSessionService>();
-builder.Services.AddScoped<CircuitHandler>(sp => sp.GetRequiredService<UserSessionService>());
 
 var app = builder.Build();
 
@@ -27,9 +35,10 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
+    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-
+app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
 app.UseHttpsRedirection();
 
 app.UseAntiforgery();

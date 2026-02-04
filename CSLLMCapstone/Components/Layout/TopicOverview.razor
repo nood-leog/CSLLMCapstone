@@ -1,13 +1,10 @@
 @using CSLLMCapstone.Models
 @using CSLLMCapstone.Services
-@inject DbService Db
-@inject NavigationManager NavManager
-@inject UserSessionService UserSession
 
-<!--Topic, CourseID, and OnClose input params-->
+<!--TopicName, CourseID, and OnClose input params-->
 @code {
     [Parameter] public Topic? Topic { get; set; }
-    [Parameter] public int CourseID { get; set; }
+    [Parameter] public int? CourseID { get; set; }
     [Parameter] public EventCallback OnClose { get; set; }
 }
 
@@ -54,13 +51,22 @@
                 <div class="topic-title-section">
                     <div class="topic-title-icon">CS</div>
                     <div class="topic-title-text">
-                        <h2>@CourseID / @(Topic?.Name ?? "Unknown")</h2>
+                        <h2>@CourseID/@(Topic?.Name ?? "Loading Topic...")</h2>
                     </div>
                 </div>
-
+                <!--Dynamic topic description-->
                 <div class="topic-description">
                     <h3>Topic Description</h3>
-                    <p>@(Topic?.TopicDesc ?? "No description available.")</p>
+                    <p>
+                        @if (Topic != null && !string.IsNullOrWhiteSpace(Topic.TopicDesc))
+                        {
+                            @Topic.TopicDesc
+                        }
+                        else
+                        {
+                            <span class="text-muted italic">No description available for this topic.</span>
+                        }
+                    </p>
                 </div>
             </div>
         </div>
@@ -85,7 +91,7 @@
             {
                 UserId = UserSession.UserId!.Value,
                 Type = type,
-                Data = $"{{\"courseId\":{CourseID},\"topicId\":{Topic?.TopicId},\"topicName\":\"{Topic?.Name}\"}}"
+                Data = $"{{\"courseId\":\"{CourseID}\",\"topicName\":\"{TopicName}\"}}" // Store course and topic info
             };
 
             // Save to database

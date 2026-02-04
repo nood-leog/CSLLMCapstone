@@ -1,8 +1,6 @@
-﻿using Microsoft.AspNetCore.Components.Server.Circuits;
-
-namespace CSLLMCapstone.Services
+﻿namespace CSLLMCapstone.Services
 {
-    public class UserSessionService : CircuitHandler
+    public class UserSessionService
     {
         public int? UserId { get; set; }
         public string? UserEmail { get; set; }
@@ -22,19 +20,6 @@ namespace CSLLMCapstone.Services
             UserId = null;
             UserEmail = null;
             UserName = null;
-        }
-
-        public override Task OnCircuitOpenedAsync(Circuit circuit, CancellationToken cancellationToken)
-        {
-            // Circuit opened - initialize if needed
-            return base.OnCircuitOpenedAsync(circuit, cancellationToken);
-        }
-
-        public override Task OnCircuitClosedAsync(Circuit circuit, CancellationToken cancellationToken)
-        {
-            // Circuit closed - cleanup if needed
-            ClearUser();
-            return base.OnCircuitClosedAsync(circuit, cancellationToken);
         }
     }
 }
