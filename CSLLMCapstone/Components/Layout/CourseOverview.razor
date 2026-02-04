@@ -1,16 +1,29 @@
-﻿@using Microsoft.JSInterop
+@using CSLLMCapstone.Models 
 @using CSLLMCapstone.Services
-@using CSLLMCapstone.Models
+@inject DbService Db
 @inject IJSRuntime JSRuntime
 @inject DbService Db
 @inject NavigationManager NavManager
 @inject UserSessionService UserSession
 
-<!--CourseID, CourseTitle, and OnClose input params-->
+<!--CourseID, CourseTitle, CourseDesc, and OnClose input params-->
 @code {
-    [Parameter] public string? CourseID { get; set; }
+    [Parameter] public int CourseID { get; set; }
     [Parameter] public string? CourseTitle { get; set; }
+    [Parameter] public string? CourseDesc { get; set; }
     [Parameter] public EventCallback OnClose { get; set; }
+
+    // List of topics for the selected course
+    private List<Topic> topics = new();
+    private bool isLoading = true;
+
+    // Fetch topics on component initialization
+    protected override async Task OnInitializedAsync()
+    {
+        isLoading = true;
+        topics = await Db.GetTopicsByCourseIDAsync(CourseID);
+        isLoading = false;
+    }
 }
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -63,24 +76,32 @@
 
                 <div class="course-description">
                     <h3>Course Description</h3>
-                    <p>
-                        Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.
-                    </p>
+                    <p>@CourseDesc</p>
                 </div>
             </div>
 
-            <!--Topics Section-->
+            <!--Dynamic Topics Section-->
             <div class="topics-section">
                 <h3>Topics</h3>
                 <div>
-                    <a class="topic-row" @onclick='() => HandleTopicClick("Object-Oriented Programming")'>
-                        <div class="topic-name">Object-Oriented Programming - Lorem ipsum dolor sit amet consectetur...</div>
-                        <div class="topic-arrow"><i class="fas fa-chevron-right"></i></div>
-                    </a>
-                    <a class="topic-row" @onclick='() => HandleTopicClick("Binary Trees")'>
-                        <div class="topic-name">Binary Trees - Quisque faucibus ex sapien vitae pellentesque...</div>
-                        <div class="topic-arrow"><i class="fas fa-chevron-right"></i></div>
-                    </a>
+                    @if (isLoading)
+                    {
+                        <p>Loading topics...</p>
+                    }
+                    else if (topics == null || !topics.Any())
+                    {
+                        <p>No topics found for this course.</p>
+                    }
+                    else
+                    {
+                        @foreach (var topic in topics)
+                        {
+                            <a class="topic-row" @onclick='() => HandleTopicClick(topic)'>
+                                <div class="topic-name">@topic.Name</div>
+                                <div class="topic-arrow"><i class="fas fa-chevron-right"></i></div>
+                            </a>
+                        }
+                    }
                 </div>
             </div>
         </div>
@@ -89,19 +110,20 @@
     <!--Display Topic Overview if topic is clicked-->
     @if (isTopicClicked)
     {
-        <TopicOverview TopicName="@topicName" CourseID="@CourseID" OnClose="() => isTopicClicked = false" />
+        <TopicOverview Topic="@topic" CourseID="@CourseID" OnClose="() => isTopicClicked = false" />
     }
 </div>
 
 <!--HandleTopicClick Logic-->
 @code {
     private bool isTopicClicked = false;
-    private string? topicName;
+    // topicName to hold clicked topic name
+    private Topic? topic;
 
-    private void HandleTopicClick(string selectedTopicName)
+    private void HandleTopicClick(Topic selectedTopic)
     {
-        isTopicClicked = true;
-        topicName = selectedTopicName;
+        isTopicClicked = true; // flip flag
+        topic = selectedTopic; // set topic
     }
 }
 

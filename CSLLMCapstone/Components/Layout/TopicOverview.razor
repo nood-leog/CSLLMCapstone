@@ -1,13 +1,10 @@
-﻿@using CSLLMCapstone.Services
 @using CSLLMCapstone.Models
-@inject DbService Db
-@inject NavigationManager NavManager
-@inject UserSessionService UserSession
+@using CSLLMCapstone.Services
 
 <!--TopicName, CourseID, and OnClose input params-->
 @code {
-    [Parameter] public string? TopicName { get; set; }
-    [Parameter] public string? CourseID { get; set; }
+    [Parameter] public Topic? Topic { get; set; }
+    [Parameter] public int? CourseID { get; set; }
     [Parameter] public EventCallback OnClose { get; set; }
 }
 
@@ -54,14 +51,21 @@
                 <div class="topic-title-section">
                     <div class="topic-title-icon">CS</div>
                     <div class="topic-title-text">
-                        <h2>@CourseID/@TopicName</h2>
+                        <h2>@CourseID/@(Topic?.Name ?? "Loading Topic...")</h2>
                     </div>
                 </div>
-
+                <!--Dynamic topic description-->
                 <div class="topic-description">
                     <h3>Topic Description</h3>
                     <p>
-                        Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.
+                        @if (Topic != null && !string.IsNullOrWhiteSpace(Topic.TopicDesc))
+                        {
+                            @Topic.TopicDesc
+                        }
+                        else
+                        {
+                            <span class="text-muted italic">No description available for this topic.</span>
+                        }
                     </p>
                 </div>
             </div>
