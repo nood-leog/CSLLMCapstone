@@ -49,33 +49,34 @@
                 </div>
             </div>
 
-            <!--Major input-->
-            <div class="signup-form-group">
-                <label class="signup-label" for="major">Major</label>
-                <div class="signup-input-with-icon">
-                    <i class="fas fa-graduation-cap"></i>
-                    <InputSelect @bind-Value="newUser.Major" id="major" class="signup-input" placeholder="Computer Science" required>
-                        <option value="">-- Select Major --</option>
-                        @foreach (var m in MajorOptions)
-                        {
-                            <option value="@m">@m</option>
-                        }
-                    </InputSelect>
+            <div class="signup-name-fields">
+                <!--Major input-->
+                <div class="signup-form-group">
+                    <label class="signup-label" for="major">Major</label>
+                    <div class="signup-input-with-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                        <InputSelect @bind-Value="newUser.Major" id="major" class="signup-input" placeholder="Computer Science" required>
+                            <option value="">Select Major</option>
+                            @foreach (var m in MajorOptions)
+                            {
+                                <option value="@m">@m</option>
+                            }
+                        </InputSelect>
+                    </div>
                 </div>
-            </div>
-
-            <!--Minor input-->
-            <div class="signup-form-group">
-                <label class="signup-label" for="minor">Minor</label>
-                <div class="signup-input-with-icon">
-                    <i class="fas fa-graduation-cap"></i>
-                    <InputSelect @bind-Value="newUser.Minor" id="minor" class="signup-input" placeholder="Applied Computer Science" >
-                        <option value="">-- Select Minor --</option>
-                        @foreach (var m in MinorOptions)
-                        {
-                            <option value="@m">@m</option>
-                        }
-                    </InputSelect>
+                <!--Minor input-->
+                <div class="signup-form-group">
+                    <label class="signup-label" for="minor">Minor</label>
+                    <div class="signup-input-with-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                        <InputSelect @bind-Value="newUser.Minor" id="minor" class="signup-input" placeholder="Applied Computer Science" >
+                            <option value="">Select Minor</option>
+                            @foreach (var m in MinorOptions)
+                            {
+                                <option value="@m">@m</option>
+                            }
+                        </InputSelect>
+                    </div>
                 </div>
             </div>
 
