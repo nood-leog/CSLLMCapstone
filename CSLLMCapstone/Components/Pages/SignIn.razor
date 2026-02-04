@@ -57,7 +57,16 @@
             </div>
 
             <!--Sign In button-->
-            <button type="submit" class="login-btn">Sign In</button>
+            <button type="submit" class="login-btn" disabled="@isLoggingIn">
+                @if (isLoggingIn)
+                {
+                    <text>Signing in...</text>
+                }
+                else
+                {
+                    <text>Sign In</text>
+                }
+            </button>
         </EditForm>
 
         <!--Create Account link-->
@@ -76,44 +85,48 @@
     // Store the input validation error message
     private string errorMessage = "";
 
+    // Managing logging in state
+    private bool isLoggingIn = false;
+
     // Handle the sign in process
     private async Task HandleSignIn()
     {
         // Reset error message
         errorMessage = "";
+        isLoggingIn = true;
 
-        // Input validation here...
-        if (string.IsNullOrEmpty(cwuEmail) || !cwuEmail.ToLower().EndsWith("@cwu.edu") || cwuEmail.Length > 100)
-        {
-            errorMessage = "You must use a valid CWU email ending in @cwu.edu.";
-            return;
-        }
-
-        var hasUpper = new Regex(@"[A-Z]+");
-        var hasSpecial = new Regex(@"[!@#$%^&*()_+=\[{\]};:<>|./?,-]+");
-
-        if (string.IsNullOrEmpty(password) || password.Length < 7)
-        {
-            errorMessage = "Password must be at least 7 characters long.";
-            return;
-        }
-        else if (!hasUpper.IsMatch(password))
-        {
-            errorMessage = "Password must contain at least one capital letter.";
-            return;
-        }
-        else if (!hasSpecial.IsMatch(password))
-        {
-            errorMessage = "Password must contain at least one special character.";
-            return;
-        }
-
-        // Attempt to sign in the user
         try
         {
+            // Input validation here...
+            if (string.IsNullOrEmpty(cwuEmail) || !cwuEmail.ToLower().EndsWith("@cwu.edu") || cwuEmail.Length > 100)
+            {
+                errorMessage = "You must use a valid CWU email ending in @cwu.edu.";
+                return;
+            }
+
+            var hasUpper = new Regex(@"[A-Z]+");
+            var hasSpecial = new Regex(@"[!@#$%^&*()_+=\[{\]};:<>|./?,-]+");
+
+            if (string.IsNullOrEmpty(password) || password.Length < 7)
+            {
+                errorMessage = "Password must be at least 7 characters long.";
+                return;
+            }
+            else if (!hasUpper.IsMatch(password))
+            {
+                errorMessage = "Password must contain at least one capital letter.";
+                return;
+            }
+            else if (!hasSpecial.IsMatch(password))
+            {
+                errorMessage = "Password must contain at least one special character.";
+                return;
+            }
+
+            // Attempt to sign in the user
             // First check if cwu email exists
             bool isTaken = await Db.IsEmailRegisteredAsync(cwuEmail);
-
+                
             if (!isTaken)
             {
                 errorMessage = "This email is not registered. Please try creating an account.";
@@ -132,13 +145,19 @@
             // Store user info in session
             UserSession.SetUser(user.UserId, user.CwuEmail, $"{user.FName} {user.LName}");
 
+            // Small delay to ensure session is set
+            await Task.Delay(100);
+
             // Redirect to dashboard
-            NavManager.NavigateTo("/dashboard");
+            NavManager.NavigateTo("/dashboard", forceLoad: true);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            errorMessage = "An error occurred while signing in. Please try again later.";
-            return;
+            errorMessage = $"An error occurred: {ex.Message}";
+        }
+        finally
+        {
+            isLoggingIn = false;
         }
     }
 }

@@ -1,10 +1,12 @@
-﻿namespace CSLLMCapstone.Services
+﻿using Microsoft.AspNetCore.Components.Server.Circuits;
+
+namespace CSLLMCapstone.Services
 {
-    public class UserSessionService
+    public class UserSessionService : CircuitHandler
     {
-        public int? UserId { get; set; }
-        public string? UserEmail { get; set; }
-        public string? UserName { get; set; }
+        public int? UserId { get; private set; }
+        public string? UserEmail { get; private set; }
+        public string? UserName { get; private set; }
 
         public bool IsLoggedIn => UserId.HasValue;
 
@@ -20,6 +22,19 @@
             UserId = null;
             UserEmail = null;
             UserName = null;
+        }
+
+        public override Task OnCircuitOpenedAsync(Circuit circuit, CancellationToken cancellationToken)
+        {
+            // Circuit opened
+            return base.OnCircuitOpenedAsync(circuit, cancellationToken);
+        }
+
+        public override Task OnCircuitClosedAsync(Circuit circuit, CancellationToken cancellationToken)
+        {
+            // Circuit closed - cleanup
+            ClearUser();
+            return base.OnCircuitClosedAsync(circuit, cancellationToken);
         }
     }
 }
