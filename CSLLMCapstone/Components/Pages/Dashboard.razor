@@ -1,24 +1,36 @@
 ﻿@page "/dashboard"
-@rendermode InteractiveServer
-@using CSLLMCapstone.Services
 @using CSLLMCapstone.Models
+@using CSLLMCapstone.Services
+@rendermode InteractiveServer
 @inject DbService Db
-@inject UserSessionService UserSession
 @inject NavigationManager NavManager
+@inject IJSRuntime JSRuntime
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <PageTitle>CS Study Cat - Dashboard</PageTitle>
 
-@if (!UserSession.IsLoggedIn)
+<!--Loading Screen-->
+@if (isLoading)
 {
-    <div>Redirecting to login...</div>
+    <div class="loading-screen">
+        <p>Loading your study space...</p>
+    </div>
 }
 else
 {
+    <!--Dasboard only displayed if user is authenticated-->
     <div class="dashboard-body">
         <!--Sidebar component-->
-        <Sidebar />
+        @if (user != null)
+        {
+            <Sidebar FName="@(user.FName ?? "")" LName="@(user.LName ?? "")" />
+        }
+        else
+        {
+            <!--Pass Study Cat if user not found-->
+            <Sidebar FName="Study" LName="Cat" />
+        }
         <!--Main Content-->
         <div class="main-content">
             <!--Top Bar-->
@@ -30,6 +42,7 @@ else
                 <div class="page-title">
                     <h2>Courses Dashboard</h2>
                 </div>
+
             </div>
 
             <!--Courses Container-->
@@ -39,24 +52,21 @@ else
                     <p>Click on a course to view details and study materials</p>
                 </div>
 
-                <!--Dynamic Courses Grid-->
+                <!--Dynamic logic for displaying course modals-->
                 <div class="courses-grid">
-                    @if (isLoading)
+                    @if (courses == null || !courses.Any())
                     {
                         <p>Loading courses...</p>
-                    }
-                    else if (courses == null || !courses.Any())
-                    {
-                        <p>No courses found.</p>
                     }
                     else
                     {
                         @foreach (var course in courses)
                         {
-                            <div class="course-card" @onclick='() => HandleCourseClick(course.CourseId, course.Title, course.CourseDesc)'>
+                            <!--Course Card-->
+                            <div class="course-card" @onclick="() => HandleCourseClick(course)">
                                 <div class="course-content">
-                                    <div class="course-number">@course.Title</div>
-                                    <div class="course-name">@course.CourseDesc</div>
+                                    <div class="course-number">@course.CourseId</div>
+                                    <div class="course-name">@course.Title</div>
                                 </div>
                                 <div class="course-footer">
                                     <div class="course-action">View Details</div>
@@ -73,41 +83,63 @@ else
         </div>
 
         <!--Display Course Overview if course is clicked-->
-        @if (isCourseClicked)
+        @if (isCourseClicked && selectedCourse != null)
         {
-            <CourseOverview CourseID="@courseID" CourseTitle="@courseTitle" CourseDesc="@courseDesc" OnClose="() => isCourseClicked = false"/>
+            <CourseOverview 
+                CourseID="@selectedCourse.CourseId"
+                CourseTitle="@selectedCourse.Title"
+                CourseDesc="@selectedCourse.CourseDesc"
+                OnClose="() => isCourseClicked = false"
+            />
         }
     </div>
 }
 
+<!--HandleCourseClick Logic - Set flag to true when course clicked and false if not-->
+<!--Fetch course data on component mount-->
 @code {
-    private bool isCourseClicked = false;
-    private int courseID;
-    private string? courseTitle;
-    private string? courseDesc;
+    // List of courses - to be fetched from DB
+    private List<Course> courses = new List<Course>();
 
-    private List<Course> courses = new();
+    // User details - to be fetched from DB
+    private User? user;
+
+    // isCourseClicked flag
+    private bool isCourseClicked = false;
+
+    // The selected course
+    private Course? selectedCourse;
+
+    // Loading state for dashboard
     private bool isLoading = true;
 
-    protected override async Task OnInitializedAsync()
+    // Checking if user is authenticated
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        // Check if user is logged in, if not redirect to login
-        if (!UserSession.IsLoggedIn)
+        if (firstRender)
         {
-            NavManager.NavigateTo("/", replace: true);
-            return;
-        }
+            // 1. Check local storage for the UserID
+            var userId = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "UserId");
 
-        isLoading = true;
-        courses = await Db.GetAllCoursesAsync();
-        isLoading = false;
+            if (string.IsNullOrEmpty(userId))
+            {
+                // 2. If no user found, boot them to login
+                NavManager.NavigateTo("/");
+            }
+            else
+            {
+                // 3. User is valid, fetch the courses & user details and show the UI
+                courses = await Db.GetAllCoursesAsync();
+                user = await Db.GetUserByIdAsync(int.Parse(userId));
+                isLoading = false;
+                StateHasChanged(); // Force a re-render now that we have data
+            }
+        }
     }
 
-    private void HandleCourseClick(int selectedCourseID, string selectedCourseTitle, string selectedCourseDesc)
+    private void HandleCourseClick(Course course)
     {
-        isCourseClicked = true;
-        courseID = selectedCourseID;
-        courseTitle = selectedCourseTitle;
-        courseDesc = selectedCourseDesc;
+        selectedCourse = course; // set selected course
+        isCourseClicked = true; //  flip flag
     }
 }

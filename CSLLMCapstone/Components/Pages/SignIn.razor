@@ -143,7 +143,10 @@
             }
 
             // Store user info in session
-            UserSession.SetUser(user.UserId, user.CwuEmail, $"{user.FName} {user.LName}");
+            // UserSession.SetUser(user.UserId, user.CwuEmail, $"{user.FName} {user.LName}");
+
+            // Save UserId to local storage upon successful sign in
+            await JSRuntime.InvokeVoidAsync("localStorage.setItem", "UserId", user.UserId.ToString());
 
             // Small delay to ensure session is set
             await Task.Delay(100);
@@ -158,6 +161,18 @@
         finally
         {
             isLoggingIn = false;
+        }
+    }
+}
+
+<!--Clear UserId from local storage on component start-->
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // This ensures the code only runs once, and only on the client-side browser
+            await JSRuntime.InvokeVoidAsync("localStorage.removeItem", "UserId");
         }
     }
 }

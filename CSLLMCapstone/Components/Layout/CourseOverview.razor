@@ -1,6 +1,5 @@
 @using CSLLMCapstone.Models 
 @using CSLLMCapstone.Services
-@inject DbService Db
 @inject IJSRuntime JSRuntime
 @inject DbService Db
 @inject NavigationManager NavManager
@@ -132,19 +131,19 @@
     private async Task HandleInstanceClick(InstanceType type)
     {
         // Check if user is logged in
-        if (!UserSession.IsLoggedIn)
-        {
-            Console.WriteLine("User not logged in");
-            NavManager.NavigateTo("/");
-            return;
-        }
+        // if (!UserSession.IsLoggedIn)
+        // {
+        //     Console.WriteLine("User not logged in");
+        //     NavManager.NavigateTo("/");
+        //     return;
+        // }
 
         try
         {
             // Create new instance
             var newInstance = new Instance
             {
-                UserId = UserSession.UserId!.Value,
+                UserId = int.Parse(await JSRuntime.InvokeAsync<string>("localStorage.getItem", "UserId")),
                 Type = type,
                 Data = "{}" // Initialize with empty JSON
             };

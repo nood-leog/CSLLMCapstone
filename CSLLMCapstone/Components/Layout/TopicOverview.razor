@@ -1,5 +1,6 @@
 @using CSLLMCapstone.Models 
 @using CSLLMCapstone.Services
+@inject IJSRuntime JSRuntime
 @inject DbService Db
 @inject NavigationManager NavManager
 @inject UserSessionService UserSession
@@ -71,19 +72,19 @@
     private async Task HandleInstanceClick(InstanceType type)
     {
         // Check if user is logged in
-        if (!UserSession.IsLoggedIn)
-        {
-            Console.WriteLine("User not logged in");
-            NavManager.NavigateTo("/");
-            return;
-        }
+        // if (!UserSession.IsLoggedIn)
+        // {
+        //     Console.WriteLine("User not logged in");
+        //     NavManager.NavigateTo("/");
+        //     return;
+        // }
 
         try
         {
             // Create new instance with topic information
             var newInstance = new Instance
             {
-                UserId = UserSession.UserId!.Value,
+                UserId = int.Parse(await JSRuntime.InvokeAsync<string>("localStorage.getItem", "UserId")),
                 Type = type,
                 Data = $"{{\"courseId\":{CourseID},\"topicId\":{Topic?.TopicId},\"topicName\":\"{Topic?.Name}\"}}"
             };

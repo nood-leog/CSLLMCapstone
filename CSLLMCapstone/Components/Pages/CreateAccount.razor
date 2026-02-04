@@ -247,3 +247,11 @@
         }
     }
 }
+
+<!--Set Graduation Date to 2026 on component start-->
+@code {
+    protected override void OnInitialized()
+    {
+        newUser.GraduationDate = 2026;
+    }
+}
