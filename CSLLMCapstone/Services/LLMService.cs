@@ -33,6 +33,7 @@ namespace CSLLMCapstone.Services
         public string questionText { get; set; } = "";
         public List<string> options { get; set; } = new List<string>();
         public string answer { get; set; } = "";
+        // add explanation
     }
 
     public class LLMService

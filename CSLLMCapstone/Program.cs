@@ -16,6 +16,7 @@ builder.Services.AddDbContextFactory<StudyContext>(options =>
 
 // Register DbService as scoped
 builder.Services.AddScoped<DbService>();
+builder.Services.AddScoped<LLMService>();
 
 // Register UserSessionService as both a service AND a CircuitHandler
 builder.Services.AddScoped<UserSessionService>();

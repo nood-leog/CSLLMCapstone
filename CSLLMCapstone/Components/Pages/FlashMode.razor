@@ -1,10 +1,13 @@
-﻿@page "/dashboard/flash/{instanceId}"
+﻿@page "/dashboard/flash/{instanceId}/{CourseID:int}"
 @using CSLLMCapstone.Services
 @using CSLLMCapstone.Models
+@using System.Text.Json
 @rendermode InteractiveServer
 @inject DbService Db
 @inject NavigationManager NavManager
 @inject IJSRuntime JSRuntime
+@inject LLMService LlmService
+
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -37,7 +40,77 @@
                     <span class="instance-id-badge">Instance: @InstanceId</span>
                 }
             </div>
-            
+
+            <a href="/dashboard" class="close-modal">&times;</a>
+        </div>
+            @if (isLoading)
+            {
+                <p>Loading flashcards...</p>
+            }
+            else if (flashcards.Count == 0)
+            {
+                <p>No flashcards generated.</p>
+            }
+            else
+            {
+                <!--Flashcards Content-->
+                <div class="study-session-body">
+                    <div class="flashcards-container">
+                        <div class="flash-header">
+                            <div class="flashcards-title">
+                               @courseTitle Flashcards
+                            </div>
+                        </div>
+
+                        <div class="flashcard-main-area">
+                            <!--Flip Toggle-->
+                            <input type="checkbox" id="flashcard-toggle" @bind="isFlipped"
+                                style="display:none"/>
+                            <!--Flashcard-->
+                            <label for="flashcard-toggle" class="flashcard">
+                                <div class="flashcard-inner">
+                                    <!--Front-->
+                                    <div class="flashcard-front">
+                                        <div class="flashcard-label">Term</div>
+                                        <div class="flashcard-content">
+                                            @flashcards[currentIndex].Item1
+                                        </div>
+                                    </div>
+                                    <!--Back-->
+                                    <div class="flashcard-back">
+                                        <div class="flashcard-label back">Definition</div>
+                                        <div class="flashcard-content">
+                                            @flashcards[currentIndex].Item2
+                                        </div>
+                                    </div>
+                                </div>
+                            </label>
+
+                            <!--Controls-->
+                            <div class="flashcard-controls">
+                                <button class="flashcard-nav-button" @onclick="PrevCard" 
+                                    disabled="@(currentIndex == 0)">
+                                    <i class="fas fa-chevron-left"></i>
+                                </button>
+
+                                <label for="flashcard-toggle" class="flashcard-flip-button">
+                                    Flip Card
+                                </label>
+
+                                <button class="flashcard-nav-button" @onclick="NextCard"
+                                    disabled="@(currentIndex == flashcards.Count -1)">
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </div>
+                            <div class="flashcard-counter">
+                                Card <span>@(currentIndex + 1)</span> of
+                                <span>@flashcards.Count</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>   
+            }
+@*
             <a href="/dashboard" class="close-modal">&times;</a>
         </div>
 
@@ -101,19 +174,32 @@
                     </div>
                 </div>
             </div>
+*@
         </div>
-
         <!--Footer-->
         <div class="footer">
         </div>
-    </div>
 </div>
 
 @code {
     [Parameter]
     public string? InstanceId { get; set; }
+    [Parameter]
+    public int CourseId { get; set; }
+
+    private Instance? instance;
 
     private bool isFlipped = false;
+    private bool isLoading = true;
+    private string courseTitle = "";
+    private string courseDesc = "";
+    private List<string> topicStrings = new();
+
+    private List<Tuple<string, string>> flashcards = new();
+    private int currentIndex = 0;
+
+    private Tuple<string, string>? CurrentCard => flashcards.Count > 0 ? flashcards[currentIndex] : null;
+
 
     private void ToggleFlashcard()
     {
@@ -123,12 +209,70 @@
     protected override async Task OnInitializedAsync()
     {
         // Load instance data here if needed
-        if (!string.IsNullOrEmpty(InstanceId))
+        if (string.IsNullOrEmpty(InstanceId))
         {
-            // TODO: Load flashcard data based on InstanceId from database
-            Console.WriteLine($"Flashcard instance loaded: {InstanceId}");
+            NavManager.NavigateTo("/dashboard");
+            return;
+        }
+
+        if (CourseId <= 0)
+        {
+            NavManager.NavigateTo("/dashboard");
+            return;
+        }
+
+        instance = await Db.GetInstanceByIdAsync(InstanceId);
+
+        if (instance == null || instance.Type != InstanceType.Flash)
+        {
+            NavManager.NavigateTo("/dashboard");
+            return;
+        }
+
+        // Load course data
+        courseTitle = await Db.GetCourseNameByCourseIdAsync(CourseId) ?? "";
+        courseDesc = await Db.GetCourseDescriptionByCourseIdAsync(CourseId) ?? "";
+        topicStrings = await Db.GetTopicNamesByCourseIDAsnyc(CourseId);
+
+        if (string.IsNullOrWhiteSpace(courseTitle))
+        {
+            NavManager.NavigateTo("/dashboard");
+            return;
+        }
+
+        // Get the topic list for the courses
+        string historyJson = instance.Data; // no deserialization
+
+        var llm = new LLM(InstanceType.Flash);
+
+        flashcards = await LlmService.GenerateFlashCardDataListAsync(llm, courseTitle, courseDesc,
+            topicStrings, historyJson);
+
+        //Save history
+        await Db.UpdateInstanceDataAsync(instance.InstanceId, JsonSerializer.Serialize(flashcards));
+
+        isLoading = false;
+    }
+
+    private void NextCard()
+    {
+        if (currentIndex < flashcards.Count - 1)
+        {
+            currentIndex++;
+            isFlipped = false;
         }
     }
+
+    private void PrevCard()
+    {
+        if (currentIndex > 0)
+        {
+            currentIndex--;
+            isFlipped = false;
+        }
+    }
+
+
 }
 
 @code {

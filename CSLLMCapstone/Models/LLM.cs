@@ -23,7 +23,7 @@ namespace CSLLMCapstone.Models
 
             string initialPrompt = initialPromptBuilder(type);
 
-            client = new Client();
+            client = new Client(apiKey: "AIzaSyA-Hoge0fhkJz8NMbQMOLS3RZuQY7DUPa8");
 
             initialModelConfig = new GenerateContentConfig
             {

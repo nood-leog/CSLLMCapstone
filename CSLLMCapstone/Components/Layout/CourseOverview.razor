@@ -138,6 +138,14 @@
         //     return;
         // }
 
+        // Check CourseId number
+        if (CourseID <= 0)
+        {
+            Console.WriteLine("Invalid CourseID");
+            return;
+        }
+
+
         try
         {
             // Create new instance
@@ -155,7 +163,7 @@
             string route = type switch
             {
                 InstanceType.Quiz => $"/dashboard/quiz/{newInstance.InstanceId}",
-                InstanceType.Flash => $"/dashboard/flash/{newInstance.InstanceId}",
+                InstanceType.Flash => $"/dashboard/flash/{newInstance.InstanceId}/{CourseID}",
                 InstanceType.Tutor => $"/dashboard/tutor/{newInstance.InstanceId}",
                 _ => "/dashboard"
             };

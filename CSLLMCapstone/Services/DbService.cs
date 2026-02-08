@@ -119,6 +119,14 @@ namespace CSLLMCapstone.Services
             return await context.Courses.Where(t => t.CourseId == courseId).Select(t => t.Title).FirstOrDefaultAsync();
         }
 
+        public async Task<Course?> GetCourseByIdAsync(int courseId)
+        {
+            using var context = _contextFactory.CreateDbContext();
+            return await context.Courses
+                .Include(c => c.Topics)
+                .FirstOrDefaultAsync(c => c.CourseId == courseId);
+        }
+
         public async Task<string?> GetCourseDescriptionByCourseIdAsync(int courseId)
         {
             using var context = _contextFactory.CreateDbContext();
@@ -167,6 +175,19 @@ namespace CSLLMCapstone.Services
                 .Where(i => i.UserId == userId)
                 .OrderByDescending(i => i.InstanceId)
                 .ToListAsync();
+        }
+
+        public async Task UpdateInstanceDataAsync(string instanceId, string data)
+        {
+            using var context = _contextFactory.CreateDbContext();
+
+            var instance = await context.Instances.FirstOrDefaultAsync(i => i.InstanceId == instanceId);
+
+            if(instance != null)
+            {
+                instance.Data = data;
+                await context.SaveChangesAsync();
+            }
         }
     }
 }
