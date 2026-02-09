@@ -182,12 +182,22 @@
 </div>
 
 @code {
+
+    // Store the clicked on topic for courseOverview
+    private class InstanceTopInfo
+    {
+        public int courseId { get; set; }
+        public int? topicId { get; set; }
+        public string? topicName { get; set; }
+    }
+
     [Parameter]
     public string? InstanceId { get; set; }
     [Parameter]
     public int CourseId { get; set; }
 
     private Instance? instance;
+    private InstanceTopInfo? insTopInfo;
 
     private bool isFlipped = false;
     private bool isLoading = true;
@@ -229,10 +239,30 @@
             return;
         }
 
+        // try to read the topic payload that is stored
+        try
+        {
+            insTopInfo = JsonSerializer.Deserialize<InstanceTopInfo>(instance.Data,
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        }
+        catch
+        {
+            insTopInfo = null;
+        }
+
         // Load course data
         courseTitle = await Db.GetCourseNameByCourseIdAsync(CourseId) ?? "";
         courseDesc = await Db.GetCourseDescriptionByCourseIdAsync(CourseId) ?? "";
-        topicStrings = await Db.GetTopicNamesByCourseIDAsnyc(CourseId);
+
+        //Check wether topic or course overview was clicked
+        if (!string.IsNullOrWhiteSpace(insTopInfo?.topicName))
+        {
+            topicStrings = new List<string> { insTopInfo!.topicName! };
+        }
+        else
+        {
+            topicStrings = await Db.GetTopicNamesByCourseIDAsnyc(CourseId);
+        }
 
         if (string.IsNullOrWhiteSpace(courseTitle))
         {

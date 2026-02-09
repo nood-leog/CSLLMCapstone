@@ -1,5 +1,6 @@
 @using CSLLMCapstone.Models 
 @using CSLLMCapstone.Services
+@using System.Text.Json
 @inject IJSRuntime JSRuntime
 @inject DbService Db
 @inject NavigationManager NavManager
@@ -79,6 +80,15 @@
         //     return;
         // }
 
+        // Load inforation to store a topic if clicked
+        var topInfo = new
+        {
+            courseId = CourseID,
+            topicId = Topic?.TopicId,
+            topicName = Topic?.Name
+
+        };
+
         try
         {
             // Create new instance with topic information
@@ -86,8 +96,10 @@
             {
                 UserId = int.Parse(await JSRuntime.InvokeAsync<string>("localStorage.getItem", "UserId")),
                 Type = type,
-                Data = $"{{\"courseId\":{CourseID},\"topicId\":{Topic?.TopicId},\"topicName\":\"{Topic?.Name}\"}}"
+                Data = JsonSerializer.Serialize(topInfo)
+                //Data = $"{{\"courseId\":{CourseID},\"topicId\":{Topic?.TopicId},\"topicName\":\"{Topic?.Name}\"}}"
             };
+
 
             // Save to database
             await Db.SaveInstanceAsync(newInstance);
@@ -96,7 +108,7 @@
             string route = type switch
             {
                 InstanceType.Quiz => $"/dashboard/quiz/{newInstance.InstanceId}",
-                InstanceType.Flash => $"/dashboard/flash/{newInstance.InstanceId}",
+                InstanceType.Flash => $"/dashboard/flash/{newInstance.InstanceId}/{CourseID}",
                 InstanceType.Tutor => $"/dashboard/tutor/{newInstance.InstanceId}",
                 _ => "/dashboard"
             };
