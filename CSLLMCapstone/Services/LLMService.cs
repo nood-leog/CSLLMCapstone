@@ -15,7 +15,7 @@ namespace CSLLMCapstone.Services
      
     flashcard JSON:
 
-    { "question" : ["keyword" : "<keyword>", "description" : "<description>"]}
+    { "keyword" : "<keyword>", "description" : "<description>"]}
 
     quiz JSON:
 
@@ -42,46 +42,46 @@ namespace CSLLMCapstone.Services
 
         // returning generated flashcard data in validated JSON formatted plaintext 
         // would used for generating data for database
-        public async Task<string> GenerateFlashCardDataValidatedJSONAsync(LLM llm, string courseName, List<string>courseTopics, string? history)
+        public async Task<string> GenerateFlashCardDataValidatedJSONAsync(LLM llm, string courseName, string courseDesc, List<string>courseTopics, string? history)
         {
             if (history != null)
             {
-                return validateJSON(await GenerateFlashCardDataWithHistoryAsync(llm, courseName, courseTopics, history));
+                return validateJSON(await GenerateFlashCardDataWithHistoryAsync(llm, courseName, courseDesc, courseTopics, history));
             }
             else
             {
-                return validateJSON(await GenerateFlashCardDataAsync(llm, courseName, courseTopics));
+                return validateJSON(await GenerateFlashCardDataAsync(llm, courseName, courseDesc, courseTopics));
             }
         }
 
         // returning generated quiz data in validated JSON formatted plaintext
         // would used for generating data for database
-        public async Task<string> GenerateQuizDataValidatedJSONAsync(LLM llm, string courseName, List<string>courseTopics, string? history)
+        public async Task<string> GenerateQuizDataValidatedJSONAsync(LLM llm, string courseName, string courseDesc, List<string>courseTopics, string? history)
         {
             if (history != null)
             {
-                return validateJSON(await GenerateQuizDataWithHistoryAsync(llm, courseName, courseTopics, history));
+                return validateJSON(await GenerateQuizDataWithHistoryAsync(llm, courseName, courseDesc, courseTopics, history));
             }
             else
             {
-                return validateJSON(await GenerateQuizDataAsync(llm, courseName, courseTopics));
+                return validateJSON(await GenerateQuizDataAsync(llm, courseName, courseDesc, courseTopics));
             }
         
         }
 
         // returning generated flash card data in list type
-        public async Task<List<Tuple<string, string>>> GenerateFlashCardDataListAsync(LLM llm, string courseName, List<string>courseTopics, string? history)
+        public async Task<List<Tuple<string, string>>> GenerateFlashCardDataListAsync(LLM llm, string courseName, string courseDesc, List<string>courseTopics, string? history)
         {
             string validatedJSONRawData = "";
             List<Tuple<string, string>> flashcardData = new List<Tuple<string, string>>();
 
             if(history != null)
             {
-                validatedJSONRawData = validateJSON(await GenerateFlashCardDataWithHistoryAsync(llm, courseName, courseTopics, history));
+                validatedJSONRawData = validateJSON(await GenerateFlashCardDataWithHistoryAsync(llm, courseName, courseDesc, courseTopics, history));
             }
             else
             {
-                validatedJSONRawData = validateJSON(await GenerateFlashCardDataAsync(llm, courseName, courseTopics));
+                validatedJSONRawData = validateJSON(await GenerateFlashCardDataAsync(llm, courseName, courseDesc, courseTopics));
             }
 
             // parse logic here
@@ -90,7 +90,7 @@ namespace CSLLMCapstone.Services
             // set the json serializer rule
             var options = new JsonSerializerOptions
             {
-                PropertyNameCaseInsensitive = true
+                PropertyNameCaseInsensitive = true // JSON serializer ignores case
             };
 
             // generate raw dictionary from the validated JSON data
@@ -108,24 +108,25 @@ namespace CSLLMCapstone.Services
         }
 
         // returning generated quiz data in list type
-        public async Task<List<List<string>>> GenerateQuizDataListAsync(LLM llm, string courseName, List<string>courseTopics, string? history)
+        
+        public async Task<List<List<string>>> GenerateQuizDataListAsync(LLM llm, string courseName, string courseDesc, List<string>courseTopics, string? history)
         {
 
-            string validatedJSONRawData = "";
+            string validatedJSONRawData = ""; 
             List<List<string>> quizData = new List<List<string>>();
 
-            if(history != null)
+            if(history != null) // if the user has query history as JSON formatted plaintext string
             {
-                validatedJSONRawData = validateJSON(await GenerateQuizDataWithHistoryAsync(llm, courseName, courseTopics, history));
+                validatedJSONRawData = validateJSON(await GenerateQuizDataWithHistoryAsync(llm, courseName, courseDesc, courseTopics, history));
             }
-            else
+            else // if this is first llm query
             {
-                validatedJSONRawData = validateJSON(await GenerateQuizDataAsync(llm, courseName, courseTopics));
+                validatedJSONRawData = validateJSON(await GenerateQuizDataAsync(llm, courseName, courseDesc, courseTopics));
             }
 
-            var options = new JsonSerializerOptions
+            var options = new JsonSerializerOptions // preparing JSON serializer
             {
-                PropertyNameCaseInsensitive = true
+                PropertyNameCaseInsensitive = true // JSON serializer doesn't care case
             };
 
 
@@ -134,7 +135,7 @@ namespace CSLLMCapstone.Services
 
             if(rawDict != null)
             {
-                foreach(var entity in rawDict.Values)
+                foreach(var entity in rawDict.Values) // takes values only
                 {
                     var row = new List<string>(); // each row will hold ["Question", "option #", "answer"]
                     row.Add(entity.questionText);
@@ -156,54 +157,56 @@ namespace CSLLMCapstone.Services
 
 
         // private methods -------------------------------------------------------------------------------------------------------------------------------
-        private async Task<string> GenerateFlashCardDataAsync(LLM llm, string courseName, List<string> courseTopics)
+
+        // having llm class variable, course name, course description, course topics as agruments
+        private async Task<string> GenerateFlashCardDataAsync(LLM llm, string courseName, string courseDesc, List<string> courseTopics)
         {
             // build a string for the llm query
             string topicString = string.Join(", ", courseTopics);
 
             // generate raw plaintext output from the model
-            string JSONRawOutput = await llm.AskAsync($"Generate Flashcards as instructed for the Course name: {courseName}, Course Topics: {topicString}.");
+            string JSONRawOutput = await llm.AskAsync($"Generate Flashcards as instructed for the Course name: {courseName}, Course Topics: {topicString}, and Course Description: {courseDesc}.");
 
             return JSONRawOutput;
         }
 
-        private async Task<string> GenerateFlashCardDataWithHistoryAsync(LLM llm, string courseName, List<string> courseTopics, string history)
+        private async Task<string> GenerateFlashCardDataWithHistoryAsync(LLM llm, string courseName, string courseDesc, List<string> courseTopics, string history)
         {
             // build a string for the llm query
             string topicString = string.Join(", ", courseTopics);
 
             // generate raw plaintext output from the model with history
-            string JSONRawOutput = await llm.AskAsync($"Generate Flashcards as instructed for the Course name: {courseName}, Course Topics: {topicString}. Your previously generated flashcard data in JSON format: {history}, and do not generate exactly same as provided JSON format.");
+            string JSONRawOutput = await llm.AskAsync($"Generate Flashcards as instructed for the Course name: {courseName}, Course Topics: {topicString}, and Course Description: {courseDesc}. Your previously generated flashcard data in JSON format: {history}, and do not generate exactly same as provided JSON format.");
 
             return JSONRawOutput;
         }
 
-        private async Task<string> GenerateQuizDataAsync(LLM llm, string courseName, List<string> courseTopics)
+        private async Task<string> GenerateQuizDataAsync(LLM llm, string courseName, string courseDesc, List<string> courseTopics)
         {
             // build a string for the llm query
             string topicString = string.Join(", ", courseTopics);
 
             // generate raw plaintext output from the model
-            string JSONRawOutput = await llm.AskAsync($"Generate Quizes as initial prompt for the Course name: {courseName}, Course Topics: {topicString}");
+            string JSONRawOutput = await llm.AskAsync($"Generate Quizes as initial prompt for the Course name: {courseName}, Course Topics: {topicString}, and Course Description: {courseDesc}.");
 
             return JSONRawOutput;
         }
 
-        private async Task<string> GenerateQuizDataWithHistoryAsync(LLM llm, string courseName, List<string> courseTopics, string history)
+        private async Task<string> GenerateQuizDataWithHistoryAsync(LLM llm, string courseName, string courseDesc, List<string> courseTopics, string history)
         {
 
             // build a string for the llm query
             string topicString = string.Join(", ", courseTopics);
 
             // generate raw plaintext output from the model
-            string JSONRawOutput = await llm.AskAsync($"Generate Quizes as initial prompt for the Course name: {courseName}, Course Topics: {topicString}. Your previously generated quiz data in JSON format: {history}, and do not generate exactly same as provided JSON format.");
+            string JSONRawOutput = await llm.AskAsync($"Generate Quizes as initial prompt for the Course name: {courseName}, Course Topics: {topicString}, and Course Description: {courseDesc}. Your previously generated quiz data in JSON format: {history}, and do not generate exactly same as provided JSON format.");
 
             return JSONRawOutput;
         }
 
 
 
-        private string validateJSON(string JSONRawOutput) // takes only JSON format string. Disregards any characters that is not part of the JSON
+        private string validateJSON(string JSONRawOutput) // used only for removing mark-up language that llm generated for now.
         {
             string JSON = ""; // buffer
             bool isOpened = false; //write flag
