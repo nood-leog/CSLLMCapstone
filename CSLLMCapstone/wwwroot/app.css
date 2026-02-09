@@ -362,9 +362,9 @@ h1:focus {
     margin: auto;
 }
 
-.signup-container:hover {
+/*.signup-container:hover {
     transform: translateY(-5px);
-}
+}*/
 
 .signup-container::before {
     content: '';
@@ -2232,4 +2232,74 @@ label {
     font-size: 0.8rem;
     font-weight: 600;
     margin-left: 10px;
+}
+
+/* Responsive: allow auth pages to scroll on small/short screens */
+@media (max-width: 600px), (max-height: 700px) {
+    /* Keep the body fixed and non-scrollable */
+    .login-body,
+    .signup-body,
+    .forgot-body {
+        height: 100vh;
+        overflow: hidden; /* Removes the global scrollbar */
+        align-items: center; /* Keeps it centered if space allows */
+        padding: 10px;
+    }
+
+    /* Enable scrolling ONLY inside the container */
+    .login-container,
+    .signup-container,
+    .forgot-container {
+        max-height: 90vh; /* Prevents container from hitting screen edges */
+        overflow-y: auto; /* Adds the scrollbar here when needed */
+        padding: 24px;
+        margin: auto;
+        display: block; /* Ensures block layout for scrolling */
+    }
+
+    /* Slightly reduce decorative bar height */
+    .login-container::before,
+    .signup-container::before,
+    .forgot-container::before {
+        height: 5px;
+    }
+
+    /* Keep fields side-by-side on mobile */
+    .signup-name-fields {
+        display: grid;
+        grid-template-columns: 1fr 1fr; /* Forces two columns */
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+
+    /* Reduce input padding for compact layout */
+    .login-input,
+    .forgot-input {
+        padding: 12px 12px 12px 42px;
+    }
+
+    /* Reduce font size slightly so they fit side-by-side without overlapping */
+    .signup-input {
+        padding: 12px 12px 12px 35px; /* Narrower padding for icons */
+        font-size: 0.9rem;
+    }
+
+    .signup-label {
+        font-size: 0.85rem;
+    }
+
+    /* Ensure modals don't overflow the viewport */
+    .modal-content,
+    .topic-modal-content,
+    .study-session-modal {
+        max-height: calc(100vh - 40px);
+        overflow-y: auto;
+    }
+
+    /* Slight typography scaling for small screens */
+    .login-logo h1,
+    .signup-logo h1,
+    .forgot-logo h1 {
+        font-size: 2rem;
+    }
 }
