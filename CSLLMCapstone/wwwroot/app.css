@@ -339,17 +339,16 @@ h1:focus {
 
 /* ========== SIGNUP PAGE STYLES ========== */
 .signup-body {
-    min-height: 100vh;
+    min-height: 100vh; /* Use min-height, not height */
     display: flex;
-    align-items: center;
+    align-items: center; /* This centers it if the screen is big enough */
     justify-content: center;
-/*    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));*/
-    color: var(--text-dark);
-    padding: 20px;
+    padding: 60px 20px; /* Force space at the top and bottom */
+    overflow-y: auto; /* Ensure the browser can scroll the body */
 }
 
 .signup-container {
-    width: 100%;                
+    width: 100%;
     max-width: 450px;
     background-color: var(--white);
     border-radius: 12px;
@@ -358,8 +357,7 @@ h1:focus {
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
     position: relative;
     overflow: hidden;
-    transition: transform 0.3s ease;
-    margin: auto;
+    margin: 0 auto; /* This handles the centering vertically and horizontally */
 }
 
 /*.signup-container:hover {
