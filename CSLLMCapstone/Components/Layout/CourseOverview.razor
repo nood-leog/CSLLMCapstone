@@ -162,7 +162,7 @@
             // Navigate to the appropriate route with the instance ID
             string route = type switch
             {
-                InstanceType.Quiz => $"/dashboard/quiz/{newInstance.InstanceId}",
+                InstanceType.Quiz => $"/dashboard/quiz/{newInstance.InstanceId}/{CourseID}",
                 InstanceType.Flash => $"/dashboard/flash/{newInstance.InstanceId}/{CourseID}",
                 InstanceType.Tutor => $"/dashboard/tutor/{newInstance.InstanceId}",
                 _ => "/dashboard"

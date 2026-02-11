@@ -208,8 +208,6 @@
     private List<Tuple<string, string>> flashcards = new();
     private int currentIndex = 0;
 
-    private Tuple<string, string>? CurrentCard => flashcards.Count > 0 ? flashcards[currentIndex] : null;
-
 
     private void ToggleFlashcard()
     {
@@ -239,7 +237,7 @@
             return;
         }
 
-        // try to read the topic payload that is stored
+        // try to read the topic information that is stored
         try
         {
             insTopInfo = JsonSerializer.Deserialize<InstanceTopInfo>(instance.Data,
@@ -254,7 +252,7 @@
         courseTitle = await Db.GetCourseNameByCourseIdAsync(CourseId) ?? "";
         courseDesc = await Db.GetCourseDescriptionByCourseIdAsync(CourseId) ?? "";
 
-        //Check wether topic or course overview was clicked
+        // Check wether topic or course overview was clicked
         if (!string.IsNullOrWhiteSpace(insTopInfo?.topicName))
         {
             topicStrings = new List<string> { insTopInfo!.topicName! };
