@@ -2,9 +2,10 @@
 
 namespace CSLLMCapstone.Models
 {
+    // User model representing a user with their details
     public class User
     {
-        [Key] // Primary Key
+        [Key]
         public int UserId { get; set; }
 
         [Required]
@@ -29,10 +30,7 @@ namespace CSLLMCapstone.Models
         public int GraduationDate { get; set; } // Storing as Year (2025, 2026)
 
         [Required]
-        [MaxLength(255)]
-        public string Password { get; set; } = string.Empty; //!TODO hash this!
-
-        // Navigation property for relationships
-        public List<Instance> Instances { get; set; } = new();
+        [MaxLength(255)] // Hashed password for security
+        public string Password { get; set; } = string.Empty;
     }
 }

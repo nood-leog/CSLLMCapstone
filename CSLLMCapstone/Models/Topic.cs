@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CSLLMCapstone.Models
 {
+    // Topic model representing a topic associated with a course, including its name and description
     public class Topic
     {
         [Key]
@@ -10,7 +11,6 @@ namespace CSLLMCapstone.Models
 
         [ForeignKey("Course")]
         public int CourseId { get; set; }
-        public Course? Course { get; set; } // Navigation property
 
         [Required]
         public string Name { get; set; } = string.Empty;

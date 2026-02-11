@@ -4,9 +4,9 @@ using Google.GenAI;
 using Google.GenAI.Types;
 using CSLLMCapstone.Services;
 
-
 namespace CSLLMCapstone.Models
 {
+    // LLM class to interact with the Google Gemini API for generating content based on the InstanceType
     public class LLM
     {
 

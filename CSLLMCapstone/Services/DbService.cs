@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace CSLLMCapstone.Services
 {
+    // This service class is responsible for all SQLite DB interactions related to Users, Courses, Topics, and Instances
     public class DbService
     {
         private readonly IDbContextFactory<StudyContext> _contextFactory;
@@ -18,18 +19,21 @@ namespace CSLLMCapstone.Services
         }
 
         // --- USER METHODS ---
+        // Get user by email, used for sign-in and other operations
         public async Task<User?> GetUserByEmailAsync(string email)
         {
             using var context = _contextFactory.CreateDbContext();
             return await context.Users.FirstOrDefaultAsync(u => u.CwuEmail == email);
         }
 
+        // Get user by ID, used for profile and other operations
         public async Task<User?> GetUserByIdAsync(int userId)
         {
             using var context = _contextFactory.CreateDbContext();
             return await context.Users.FirstOrDefaultAsync(u => u.UserId == userId);
         }
 
+        // Create a new user, hashing the password before saving to the database
         public async Task CreateUserAsync(User newUser)
         {
             using var context = _contextFactory.CreateDbContext();
@@ -39,6 +43,7 @@ namespace CSLLMCapstone.Services
             await context.SaveChangesAsync();
         }
 
+        // Check if an email is already registered, used for validation during sign-up
         public async Task<bool> IsEmailRegisteredAsync(string email)
         {
             using var context = _contextFactory.CreateDbContext();
@@ -46,6 +51,7 @@ namespace CSLLMCapstone.Services
             return await context.Users.AnyAsync(u => u.CwuEmail == email);
         }
 
+        // Sign in a user by verifying the email and password, returns the user if successful, null otherwise
         public async Task<User?> SignInUserAsync(string email, string password)
         {
             using var context = _contextFactory.CreateDbContext();
@@ -63,6 +69,7 @@ namespace CSLLMCapstone.Services
             return result == PasswordVerificationResult.Success ? user : null;
         }
 
+        // Check if the new password is the same as the old password for a given user, used for validation during password change
         public async Task<bool> IsPasswordSameAsOldAsync(string email, string newPassword)
         {
             using var context = _contextFactory.CreateDbContext();
@@ -77,6 +84,7 @@ namespace CSLLMCapstone.Services
             return result == PasswordVerificationResult.Success;
         }
 
+        // Update the user's password, hashing the new password before saving to the database
         public async Task UpdateUserPasswordAsync(string email, string newPassword)
         {
             using var context = _contextFactory.CreateDbContext();
@@ -91,6 +99,7 @@ namespace CSLLMCapstone.Services
         }
 
         // --- COURSE METHODS ---
+        // Get all courses with their associated topics, used for displaying the course catalog and other operations
         public async Task<List<Course>> GetAllCoursesAsync()
         {
             using var context = _contextFactory.CreateDbContext();
@@ -99,26 +108,14 @@ namespace CSLLMCapstone.Services
                 .ToListAsync();
         }
 
-        //public async Task<List<Course>> GetAllCoursesAsync()
-        //{
-        //    using var context = _contextFactory.CreateDbContext();
-        //    // Include Topics so we get the nested data
-        //    return await context.Courses.Include(c => c.Topics).ToListAsync();
-        //}
-
-        public async Task AddCourseAsync(Course course)
-        {
-            using var context = _contextFactory.CreateDbContext();
-            context.Courses.Add(course);
-            await context.SaveChangesAsync();
-        }
-
+        // Get course name by course ID, used for displaying course details and other operations
         public async Task<string?> GetCourseNameByCourseIdAsync(int courseId)
         {
             using var context = _contextFactory.CreateDbContext();
             return await context.Courses.Where(t => t.CourseId == courseId).Select(t => t.Title).FirstOrDefaultAsync();
         }
 
+        // Get course description by course ID, used for displaying course details and other operations
         public async Task<string?> GetCourseDescriptionByCourseIdAsync(int courseId)
         {
             using var context = _contextFactory.CreateDbContext();
@@ -126,7 +123,7 @@ namespace CSLLMCapstone.Services
         }
 
         // --- TOPIC METHODS ---
-
+        // Get all topics for a given course ID, used for displaying course details and other operations
         public async Task<List<Topic>> GetTopicsByCourseIDAsync(int courseId)
         {
             using var context = _contextFactory.CreateDbContext();
@@ -134,6 +131,7 @@ namespace CSLLMCapstone.Services
             return await context.Topics.Where(t => t.CourseId == courseId).ToListAsync();
         }
 
+        // Get topic names for a given course ID, used for displaying course details and other operations
         public async Task<List<string>> GetTopicNamesByCourseIDAsnyc(int courseId)
         {
             using var context = _contextFactory.CreateDbContext();
@@ -144,7 +142,8 @@ namespace CSLLMCapstone.Services
         }
 
 
-        // --- INSTANCE/STUDY SESSION METHODS ---
+        // --- INSTANCE METHODS ---
+        // Save a new instance to the database, used for recording user interactions and other operations
         public async Task SaveInstanceAsync(Instance instance)
         {
             using var context = _contextFactory.CreateDbContext();
@@ -152,6 +151,7 @@ namespace CSLLMCapstone.Services
             await context.SaveChangesAsync();
         }
 
+        // Get an instance by its unique ID, used for retrieving specific interactions and other operations
         public async Task<Instance?> GetInstanceByIdAsync(string instanceId)
         {
             using var context = _contextFactory.CreateDbContext();
@@ -160,6 +160,7 @@ namespace CSLLMCapstone.Services
                 .FirstOrDefaultAsync(i => i.InstanceId == instanceId);
         }
 
+        // Get all instances for a given user ID, ordered by most recent first, used for displaying user history and other operations
         public async Task<List<Instance>> GetUserHistoryAsync(int userId)
         {
             using var context = _contextFactory.CreateDbContext();

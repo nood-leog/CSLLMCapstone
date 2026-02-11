@@ -17,10 +17,6 @@ builder.Services.AddDbContextFactory<StudyContext>(options =>
 // Register DbService as scoped
 builder.Services.AddScoped<DbService>();
 
-// Register UserSessionService as both a service AND a CircuitHandler
-builder.Services.AddScoped<UserSessionService>();
-builder.Services.AddScoped<CircuitHandler>(sp => sp.GetRequiredService<UserSessionService>());
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

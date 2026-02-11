@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CSLLMCapstone.Models
 {
+    // Instance can be of type: Quiz, Tutor, or Flash
     public enum InstanceType
     {
         Quiz,
@@ -11,15 +12,11 @@ namespace CSLLMCapstone.Models
         Flash
     }
 
+    // Instance model representing an instance of a quiz, tutor, or flashcard session associated with a user
     public class Instance
     {
-
-        // LLM is not mapped to the database, it's only used in memory
-        // This is easier to make a LLM service methods because the instance type is already known when user creates an instance
-        // So we can just create the LLM object on the fly when needed
         [NotMapped]
         public LLM? llm { get; set; }
-
 
         [Key]
         [MaxLength(8)]
@@ -27,12 +24,12 @@ namespace CSLLMCapstone.Models
 
         [ForeignKey("User")]
         public int UserId { get; set; }
+
         public User? User { get; set; }
 
         [Required]
         public InstanceType Type { get; set; }
 
-        //SQLite doesn't have a native JSON type, it stores it as TEXT
         [Required]
         public string Data { get; set; } = "{}";
     }

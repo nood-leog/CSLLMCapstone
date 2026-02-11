@@ -2,11 +2,10 @@
 
 namespace CSLLMCapstone.Models
 {
+    // Course model representing a course with its details and associated topics
     public class Course
     {
         [Key]
-        //assuming Course ID is an integer like 111, 112 ect
-        //to turn off AutoIncrement for this specific ID, use [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int CourseId { get; set; }
 
         [Required]
