@@ -7,27 +7,14 @@ using System.Text.Json;
 
 namespace CSLLMCapstone.Services
 {
-
-    // data interface
-
-
-    /*
-     
-    flashcard JSON:
-
-    { "keyword" : "<keyword>", "description" : "<description>"]}
-
-    quiz JSON:
-
-    {"quiz #" : {"options" : [ 4 options here ], "answer" : "<answer from candidates>"}}
-
-     */
-    public class FlashCardData
+    // FlashcardData class holds generated keyword, description as string
+    public class FlashcardData
     {
         public string keyword { get; set; } = "";
         public string description { get; set; } = "";
     }
 
+    // QuizData class holds generated question as string, options as list of strings, and answer as string  
     public class QuizData
     {
         public string questionText { get; set; } = "";
@@ -84,9 +71,6 @@ namespace CSLLMCapstone.Services
                 validatedJSONRawData = validateJSON(await GenerateFlashCardDataAsync(llm, courseName, courseDesc, courseTopics));
             }
 
-            // parse logic here
-
-
             // set the json serializer rule
             var options = new JsonSerializerOptions
             {
@@ -94,7 +78,7 @@ namespace CSLLMCapstone.Services
             };
 
             // generate raw dictionary from the validated JSON data
-            var rawDict = JsonSerializer.Deserialize<Dictionary<string, FlashCardData>>(validatedJSONRawData, options);
+            var rawDict = JsonSerializer.Deserialize<Dictionary<string, FlashcardData>>(validatedJSONRawData, options);
 
             if(rawDict != null)
             {
@@ -108,7 +92,6 @@ namespace CSLLMCapstone.Services
         }
 
         // returning generated quiz data in list type
-        
         public async Task<List<List<string>>> GenerateQuizDataListAsync(LLM llm, string courseName, string courseDesc, List<string>courseTopics, string? history)
         {
 
@@ -129,8 +112,6 @@ namespace CSLLMCapstone.Services
                 PropertyNameCaseInsensitive = true // JSON serializer doesn't care case
             };
 
-
-            // funny thing, since we are passing QuizData interface, JsonSerializer will automatically parse as QuizData.
             var rawDict = JsonSerializer.Deserialize<Dictionary<string, QuizData>>(validatedJSONRawData, options);
 
             if(rawDict != null)
@@ -158,7 +139,7 @@ namespace CSLLMCapstone.Services
 
         // private methods -------------------------------------------------------------------------------------------------------------------------------
 
-        // having llm class variable, course name, course description, course topics as agruments
+        // GenerateFlashCardDataAsync() generates flashcard data with given course topics
         private async Task<string> GenerateFlashCardDataAsync(LLM llm, string courseName, string courseDesc, List<string> courseTopics)
         {
             // build a string for the llm query
@@ -170,6 +151,7 @@ namespace CSLLMCapstone.Services
             return JSONRawOutput;
         }
 
+        // GenerateFlashCardDataWithHistoryAsync() generates flashcard data with given course topics. It takes previously generated materials to prevent duplicate
         private async Task<string> GenerateFlashCardDataWithHistoryAsync(LLM llm, string courseName, string courseDesc, List<string> courseTopics, string history)
         {
             // build a string for the llm query
@@ -181,6 +163,7 @@ namespace CSLLMCapstone.Services
             return JSONRawOutput;
         }
 
+        // GenerateQuizDataAsync() generates quiz data with given course topics
         private async Task<string> GenerateQuizDataAsync(LLM llm, string courseName, string courseDesc, List<string> courseTopics)
         {
             // build a string for the llm query
@@ -192,9 +175,9 @@ namespace CSLLMCapstone.Services
             return JSONRawOutput;
         }
 
+        // GenerateQuizDataWithHistoryAsync() generates quiz data with given course topics. It takes previously generated materials to prevent duplicate
         private async Task<string> GenerateQuizDataWithHistoryAsync(LLM llm, string courseName, string courseDesc, List<string> courseTopics, string history)
         {
-
             // build a string for the llm query
             string topicString = string.Join(", ", courseTopics);
 
@@ -204,9 +187,8 @@ namespace CSLLMCapstone.Services
             return JSONRawOutput;
         }
 
-
-
-        private string validateJSON(string JSONRawOutput) // used only for removing mark-up language that llm generated for now.
+        // validateJSON function takes generated JSON formatted plaintext and remove unnecessary noizes. 
+        private string validateJSON(string JSONRawOutput) 
         {
             string JSON = ""; // buffer
             bool isOpened = false; //write flag
