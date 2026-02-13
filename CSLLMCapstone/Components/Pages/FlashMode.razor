@@ -3,6 +3,7 @@
 @using CSLLMCapstone.Models
 @rendermode InteractiveServer
 @inject DbService Db
+@inject LLMService Llm
 @inject NavigationManager NavManager
 @inject IJSRuntime JSRuntime
 
@@ -41,8 +42,12 @@
             <a href="/dashboard" class="close-modal">&times;</a>
         </div>
 
+
+
+        
         <!--Flashcards Content - HARDCODED, MUST UPDATE WITH LLM INTEGRATION-->
-        <div class="study-session-body">
+        <!--
+                    <div class="study-session-body">
             <div class="flashcards-container">
                 <div class="flashcards-header">
                     <div class="flashcards-title">Lorem Ipsum Flashcards</div>
@@ -50,10 +55,9 @@
                 </div>
 
                 <div class="flashcard-main-area">
-                    <!-- FLASHCARD FLIP SYSTEM -->
+
                     <input type="checkbox" id="flashcard-toggle" style="display: none;">
 
-                    <!-- Label that toggles the checkbox when clicked -->
                     <label for="flashcard-toggle" class="flashcard">
                         <div class="flashcard-inner">
                             <div class="flashcard-front">
@@ -103,6 +107,70 @@
             </div>
         </div>
 
+        -->
+        <div class="study-session-body">
+            <div class="flashcards-container">
+                <div class="flashcards-header">
+                    <div class="flashcards-title">Study Session: @InstanceId</div>
+
+                    <!--
+                    <div class="flashcards-progress">
+                        (@flashcards.Any() ? (currentIndex + 1) : 0) / @flashcards.Count
+                    </div>
+                    -->
+                </div>
+
+                <div class="flashcard-main-area">
+                    @if (flashcards.Any())
+                    {
+                        var currentCard = flashcards[currentCardIndex];
+
+                        <div class="flashcard @(isFlipped ? "flipped" : "")" @onclick="ToggleFlashcard">
+                            <div class="flashcard-inner">
+                                <div class="flashcard-front">
+                                    <div class="flashcard-label">Term</div>
+                                    <div class="flashcard-content">
+                                        @currentCard.Item1
+                                    </div>
+                                </div>
+                                <div class="flashcard-back">
+                                    <div class="flashcard-label back">Definition</div>
+                                    <div class="flashcard-content">
+                                        @currentCard.Item2
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flashcard-controls">
+                            <button class="flashcard-nav-button" @onclick="GoToPreviousCard" disabled="@(currentCardIndex == 0)">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+
+                            <button class="flashcard-flip-button" @onclick="ToggleFlashcard">
+                                Flip Card
+                            </button>
+
+                            <button class="flashcard-nav-button" @onclick="GoToNextCard" disabled="@(currentCardIndex >= flashcards.Count - 1)">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="flashcard-content">
+                            Generating cards or no cards found...
+                        </div>
+                    }
+
+                    <div class="flashcard-counter">
+                        Card <span>@(flashcards.Any() ? currentCardIndex + 1 : 0)</span> of <span>@flashcards.Count</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
         <!--Footer-->
         <div class="footer">
         </div>
@@ -114,6 +182,8 @@
     public string? InstanceId { get; set; }
 
     private bool isFlipped = false;
+    private int currentCardIndex = 0;
+    List<Tuple<string, string>> flashcards = new List<Tuple<string, string>>();
 
     private void ToggleFlashcard()
     {
@@ -125,10 +195,36 @@
         // Load instance data here if needed
         if (!string.IsNullOrEmpty(InstanceId))
         {
-            // TODO: Load flashcard data based on InstanceId from database
-            Console.WriteLine($"Flashcard instance loaded: {InstanceId}");
+            // get the instance from instance id
+            Instance? instance = await Db.GetInstanceByIdAsync(InstanceId);
+
+            if(instance != null)
+            {
+                // call llm service to generate flashcard content based on instance data
+                flashcards = Llm.GenerateFlashCardDataList(instance.Data);
+            }
+            
         }
     }
+
+    private void GoToPreviousCard()
+    {
+        if (currentCardIndex > 0)
+        {
+            currentCardIndex--;
+            isFlipped = false; // Reset flip state when navigating
+        }
+	}
+
+    private void GoToNextCard()
+    {
+        // Assuming we have a total of 20 cards for demonstration
+        if (currentCardIndex < 19)
+        {
+            currentCardIndex++;
+            isFlipped = false; // Reset flip state when navigating
+        }
+	}
 }
 
 @code {
@@ -157,3 +253,4 @@
         }
     }
 }
+   

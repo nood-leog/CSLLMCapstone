@@ -44,7 +44,7 @@ namespace CSLLMCapstone.Models
             return response.Candidates[0].Content.Parts[0].Text;
         }
 
-        // initialPromptBuilder() takes instance type and generates system prompt based on the type.
+        // initialPromptBuilder() takes instance type and generates system prompt based on the type
         private string initialPromptBuilder(InstanceType type)
         {
             switch (type)

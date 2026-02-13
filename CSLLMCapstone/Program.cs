@@ -14,8 +14,18 @@ builder.Services.AddRazorComponents()
 builder.Services.AddDbContextFactory<StudyContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+
 // Register DbService as scoped
-builder.Services.AddScoped<DbService>();
+builder.Services.AddScoped<DbService>(); // required for DbService to be injected into the components
+builder.Services.AddScoped<LLMService>(); // required for LLMService to be injected into the components
+/*
+
+AddScoped is used to register services that are created once per client request (or connection in the case of Blazor Server). 
+This means that for each user interaction, a new instance of the service will be created and shared across all components that require it during that interaction. 
+This is ideal for services that maintain state or need to be consistent throughout a user's session, such as database services or LLM services in this case. 
+If you were to use AddSingleton instead, the same instance of the service would be shared across all users and all interactions, which could lead to issues with data consistency and thread safety, especially in a multi-user environment.
+
+*/
 
 var app = builder.Build();
 

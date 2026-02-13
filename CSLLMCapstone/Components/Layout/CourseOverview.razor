@@ -2,6 +2,7 @@
 @using CSLLMCapstone.Services
 @inject IJSRuntime JSRuntime
 @inject DbService Db
+@inject LLMService llm
 @inject NavigationManager NavManager
 
 <!--CourseID, CourseTitle, CourseDesc, and OnClose input params-->
@@ -139,8 +140,31 @@
             {
                 UserId = int.Parse(await JSRuntime.InvokeAsync<string>("localStorage.getItem", "UserId")),
                 Type = type,
+                llm = new LLM(type),
                 Data = "{}" // Initialize with empty JSON
             };
+
+			// convert the topics list to a list of strings containing the topic names
+            List<string> topicNames = topics.Select(t => t.Name).ToList();
+
+            if (type == InstanceType.Quiz)
+            {
+                // Generate quiz data using LLM service
+                var quizData = await llm.GenerateQuizDataValidatedJSONAsync(newInstance.llm, CourseTitle, CourseDesc, topicNames, null);
+                newInstance.Data = quizData;
+            }
+            else if (type == InstanceType.Flash)
+            {
+                // Generate flashcard data using LLM service
+                var flashData = await llm.GenerateFlashCardDataValidatedJSONAsync(newInstance.llm, CourseTitle, CourseDesc, topicNames, null);
+                newInstance.Data = flashData;
+            }
+            else if (type == InstanceType.Tutor)
+            {
+                // Generate tutor session data using LLM service
+                // var tutorData = await llm.GenerateTutorSessionAsync(CourseID, topic?.TopicId);
+                // newInstance.Data = tutorData;
+			}
 
             // Save to database
             await Db.SaveInstanceAsync(newInstance);

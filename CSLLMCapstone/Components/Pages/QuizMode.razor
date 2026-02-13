@@ -3,6 +3,7 @@
 @using CSLLMCapstone.Models
 @rendermode InteractiveServer
 @inject DbService Db
+@inject LLMService Llm
 @inject NavigationManager NavManager
 @inject IJSRuntime JSRuntime
 
@@ -41,7 +42,7 @@
             <a href="/dashboard" class="close-modal">&times;</a>
         </div>
 
-        <!--Quiz Content-->
+        <!--
         <div class="study-session-body">
             <div class="quiz-container">
                 <div class="quiz-header">
@@ -49,7 +50,6 @@
                     <div class="quiz-progress">Question 5 of 12</div>
                 </div>
 
-                <!--HARDCODED - UPDATE WITH LLM INTEGRATION-->
                 <div class="quiz-content">
                     <div class="quiz-question-section">
                         <h4>Question 5:</h4>
@@ -83,6 +83,58 @@
                 </div>
             </div>
         </div>
+        -->
+
+        <div class="study-session-body">
+            <div class="quiz-container">
+                @if (quiz != null && quiz.Any())
+                {
+                    // Grab the current row: ["question 1", "Question Text", "Opt1", "Opt2", "Opt3", "Opt4", "Answer"]
+                    var currentQuestion = quiz[currentIndex];
+
+                    <div class="quiz-header">
+                        <div class="quiz-title">Instance Quiz</div>
+                        <div class="quiz-progress">Question @(currentIndex + 1) of @quiz.Count</div>
+                    </div>
+
+                    <div class="quiz-content">
+                        <div class="quiz-question-section">
+                            <h4>@currentQuestion[0]:</h4>
+                            <p>@currentQuestion[1]</p>
+
+                            <div class="quiz-options">
+                                @for (int i = 2; i <= 5; i++) // Options are at indices 2, 3, 4, 5
+                                {
+                                    int optionIdx = i;
+                                    <div class="quiz-option @(selectOptionIndex == optionIdx ? "active" : "")" @onclick="() => SelectOption(optionIdx)">
+                                        <div class="quiz-option-letter">@((char)('A' + i - 2))</div>
+                                        <div class="quiz-option-text">@currentQuestion[optionIdx]</div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+                        @if (selectOptionIndex != null)
+                        {
+                            <div class="quiz-answer-section animate-popup">
+                                <h5>Correct answer: @currentQuestion[6]</h5>
+                                <p class="quiz-answer-text">Details and explanation would go here.</p>
+                                <p>You selected: @currentQuestion[selectOptionIndex.Value]</p>
+                            </div>
+                        }
+
+                        <div class="quiz-controls" style="margin-top: 20px; display: flex; gap: 10px; justify-content: center;">
+                            <button class="flashcard-nav-button" @onclick="PreviousQuestion" disabled="@(currentIndex == 0)">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <button class="flashcard-nav-button" @onclick="NextQuestion" disabled="@(currentIndex == quiz.Count - 1)">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
 
         <!--Footer-->
         <div class="footer">
@@ -94,6 +146,10 @@
     [Parameter]
     public string? InstanceId { get; set; }
 
+    private int currentIndex = 0;
+    private int? selectOptionIndex = null;
+    List<List<string>> quiz = new List<List<string>>();
+
     protected override async Task OnInitializedAsync()
     {
         // Load instance data here if needed
@@ -101,8 +157,46 @@
         {
             // TODO: Load quiz data based on InstanceId from database
             Console.WriteLine($"Quiz instance loaded: {InstanceId}");
+
+            Instance? instance = await Db.GetInstanceByIdAsync(InstanceId);
+            if(instance != null)
+            {
+                quiz = Llm.GenerateQuizDataList(instance.Data);
+            }
+
+            foreach(var ins in quiz)
+            {
+                for(int i = 0; i < ins.Count; i++)
+                {
+                    Console.WriteLine($"Quiz Data [{currentIndex}][{i}]: {ins[i]}");
+                }
+			}
+
         }
     }
+
+    private void SelectOption(int index)
+    {
+		selectOptionIndex = index;
+    }
+
+    private void NextQuestion()
+    {
+        if(currentIndex < quiz.Count - 1)
+        {
+            currentIndex++;
+            selectOptionIndex = null; // reset selected option for next question
+        }
+	}
+
+    private void PreviousQuestion()
+    {
+        if(currentIndex > 0)
+        {
+            currentIndex--;
+            selectOptionIndex = null; // reset selected option for previous question
+        }
+	}
 }   
 
 @code {

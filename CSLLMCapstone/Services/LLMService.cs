@@ -1,9 +1,10 @@
-﻿using CSLLMCapstone.Models;
-using CSLLMCapstone.Data;
+﻿using CSLLMCapstone.Data;
+using CSLLMCapstone.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Numerics;
 using System.Data;
+using System.Numerics;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace CSLLMCapstone.Services
 {
@@ -17,6 +18,9 @@ namespace CSLLMCapstone.Services
     // QuizData class holds generated question as string, options as list of strings, and answer as string  
     public class QuizData
     {
+        public string questionID { get; set; } // To store "question 1"
+
+        [JsonPropertyName("question text")] // This forces it to map the key with the space
         public string questionText { get; set; } = "";
         public List<string> options { get; set; } = new List<string>();
         public string answer { get; set; } = "";
@@ -31,30 +35,64 @@ namespace CSLLMCapstone.Services
         // would used for generating data for database
         public async Task<string> GenerateFlashCardDataValidatedJSONAsync(LLM llm, string courseName, string courseDesc, List<string>courseTopics, string? history)
         {
+            string JSON = ""; // buffer 
+
             if (history != null)
             {
-                return validateJSON(await GenerateFlashCardDataWithHistoryAsync(llm, courseName, courseDesc, courseTopics, history));
+                JSON = await GenerateFlashCardDataWithHistoryAsync(llm, courseName, courseDesc, courseTopics, history);
             }
             else
             {
-                return validateJSON(await GenerateFlashCardDataAsync(llm, courseName, courseDesc, courseTopics));
+                JSON = await GenerateFlashCardDataAsync(llm, courseName, courseDesc, courseTopics);
             }
+
+            return validateJSON(JSON);
         }
 
         // returning generated quiz data in validated JSON formatted plaintext
         // would used for generating data for database
         public async Task<string> GenerateQuizDataValidatedJSONAsync(LLM llm, string courseName, string courseDesc, List<string>courseTopics, string? history)
         {
+            string JSON = ""; // buffer
+
             if (history != null)
             {
-                return validateJSON(await GenerateQuizDataWithHistoryAsync(llm, courseName, courseDesc, courseTopics, history));
+                JSON = await GenerateQuizDataWithHistoryAsync(llm, courseName, courseDesc, courseTopics, history);  
             }
             else
             {
-                return validateJSON(await GenerateQuizDataAsync(llm, courseName, courseDesc, courseTopics));
+                JSON = await GenerateQuizDataAsync(llm, courseName, courseDesc, courseTopics);  
             }
-        
+
+            return validateJSON(JSON);
+
         }
+
+
+        // returning generated flash card data in list type
+        public List<Tuple<string, string>>  GenerateFlashCardDataList(string JSONValidatedData)
+        {
+            List<Tuple<string, string>> flashcardData = new List<Tuple<string, string>>();
+
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true // JSON serializer ignores case
+            };
+
+            var rawDict = JsonSerializer.Deserialize<Dictionary<string, FlashcardData>>(JSONValidatedData, options);
+            if(rawDict != null)
+            {
+                foreach(var item in rawDict)
+                {
+                    flashcardData.Add(new Tuple<string, string>(item.Value.keyword, item.Value.description));
+                }
+            }
+
+            return flashcardData;
+        }
+
+
+        /*
 
         // returning generated flash card data in list type
         public async Task<List<Tuple<string, string>>> GenerateFlashCardDataListAsync(LLM llm, string courseName, string courseDesc, List<string>courseTopics, string? history)
@@ -90,7 +128,101 @@ namespace CSLLMCapstone.Services
 
             return flashcardData;
         }
+        */
+        // returning generated quiz data in list type
 
+
+        public List<List<string>> GenerateQuizDataList(string JSONValidatedData)
+        {
+            List<List<string>> quizData = new List<List<string>>();
+
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+
+            // 1. Deserialize into a Dictionary to capture the "Question 1" keys
+            var rawDict = JsonSerializer.Deserialize<Dictionary<string, QuizData>>(JSONValidatedData, options);
+
+            if (rawDict != null)
+            {
+                foreach (var kvp in rawDict)
+                {
+                    var row = new List<string>();
+
+                    // 2. Add the "Question ID" (e.g., "question 1") first so it's not ignored
+                    row.Add(kvp.Key);
+
+                    // 3. Add the actual question text
+                    row.Add(kvp.Value.questionText);
+
+                    // 4. Add all the options
+                    foreach (var option in kvp.Value.options)
+                    {
+                        row.Add(option);
+                    }
+
+                    // 5. Add the correct answer at the end
+                    row.Add(kvp.Value.answer);
+
+                    // 6. Add this completed "row" to your master list
+                    quizData.Add(row);
+                }
+            }
+
+            return quizData;
+        }
+
+        /*
+        public List<List<string>> GenerateQuizDataList(string JSONValidatedData)
+        {
+            
+            List<List<string>> quizData = new List<List<string>>();
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true // JSON serializer ignores case
+            };
+
+
+            var rawDict = JsonSerializer.Deserialize<Dictionary<string, QuizData>>(JSONValidatedData, options);
+            
+            if(rawDict != null)
+            {
+
+               
+       
+                foreach(var entity in rawDict.Values) // takes values only
+                {
+                    var row = new List<string>(); // each row will hold ["Question", "option #", "answer"]
+                    Console.WriteLine(entity.questionText);
+                    row.Add(entity.questionText);
+                    foreach(var cand in entity.options) // add each candidates into quiz content list
+                    {
+                        row.Add(cand);
+                    }
+                    row.Add(entity.answer); // add the answer into quiz content list
+                    quizData.Add(row); // add completed question into the quiz container list
+                }
+                
+            }
+            
+
+            // 1. Deserialize into a Dictionary because of the "question X" keys
+            var rawData = JsonSerializer.Deserialize<Dictionary<string, QuizData>>(JSONValidatedData);
+
+            // 2. Convert that Dictionary into a List of your QuizData objects
+            //List<QuizData> quizList = rawData.Values.ToList();
+
+            List<QuizData> quizList = rawData.Select(kvp => {
+                kvp.Value.questionID = kvp.Key;
+                return kvp.Value;
+            }).ToList();
+
+            return quizData;
+        }
+        */
+
+        /*
         // returning generated quiz data in list type
         public async Task<List<List<string>>> GenerateQuizDataListAsync(LLM llm, string courseName, string courseDesc, List<string>courseTopics, string? history)
         {
@@ -136,6 +268,7 @@ namespace CSLLMCapstone.Services
             return quizData;
         }
 
+        */
 
         // private methods -------------------------------------------------------------------------------------------------------------------------------
 
