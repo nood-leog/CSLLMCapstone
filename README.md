@@ -1346,13 +1346,3 @@ Database file: `studycat.db` (SQLite)
 { "courseId": 110, "topicId": 43, "topicName": "Java Fundamentals", "questions": [ { "question": "What is polymorphism?", "options": ["A", "B", "C", "D"], "answer": "B", "userAnswer": "B" } ] }
 
 ---
-
-
-## License
-
-MIT License - Copyright (c) 2026 CS Study Cat Team
-
-For questions or contributions, please contact the development team or create an issue on GitHub.
-
-Repository: https://github.com/nood-leog/CSLLMCapstone
-
