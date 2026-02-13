@@ -1,5 +1,6 @@
-# CSLLMCapstone
+# CS Study Cat - Technical Documentation
 
+## Simplified Class Diagram
 ```mermaid
 classDiagram
     class User {
@@ -49,8 +50,6 @@ classDiagram
     DbService ..> Instance
     LLMService ..> Instance
 ```
-
-# CS Study Cat - Technical Documentation
 
 ## Table of Contents
 
