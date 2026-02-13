@@ -1,5 +1,55 @@
 # CSLLMCapstone
 
+```mermaid
+classDiagram
+    class User {
+        +int UserId
+        +string FName
+        +string LName
+        +string CwuEmail
+        +string Password
+    }
+    
+    class Course {
+        +int CourseId
+        +string Title
+        +string CourseDesc
+        +List~Topic~ Topics
+    }
+    
+    class Topic {
+        +int TopicId
+        +int CourseId
+        +string Name
+        +string TopicDesc
+    }
+    
+    class Instance {
+        +string InstanceId
+        +int UserId
+        +InstanceType Type
+        +string Data
+    }
+    
+    class DbService {
+        +GetUserByIdAsync()
+        +GetAllCoursesAsync()
+        +SaveInstanceAsync()
+    }
+    
+    class LLMService {
+        +GenerateQuizDataAsync()
+        +GenerateFlashCardDataAsync()
+    }
+    
+    Course "1" --> "*" Topic
+    User "1" --> "*" Instance
+    DbService ..> User
+    DbService ..> Course
+    DbService ..> Instance
+    LLMService ..> Instance
+```
+
 # CS Study Cat - Technical Documentation
 
 ## Table of Contents
@@ -60,57 +110,7 @@ The application follows a layered architecture:
 - **Service Layer**: Business logic in `DbService` and `LLMService`
 - **Data Layer**: Entity Framework Core with `StudyContext`
 - **Model Layer**: Domain entities and enums
-
-```mermaid
-classDiagram
-    class User {
-        +int UserId
-        +string FName
-        +string LName
-        +string CwuEmail
-        +string Password
-    }
-    
-    class Course {
-        +int CourseId
-        +string Title
-        +string CourseDesc
-        +List~Topic~ Topics
-    }
-    
-    class Topic {
-        +int TopicId
-        +int CourseId
-        +string Name
-        +string TopicDesc
-    }
-    
-    class Instance {
-        +string InstanceId
-        +int UserId
-        +InstanceType Type
-        +string Data
-    }
-    
-    class DbService {
-        +GetUserByIdAsync()
-        +GetAllCoursesAsync()
-        +SaveInstanceAsync()
-    }
-    
-    class LLMService {
-        +GenerateQuizDataAsync()
-        +GenerateFlashCardDataAsync()
-    }
-    
-    Course "1" --> "*" Topic
-    User "1" --> "*" Instance
-    DbService ..> User
-    DbService ..> Course
-    DbService ..> Instance
-    LLMService ..> Instance
-```
-
+  
 ---
 
 ## Model Classes
