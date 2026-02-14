@@ -160,14 +160,39 @@ namespace CSLLMCapstone.Services
                 .FirstOrDefaultAsync(i => i.InstanceId == instanceId);
         }
 
-        // Get all instances for a given user ID, ordered by most recent first, used for displaying user history and other operations
+        // Get all instances for a given user ID, ordered by favorites first, then most recent
         public async Task<List<Instance>> GetUserHistoryAsync(int userId)
         {
             using var context = _contextFactory.CreateDbContext();
             return await context.Instances
                 .Where(i => i.UserId == userId)
-                .OrderByDescending(i => i.InstanceId)
+                .OrderByDescending(i => i.IsFavorite) // Primary sort: Favorites at top
+                .ThenByDescending(i => i.InstanceId)   // Secondary sort: Most recent first
                 .ToListAsync();
+        }
+
+        // Update an existing instance favorite status, used for allowing users to mark interactions as favorites and other operations
+        public async Task UpdateInstanceFavoriteStatusAsync(string instanceId, bool isFavorite)
+        {
+            using var context = _contextFactory.CreateDbContext();
+            var instance = await context.Instances.FirstOrDefaultAsync(i => i.InstanceId == instanceId);
+            if (instance != null)
+            {
+                instance.IsFavorite = isFavorite;
+                await context.SaveChangesAsync();
+            }
+        }
+
+        // Delete an existing instance by its unique ID, used for allowing users to remove interactions from their history and other operations
+        public async Task DeleteInstanceAsync(string instanceId)
+        {
+            using var context = _contextFactory.CreateDbContext();
+            var instance = await context.Instances.FirstOrDefaultAsync(i => i.InstanceId == instanceId);
+            if (instance != null)
+            {
+                context.Instances.Remove(instance);
+                await context.SaveChangesAsync();
+            }
         }
     }
 }

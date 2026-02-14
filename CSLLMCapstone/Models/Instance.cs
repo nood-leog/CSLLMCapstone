@@ -32,5 +32,14 @@ namespace CSLLMCapstone.Models
 
         [Required]
         public string Data { get; set; } = "{}";
+
+        [Required]
+        public bool IsFavorite { get; set; } = false;
+
+        [Required]
+        public int CourseId { get; set; }
+
+        [Required]
+        public string CourseTitle { get; set; } = "";
     }
 }

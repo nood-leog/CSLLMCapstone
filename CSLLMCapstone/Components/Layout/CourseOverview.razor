@@ -141,7 +141,10 @@
                 UserId = int.Parse(await JSRuntime.InvokeAsync<string>("localStorage.getItem", "UserId")),
                 Type = type,
                 llm = new LLM(type),
-                Data = "{}" // Initialize with empty JSON
+                Data = "{}", // Initialize with empty JSON
+                IsFavorite = false, // set default value for IsFavorite
+                CourseId = CourseID,
+                CourseTitle = CourseTitle
             };
 
 			// convert the topics list to a list of strings containing the topic names

@@ -61,21 +61,32 @@
                 {
                     @foreach (var instance in instances)
                     {
-                        // NEED TO ADJUST ROUTING HERE
-                        <a class="sidebar-instance-item" @onclick='() => HandleInstanceClick(instance)'>
-                            <div class="sidebar-instance-icon">
-                                <i class="fas @GetInstanceIcon(instance.Type)"></i>
+                        <div class="sidebar-instance-container">
+                            <a class="sidebar-instance-item" @onclick='() => HandleInstanceClick(instance)'>
+                                <div class="sidebar-instance-icon">
+                                    <i class="fas @GetInstanceIcon(instance.Type)"></i>
+                                </div>
+                                <div class="sidebar-instance-info">
+                                    <h5>@instance.Type</h5>
+                                    <p>CS @instance.CourseId @instance.CourseTitle</p>
+                                </div>
+                            </a>
+                            <div class="instance-actions">
+                                <button class="favorite-button @(instance.IsFavorite ? "is-favorite" : "")"
+                                        @onclick='() => HandleFavoriteClick(instance)' @onclick:stopPropagation="true">
+                                    <i class="@(instance.IsFavorite ? "fas fa-star" : "far fa-star")"></i>
+                                </button>
+                                <button class="delete-button"
+                                        @onclick='() => HandleDeleteClick(instance)' @onclick:stopPropagation="true">
+                                    <i class="fas fa-trash"></i>
+                                </button>
                             </div>
-                            <div class="sidebar-instance-info">
-                                <h5>@instance.Type</h5>
-                                <p>@instance.InstanceId</p>
-                            </div>
-                        </a>
+                        </div>
                     }
                 }
                 else if (!isLoading)
                 {
-                    <p style="padding: 10px; font-size: 0.8rem; color: black;">No history found</p>
+                    <p class="no-history-text">No history found</p>
                 }
             </div>
         </div>
@@ -133,6 +144,48 @@
         catch (Exception ex)
         {
             Console.WriteLine($"Error creating instance: {ex.Message}");
+        }
+    }
+}
+
+<!--HandleFavoriteClick Logic for the instance history-->
+@code {
+    private async Task HandleFavoriteClick(Instance instance)
+    {
+        try
+        {
+            // Toggle the favorite status
+            instance.IsFavorite = !instance.IsFavorite;
+            // Update the database with the new favorite status
+            await Db.UpdateInstanceFavoriteStatusAsync(instance.InstanceId, instance.IsFavorite);
+            StateHasChanged(); // Force a re-render to reflect changes
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error updating favorite status: {ex.Message}");
+        }
+    }
+}
+
+<!--HandleDeleteClick Logic for the instance history-->
+@code {
+    private async Task HandleDeleteClick(Instance instance)
+    {
+        try
+        {
+            // prompt the user for confirmation before deleting (UPDATE UI LATER)
+            bool confirmed = await JSRuntime.InvokeAsync<bool>("confirm", $"Are you sure you want to delete this {instance.Type} instance?");
+            if (!confirmed)
+            {
+                return; // User canceled the deletion
+            }
+            // Delete the instance from the database
+            await Db.DeleteInstanceAsync(instance.InstanceId);
+            NavManager.NavigateTo("/dashboard"); // Refresh the dashboard to update instance history
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error deleting instance: {ex.Message}");
         }
     }
 }
