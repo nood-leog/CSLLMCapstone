@@ -20,10 +20,11 @@ namespace CSLLMCapstone.Services
     {
         public string questionID { get; set; } // To store "question 1"
 
-        [JsonPropertyName("question text")] // This forces it to map the key with the space
+        [JsonPropertyName("question text")] // this forces it to map the key with the space
         public string questionText { get; set; } = "";
         public List<string> options { get; set; } = new List<string>();
         public string answer { get; set; } = "";
+        public string answer_desc { get; set; } = ""; // optional field for future use, not currently used in the prompt } 
     }
 
     public class LLMService
@@ -80,6 +81,7 @@ namespace CSLLMCapstone.Services
             };
 
             var rawDict = JsonSerializer.Deserialize<Dictionary<string, FlashcardData>>(JSONValidatedData, options);
+
             if(rawDict != null)
             {
                 foreach(var item in rawDict)
@@ -130,8 +132,6 @@ namespace CSLLMCapstone.Services
         }
         */
         // returning generated quiz data in list type
-
-
         public List<List<string>> GenerateQuizDataList(string JSONValidatedData)
         {
             List<List<string>> quizData = new List<List<string>>();
@@ -141,31 +141,34 @@ namespace CSLLMCapstone.Services
                 PropertyNameCaseInsensitive = true
             };
 
-            // 1. Deserialize into a Dictionary to capture the "Question 1" keys
+            // dserialize into a Dictionary to capture the "Question 1" keys
             var rawDict = JsonSerializer.Deserialize<Dictionary<string, QuizData>>(JSONValidatedData, options);
 
             if (rawDict != null)
             {
-                foreach (var kvp in rawDict)
+                foreach (var item in rawDict)
                 {
                     var row = new List<string>();
 
-                    // 2. Add the "Question ID" (e.g., "question 1") first so it's not ignored
-                    row.Add(kvp.Key);
+                    // add the "Question ID" (e.g., "question 1") first so it's not ignored
+                    row.Add(item.Key);
 
-                    // 3. Add the actual question text
-                    row.Add(kvp.Value.questionText);
+                    // add the actual question text
+                    row.Add(item.Value.questionText);
 
-                    // 4. Add all the options
-                    foreach (var option in kvp.Value.options)
+                    // add all the options
+                    foreach (var option in item.Value.options)
                     {
                         row.Add(option);
                     }
 
-                    // 5. Add the correct answer at the end
-                    row.Add(kvp.Value.answer);
+                    // add the correct answer at the end
+                    row.Add(item.Value.answer);
 
-                    // 6. Add this completed "row" to your master list
+                    // add the answer description at the end 
+                    row.Add(item.Value.answer_desc);
+
+                    // add this completed "row" to your master list
                     quizData.Add(row);
                 }
             }
