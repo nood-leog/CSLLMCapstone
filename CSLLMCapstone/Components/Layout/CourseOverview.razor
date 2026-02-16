@@ -112,7 +112,13 @@
     <!--Display Topic Overview if topic is clicked-->
     @if (isTopicClicked)
     {
-        <TopicOverview Topic="@topic" CourseID="@CourseID" OnClose="() => isTopicClicked = false" />
+        <TopicOverview 
+            Topic="@topic" 
+            CourseID="@CourseID" 
+            CourseTitle="@CourseTitle" 
+            CourseDesc="@CourseDesc" 
+            OnClose="() => isTopicClicked = false" 
+        />
     }
 </div>
 
@@ -162,6 +168,7 @@
                 var flashData = await llm.GenerateFlashCardDataValidatedJSONAsync(newInstance.llm, CourseTitle, CourseDesc, topicNames, null);
                 newInstance.Data = flashData;
             }
+            // FINISH TUTOR MODE LATER
             else if (type == InstanceType.Tutor)
             {
                 // Generate tutor session data using LLM service

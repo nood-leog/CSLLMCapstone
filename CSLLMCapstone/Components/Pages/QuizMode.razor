@@ -42,61 +42,20 @@
             <a href="/dashboard" class="close-modal">&times;</a>
         </div>
 
-        <!--
-        <div class="study-session-body">
-            <div class="quiz-container">
-                <div class="quiz-header">
-                    <div class="quiz-title">Lorem Ipsum Quiz</div>
-                    <div class="quiz-progress">Question 5 of 12</div>
-                </div>
-
-                <div class="quiz-content">
-                    <div class="quiz-question-section">
-                        <h4>Question 5:</h4>
-                        <p>Lorem ipsum dolor sit amet consectetur adipiscing elit?</p>
-
-                        <div class="quiz-options">
-                            <div class="quiz-option">
-                                <div class="quiz-option-letter">A</div>
-                                <div class="quiz-option-text">Quisque faucibus ex sapien vitae pellentesque</div>
-                            </div>
-                            <div class="quiz-option">
-                                <div class="quiz-option-letter">B</div>
-                                <div class="quiz-option-text">In id cursus mi pretium tellus duis convallis</div>
-                            </div>
-                            <div class="quiz-option">
-                                <div class="quiz-option-letter">C</div>
-                                <div class="quiz-option-text">Tempus leo eu aenean sed diam urna tempor</div>
-                            </div>
-                            <div class="quiz-option">
-                                <div class="quiz-option-letter">D</div>
-                                <div class="quiz-option-text">Pulvinar vivamus fringilla lacus nec metus</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="quiz-answer-section">
-                        <h5>Correct answer: B</h5>
-                        <p class="quiz-answer-text">In id cursus mi pretium tellus duis convallis</p>
-                        <p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        -->
-
+        <!--Dynamic Quiz Mode-->
         <div class="study-session-body">
             <div class="quiz-container">
                 @if (quiz != null && quiz.Any())
                 {
-                    // Grab the current row: ["question 1", "Question Text", "Opt1", "Opt2", "Opt3", "Opt4", "Answer"]
+                    // Grab the current row
                     var currentQuestion = quiz[currentIndex];
-
+                    <!--Quiz Header-->
                     <div class="quiz-header">
                         <div class="quiz-title">Instance Quiz</div>
                         <div class="quiz-progress">Question @(currentIndex + 1) of @quiz.Count</div>
                     </div>
 
+                    <!--Quiz Main Section-->
                     <div class="quiz-content">
                         <div class="quiz-question-section">
                             <h4>@currentQuestion[0]:</h4>
@@ -155,23 +114,14 @@
         // Load instance data here if needed
         if (!string.IsNullOrEmpty(InstanceId))
         {
-            // TODO: Load quiz data based on InstanceId from database
-            Console.WriteLine($"Quiz instance loaded: {InstanceId}");
-
+            // get the instance from instance id
             Instance? instance = await Db.GetInstanceByIdAsync(InstanceId);
+
             if(instance != null)
             {
+                // call llm service to generate quiz content based on instance data
                 quiz = Llm.GenerateQuizDataList(instance.Data);
             }
-
-            foreach(var ins in quiz)
-            {
-                for(int i = 0; i < ins.Count; i++)
-                {
-                    Console.WriteLine($"Quiz Data [{currentIndex}][{i}]: {ins[i]}");
-                }
-			}
-
         }
     }
 

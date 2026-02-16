@@ -2,12 +2,15 @@
 @using CSLLMCapstone.Services
 @inject IJSRuntime JSRuntime
 @inject DbService Db
+@inject LLMService llm
 @inject NavigationManager NavManager
 
 <!--Topic, CourseID, and OnClose input params-->
 @code {
     [Parameter] public Topic? Topic { get; set; }
     [Parameter] public int CourseID { get; set; }
+    [Parameter] public string? CourseTitle { get; set; }
+    [Parameter] public string? CourseDesc { get; set; }
     [Parameter] public EventCallback OnClose { get; set; }
 }
 
@@ -63,7 +66,7 @@
 
                 <div class="topic-description">
                     <h3>Topic Description</h3>
-                    <p>@(Topic?.Name ?? "No description available.")</p>
+                    <p>@(Topic?.TopicDesc ?? "No description available.")</p>
                 </div>
             </div>
         </div>
@@ -73,23 +76,42 @@
 @code {
     private async Task HandleInstanceClick(InstanceType type)
     {
-        // Check if user is logged in
-        // if (!UserSession.IsLoggedIn)
-        // {
-        //     Console.WriteLine("User not logged in");
-        //     NavManager.NavigateTo("/");
-        //     return;
-        // }
-
         try
         {
-            // Create new instance with topic information
+            // Create new instance
             var newInstance = new Instance
             {
                 UserId = int.Parse(await JSRuntime.InvokeAsync<string>("localStorage.getItem", "UserId")),
                 Type = type,
-                Data = $"{{\"courseId\":{CourseID},\"topicId\":{Topic?.TopicId},\"topicName\":\"{Topic?.Name}\"}}"
+                llm = new LLM(type),
+                Data = "{}", // Initialize with empty JSON
+                IsFavorite = false, // set default value for IsFavorite
+                CourseId = CourseID,
+                CourseTitle = CourseTitle
             };
+
+            // create list of topic names for current topic (if exists) to pass to LLM service
+            List<string> topicNames = Topic != null ? new List<string> { Topic.Name } : new List<string>();
+
+            if (type == InstanceType.Quiz)
+            {
+                // Generate quiz data using LLM service
+                var quizData = await llm.GenerateQuizDataValidatedJSONAsync(newInstance.llm, CourseTitle, CourseDesc, topicNames, null);
+                newInstance.Data = quizData;
+            }
+            else if (type == InstanceType.Flash)
+            {
+                // Generate flashcard data using LLM service
+                var flashData = await llm.GenerateFlashCardDataValidatedJSONAsync(newInstance.llm, CourseTitle, CourseDesc, topicNames, null);
+                newInstance.Data = flashData;
+            }
+            // FINISH TUTOR MODE LATER
+            else if (type == InstanceType.Tutor)
+            {
+                // Generate tutor session data using LLM service
+                // var tutorData = await llm.GenerateTutorSessionAsync(CourseID, topic?.TopicId);
+                // newInstance.Data = tutorData;
+            }
 
             // Save to database
             await Db.SaveInstanceAsync(newInstance);

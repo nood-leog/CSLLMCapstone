@@ -42,84 +42,15 @@
             <a href="/dashboard" class="close-modal">&times;</a>
         </div>
 
-
-
-        
-        <!--Flashcards Content - HARDCODED, MUST UPDATE WITH LLM INTEGRATION-->
-        <!--
-                    <div class="study-session-body">
-            <div class="flashcards-container">
-                <div class="flashcards-header">
-                    <div class="flashcards-title">Lorem Ipsum Flashcards</div>
-                    <div class="flashcards-progress">5/20</div>
-                </div>
-
-                <div class="flashcard-main-area">
-
-                    <input type="checkbox" id="flashcard-toggle" style="display: none;">
-
-                    <label for="flashcard-toggle" class="flashcard">
-                        <div class="flashcard-inner">
-                            <div class="flashcard-front">
-                                <div class="flashcard-label">Term</div>
-                                <div class="flashcard-content">
-                                    Lorem ipsum dolor sit amet
-                                </div>
-                            </div>
-                            <div class="flashcard-back">
-                                <div class="flashcard-label back">Definition</div>
-                                <div class="flashcard-content">
-                                    Consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis.
-                                </div>
-                            </div>
-                        </div>
-                    </label>
-
-                    <div class="flashcard-controls">
-                        <button class="flashcard-nav-button">
-                            <i class="fas fa-chevron-left"></i>
-                        </button>
-
-                        <label for="flashcard-toggle" class="flashcard-flip-button">
-                            Flip Card
-                        </label>
-
-                        <button class="flashcard-nav-button">
-                            <i class="fas fa-chevron-right"></i>
-                        </button>
-                    </div>
-
-                    <div class="flashcard-counter">
-                        Card <span>5</span> of <span>20</span>
-                    </div>
-                </div>
-
-                <div class="flashcard-stats">
-                    <div class="flashcard-actions">
-                        <button class="flashcard-action-btn">
-                            <i class="fas fa-random"></i> Shuffle
-                        </button>
-                        <button class="flashcard-action-btn">
-                            <i class="fas fa-star"></i> Star
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        -->
+        <!--Dynamic Flashcards Mode-->
         <div class="study-session-body">
             <div class="flashcards-container">
+                <!--Flashcards Header-->
                 <div class="flashcards-header">
                     <div class="flashcards-title">Study Session: @InstanceId</div>
-
-                    <!--
-                    <div class="flashcards-progress">
-                        (@flashcards.Any() ? (currentIndex + 1) : 0) / @flashcards.Count
-                    </div>
-                    -->
                 </div>
 
+                <!--Flashcards Main Section-->
                 <div class="flashcard-main-area">
                     @if (flashcards.Any())
                     {
