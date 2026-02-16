@@ -51,7 +51,16 @@
                     var currentQuestion = quiz[currentIndex];
                     <!--Quiz Header-->
                     <div class="quiz-header">
-                        <div class="quiz-title">Instance Quiz</div>
+                        <div class="quiz-title">
+                            @if (instance != null)
+                            {
+                                <span>CS @instance.CourseId @instance.CourseTitle</span>
+                            }
+                            else
+                            {
+                                <span>Loading Course Details...</span>
+                            }
+                        </div>
                         <div class="quiz-progress">Question @(currentIndex + 1) of @quiz.Count</div>
                     </div>
 
@@ -105,6 +114,9 @@
     [Parameter]
     public string? InstanceId { get; set; }
 
+    // delcare instance so HTML can access course info for quiz header
+    private Instance? instance;
+
     private int currentIndex = 0;
     private int? selectOptionIndex = null;
     List<List<string>> quiz = new List<List<string>>();
@@ -115,7 +127,7 @@
         if (!string.IsNullOrEmpty(InstanceId))
         {
             // get the instance from instance id
-            Instance? instance = await Db.GetInstanceByIdAsync(InstanceId);
+            instance = await Db.GetInstanceByIdAsync(InstanceId);
 
             if(instance != null)
             {

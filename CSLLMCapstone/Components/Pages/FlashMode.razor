@@ -47,7 +47,16 @@
             <div class="flashcards-container">
                 <!--Flashcards Header-->
                 <div class="flashcards-header">
-                    <div class="flashcards-title">Study Session: @InstanceId</div>
+                    <div class="flashcards-title">
+                        @if (instance != null)
+                        {
+                            <span>CS @instance.CourseId @instance.CourseTitle</span>
+                        }
+                        else
+                        {
+                            <span>Loading Course Details...</span>
+                        }
+                    </div>
                 </div>
 
                 <!--Flashcards Main Section-->
@@ -112,6 +121,9 @@
     [Parameter]
     public string? InstanceId { get; set; }
 
+    // delcare instance so HTML can access course info for flashcard header
+    private Instance? instance;
+
     private bool isFlipped = false;
     private int currentCardIndex = 0;
     List<Tuple<string, string>> flashcards = new List<Tuple<string, string>>();
@@ -127,7 +139,7 @@
         if (!string.IsNullOrEmpty(InstanceId))
         {
             // get the instance from instance id
-            Instance? instance = await Db.GetInstanceByIdAsync(InstanceId);
+            instance = await Db.GetInstanceByIdAsync(InstanceId);
 
             if(instance != null)
             {
@@ -149,8 +161,7 @@
 
     private void GoToNextCard()
     {
-        // Assuming we have a total of 20 cards for demonstration
-        if (currentCardIndex < 19)
+        if (currentCardIndex < flashcards.Count - 1)
         {
             currentCardIndex++;
             isFlipped = false; // Reset flip state when navigating
