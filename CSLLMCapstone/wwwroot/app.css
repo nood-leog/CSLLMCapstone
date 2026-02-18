@@ -1724,6 +1724,26 @@
     line-height: 1.5;
 }
 
+.quiz-option.active {
+    border-color: var(--primary-red) !important;
+    background-color: rgba(211, 47, 47, 0.1) !important;
+    box-shadow: 0 0 8px var(--shadow-color);
+    transform: translateX(5px);
+}
+
+.quiz-option.active .quiz-option-letter {
+    background-color: var(--primary-red);
+    color: var(--white);
+}
+
+.quiz-options:has(.active) .quiz-option {
+    cursor: default;
+}
+
+.quiz-option.active {
+    border-width: 2px;
+}
+
 .quiz-answer-section {
     margin-top: 30px;
     padding-top: 25px;

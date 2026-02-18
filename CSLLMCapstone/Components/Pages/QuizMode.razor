@@ -67,14 +67,16 @@
                     <!--Quiz Main Section-->
                     <div class="quiz-content">
                         <div class="quiz-question-section">
-                            <h4>@currentQuestion[0]:</h4>
+                            <h4>@(currentQuestion[0].StartsWith("q") ? "Q" + currentQuestion[0].Substring(1) : currentQuestion[0]):</h4>
                             <p>@currentQuestion[1]</p>
 
                             <div class="quiz-options">
                                 @for (int i = 2; i <= 5; i++) // Options are at indices 2, 3, 4, 5
                                 {
                                     int optionIdx = i;
-                                    <div class="quiz-option @(selectOptionIndex == optionIdx ? "active" : "")" @onclick="() => SelectOption(optionIdx)">
+                                    bool isSelected = userAnswers.ContainsKey(currentIndex) && userAnswers[currentIndex] == optionIdx;
+
+                                    <div class="quiz-option @(isSelected ? "active" : "")" @onclick="() => { if (!userAnswers.ContainsKey(currentIndex)) SelectOption(optionIdx); }">
                                         <div class="quiz-option-letter">@((char)('A' + i - 2))</div>
                                         <div class="quiz-option-text">@currentQuestion[optionIdx]</div>
                                     </div>
@@ -82,12 +84,24 @@
                             </div>
                         </div>
 
-                        @if (selectOptionIndex != null)
+                        @if (userAnswers.ContainsKey(currentIndex))
                         {
+                            // get the selected option index for current question
+                            int selectedIdx = userAnswers[currentIndex];
+                            // determine if answer is correct or incorrect
+                            bool isCorrect = currentQuestion[selectedIdx] == currentQuestion[6];
+
                             <div class="quiz-answer-section animate-popup">
-                                <h5>Correct answer: @currentQuestion[6]</h5>
+                                @if (isCorrect)
+                                {
+                                    <h5 style="color: green;"><i class="fas fa-check-circle"></i> Correct!</h5>
+                                }
+                                else
+                                {
+                                    <h5 style="color: red;"><i class="fas fa-times-circle"></i> Incorrect</h5>
+                                    <h5>Correct answer: @currentQuestion[6]</h5>
+                                }
                                 <p class="quiz-answer-text">Explanation: @currentQuestion[7]</p>
-                                <p>You selected: @currentQuestion[selectOptionIndex.Value]</p>
                             </div>
                         }
 
@@ -118,7 +132,8 @@
     private Instance? instance;
 
     private int currentIndex = 0;
-    private int? selectOptionIndex = null;
+    // track selected option index for current question (question index, value)
+    private Dictionary<int, int> userAnswers = new Dictionary<int, int>();
     List<List<string>> quiz = new List<List<string>>();
 
     protected override async Task OnInitializedAsync()
@@ -139,7 +154,8 @@
 
     private void SelectOption(int index)
     {
-		selectOptionIndex = index;
+        // save or update the answer for the current question
+        userAnswers[currentIndex] = index;
     }
 
     private void NextQuestion()
@@ -147,7 +163,6 @@
         if(currentIndex < quiz.Count - 1)
         {
             currentIndex++;
-            selectOptionIndex = null; // reset selected option for next question
         }
 	}
 
@@ -156,7 +171,6 @@
         if(currentIndex > 0)
         {
             currentIndex--;
-            selectOptionIndex = null; // reset selected option for previous question
         }
 	}
 }   
