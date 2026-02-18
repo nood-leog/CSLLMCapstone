@@ -43,6 +43,20 @@ else
                     <h2>Courses Dashboard</h2>
                 </div>
 
+                <div class="top-legend">
+                    <div class="legend-item">
+                        <span class="legend-dot major"></span> Major
+                    </div>
+
+                    <div class="legend-item">
+                        <span class="legend-dot minor"></span> Minor
+                    </div>
+
+                    <div class="legend-item">
+                        <span class="legend-dot both"></span> Both
+                    </div>
+                </div>
+
             </div>
 
             <!--Courses Container-->
@@ -63,7 +77,7 @@ else
                         @foreach (var course in courses)
                         {
                             <!--Course Card-->
-                            <div class="course-card" @onclick="() => HandleCourseClick(course)">
+                            <div class="course-card @CategorizeCourse(course)" @onclick="() => HandleCourseClick(course)">
                                 <div class="course-content">
                                     <div class="course-number">@course.CourseId</div>
                                     <div class="course-name">@course.Title</div>
@@ -142,4 +156,76 @@ else
         selectedCourse = course; // set selected course
         isCourseClicked = true; //  flip flag
     }
+
+    // Return the css style if the course is in the users Major or Minor
+    private string CategorizeCourse(Course course)
+    {
+        // 1. Check if there is a user
+        if (user == null)
+        {
+            return "course-other";
+        }
+
+        // 2. Check for the users major and minor to see if the Mohor and Minor retrieved contains the course
+        string majorName = user.Major ?? "";
+
+        bool inMajor = MajorCourses.TryGetValue(majorName, out var majorSet)
+                        && majorSet.Contains(course.CourseId);
+
+        string minorName = user.Minor ?? "";
+
+        bool inMinor = MinorCourses.TryGetValue(minorName, out var minorSet)
+                        && minorSet.Contains(course.CourseId);
+
+        // 3. Return the CSS style based on if the major or minor
+        if (inMajor && inMinor)
+        {
+            return "course-both";
+        }
+
+        if (inMajor)
+        {
+            return "course-major";
+        }
+
+        if (inMinor)
+        {
+            return "course-minor";
+        }
+
+        return "course-other";
+    }
+
+<!--Major and minor course data-->
+@code{
+
+    public static readonly Dictionary<string, HashSet<int>> MajorCourses = new()
+    {
+        ["Computer Science"] = new()
+            {
+                110,111,112,301,302,311,312,325,361,362,
+                380,392,420,427,450,470,480,481,489,492
+            },
+
+        ["Data Science"] = new()
+            {
+                 361,380,445,456,457,465,467,480,481
+            },
+    };
+
+    public static readonly Dictionary<string, HashSet<int>> MinorCourses = new()
+    {
+        ["Applied Computer Science"] = new()
+            {
+                110,111,301,112,302,311,351,367,370,426,
+                446,460,467
+            },
+
+        ["Computer Science"] = new()
+            {
+                110,111,301,311
+            }
+    };
 }
+}
+

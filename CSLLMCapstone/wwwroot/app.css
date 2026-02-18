@@ -824,6 +824,46 @@
     gap: 5px;
 }
 
+/* Legend Styling*/
+/* Keep the legend pinned right and in a horizontal row */
+.top-legend {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 18px;
+    white-space: nowrap;
+}
+
+/* Make each label and dot sit on one line */
+.legend-item {
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+}
+
+/* FORCE the dot to render */
+.legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 999px;
+    display: inline-block; /* <- important */
+}
+
+.legend-dot.major {
+    background: #4CAF50;
+}
+
+.legend-dot.minor {
+    background: #2196F3;
+}
+
+.legend-dot.both {
+    background: #9C27B0;
+}
+
 
 /* ========== CONSOLIDATED INSTANCE HISTORY ========== */
 
@@ -973,6 +1013,7 @@
     display: flex;
     align-items: center;
     gap: 10px;
+    flex: 1 1 auto; /* Added to help legend display correctly */
 }
 
 .page-title h2 {
@@ -1162,6 +1203,19 @@
 .course-action:hover {
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(211, 47, 47, 0.4);
+}
+
+/* Major and Minor CSS color coding */
+.course-card.course-major .course-content {
+    background: linear-gradient(135deg, rgba(76, 175, 80, 0.18), rgba(46, 125, 50, 0.08));
+}
+
+.course-card.course-minor .course-content {
+    background: linear-gradient(135deg, rgba(33, 150, 243, 0.18), rgba(21, 101, 192, 0.08));
+}
+
+.course-card.course-both .course-content {
+    background: linear-gradient(135deg, rgba(156, 39, 176, 0.18), rgba(106, 27, 154, 0.08));
 }
 
 /* Modal Styling */
