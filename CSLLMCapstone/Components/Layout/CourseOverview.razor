@@ -27,6 +27,21 @@
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+<!--Loading UI-->
+@if (isGeneratingInstance)
+{
+    <div class="loading-overlay">
+        <div class="loading-card">
+            <img src="favicon.png" class="loading-cat-spinner" alt="Loading" />
+            <h3>Creating your study session...</h3>
+            <p>Our CS Study Cat is fetching the best materials for CS @CourseID @CourseTitle</p>
+            <div class="progress-bar-container">
+                <div class="progress-bar-fill"></div>
+            </div>
+        </div>
+    </div>
+}
+
 <!--Course Modal-->
 <div class="modal" id="courseModal" style="display: flex !important; align-items: center; justify-content: center;">
     <div class="modal-content">
@@ -137,10 +152,17 @@
 
 <!--HandleInstanceClick Logic-->
 @code {
+    // Flag to show loading UI when generating instance
+    private bool isGeneratingInstance = false;
+
     private async Task HandleInstanceClick(InstanceType type)
     {
         try
         {
+            // Start Loading UI
+            isGeneratingInstance = true;
+            StateHasChanged();
+
             // Create new instance
             var newInstance = new Instance
             {
@@ -203,6 +225,9 @@
         catch (Exception ex)
         {
             Console.WriteLine($"Error creating instance: {ex.Message}");
+            // Hide the loading UI if there's an error
+            isGeneratingInstance = false;
+            StateHasChanged();
         }
     }
 }
