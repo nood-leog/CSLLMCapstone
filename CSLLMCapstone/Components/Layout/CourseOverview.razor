@@ -146,35 +146,47 @@
             {
                 UserId = int.Parse(await JSRuntime.InvokeAsync<string>("localStorage.getItem", "UserId")),
                 Type = type,
-                llm = new LLM(type),
                 Data = "{}", // Initialize with empty JSON
                 IsFavorite = false, // set default value for IsFavorite
                 CourseId = CourseID,
                 CourseTitle = CourseTitle
             };
 
-			// convert the topics list to a list of strings containing the topic names
+            // convert the topics list to a list of strings containing the topic names
             List<string> topicNames = topics.Select(t => t.Name).ToList();
 
-            if (type == InstanceType.Quiz)
+            if(type == InstanceType.Tutor)
             {
-                // Generate quiz data using LLM service
-                var quizData = await llm.GenerateQuizDataValidatedJSONAsync(newInstance.llm, CourseTitle, CourseDesc, topicNames, null);
-                newInstance.Data = quizData;
-            }
-            else if (type == InstanceType.Flash)
-            {
-                // Generate flashcard data using LLM service
-                var flashData = await llm.GenerateFlashCardDataValidatedJSONAsync(newInstance.llm, CourseTitle, CourseDesc, topicNames, null);
-                newInstance.Data = flashData;
-            }
-            // FINISH TUTOR MODE LATER
-            else if (type == InstanceType.Tutor)
-            {
+                var tutorModeData = new List<TutorConversationData>
+                {
+                    new TutorConversationData
+                    {
+                        role = "tutor",
+                        content = "Hello! I'm your AI tutor. How can I help you learning today?"
+                    }
+                };
+
+                newInstance.Data = System.Text.Json.JsonSerializer.Serialize(tutorModeData);
                 // Generate tutor session data using LLM service
                 // var tutorData = await llm.GenerateTutorSessionAsync(CourseID, topic?.TopicId);
                 // newInstance.Data = tutorData;
-			}
+            }
+            else
+            {
+                newInstance.llm = new LLM(type);
+                if (type == InstanceType.Quiz)
+                {
+                    // Generate quiz data using LLM service
+                    var quizData = await llm.GenerateQuizDataValidatedJSONAsync(newInstance.llm, CourseTitle, CourseDesc, topicNames, null);
+                    newInstance.Data = quizData;
+                }
+                else if (type == InstanceType.Flash)
+                {
+                    // Generate flashcard data using LLM service
+                    var flashData = await llm.GenerateFlashCardDataValidatedJSONAsync(newInstance.llm, CourseTitle, CourseDesc, topicNames, null);
+                    newInstance.Data = flashData;
+                }
+            }
 
             // Save to database
             await Db.SaveInstanceAsync(newInstance);

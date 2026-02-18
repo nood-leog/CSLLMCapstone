@@ -3,6 +3,7 @@
 @using CSLLMCapstone.Models
 @rendermode InteractiveServer
 @inject DbService Db
+@inject LLMService llm
 @inject NavigationManager NavManager
 @inject IJSRuntime JSRuntime
 
@@ -59,29 +60,26 @@
                 </div>
                     
                 <div class="tutor-content">
+
                     <div class="tutor-chat-container">
-                        <div class="tutor-message bot">
-                            <div class="tutor-avatar">
-                                <i class="fas fa-robot"></i>
+                        @foreach (var message in conversationDatas)
+                        {
+                            <div class="tutor-message @(message.role == "user" ? "user" : "bot")">
+                                <div class="tutor-avatar">
+                                    <i class="fas @(message.role == "user" ? "fa-user" : "fa-robot")"></i>
+                                </div>
+                                <div class="tutor-message-content">
+                                    @message.content
+                                </div>
                             </div>
-                            <div class="tutor-message-content">
-                                Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat.
-                            </div>
-                        </div>
-                        <div class="tutor-message user">
-                            <div class="tutor-avatar">
-                                <i class="fas fa-user"></i>
-                            </div>
-                            <div class="tutor-message-content">
-                                In id cursus mi pretium tellus duis convallis?
-                            </div>
-                        </div>
+                        }
                     </div>
-                        
+
                     <div class="tutor-input-container">
-                        <input type="text" class="tutor-input" placeholder="Ask anything about computer science..." value="Lorem ipsum dolor sit amet?">
-                        <button class="tutor-send-button">
-                            <i class="fas fa-paper-plane"></i>
+                        <input type="text" class="tutor-input" placeholder="Ask anything..."
+                               @bind="userInput" @onkeyup="HandleKeyPress">
+                        <button class="tutor-send-button" @onclick="SendMessage" disabled="@isGenerating">
+                            <i class="fas @(isGenerating ? "fa-spinner fa-spin" : "fa-paper-plane")"></i>
                         </button>
                     </div>
                 </div>
@@ -94,52 +92,124 @@
     </div>
 </div>
 
-@code {
-    [Parameter]
-    public string? InstanceId { get; set; }
 
-    // delcare instance so HTML can access course info for quiz header
+@code {
+    [Parameter] public string? InstanceId { get; set; }
+
     private Instance? instance;
+    private List<TutorConversationData> conversationDatas = new();
+    private User? user;
+    private string userInput = "";
+    private bool isGenerating = false;
+    private string? errorMessage; // To show the user if the AI is busy
 
     protected override async Task OnInitializedAsync()
     {
-        // Load instance data here if needed
         if (!string.IsNullOrEmpty(InstanceId))
         {
-            // get the instance from instance id
             instance = await Db.GetInstanceByIdAsync(InstanceId);
-
             if (instance != null)
             {
-                // call llm service to generate tutor content based on instance data
+                // Initialize LLM object
+                instance.llm = new LLM(instance.Type);
+
+                if (!string.IsNullOrEmpty(instance.Data) && instance.Data != "{}")
+                {
+                    try
+                    {
+                        conversationDatas = System.Text.Json.JsonSerializer.Deserialize<List<TutorConversationData>>(instance.Data)
+                                           ?? new List<TutorConversationData>();
+                    }
+                    catch { /* Handle malformed JSON if necessary */ }
+                }
             }
         }
     }
-}
 
-@code {
-    // User details - to be fetched from DB
-    private User? user;
+    private async Task SendMessage()
+    {
+        if (string.IsNullOrWhiteSpace(userInput) || isGenerating || instance == null) return;
 
-    // Checking if user is authenticated
+        isGenerating = true;
+        errorMessage = null;
+
+        // Save User Message Block
+        var currentInput = userInput;
+        userInput = ""; // Clear UI input immediately
+        await AppendMessageAndSave("user", currentInput);
+
+        try
+        {
+            // Generate LLM Response
+            var tutorMsg = await llm.GenerateTutorResponse(instance.llm, currentInput, conversationDatas);
+
+            // Save Tutor Response Block
+            await AppendMessageAndSave("tutor", tutorMsg.content);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"LLM Error: {ex.Message}");
+            errorMessage = "The tutor is having trouble connecting. Try again?";
+        }
+        finally
+        {
+            isGenerating = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task HandleKeyPress(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter") await SendMessage();
+    }
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            // 1. Check local storage for the UserID
             var userId = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "UserId");
-
             if (string.IsNullOrEmpty(userId))
             {
-                // 2. If no user found, boot them to login
                 NavManager.NavigateTo("/");
             }
             else
             {
-                // 3. User is valid, fetch the user details and show the UI
                 user = await Db.GetUserByIdAsync(int.Parse(userId));
-                StateHasChanged(); // Force a re-render now that we have data
+                StateHasChanged();
             }
         }
     }
+
+
+    private async Task AppendMessageAndSave(string role, string content)
+    {
+        if (instance == null) return;
+
+        // 1. Create the new data block
+        var newMessage = new TutorConversationData
+        {
+            role = role,
+            content = content
+        };
+
+        // 2. Add to the local list (the UI uses this)
+        conversationDatas.Add(newMessage);
+
+        // 3. Serialize the ENTIRE list back to JSON
+        // This creates the [{"role":"tutor"...}, {"role":"user"...}] structure
+        instance.Data = System.Text.Json.JsonSerializer.Serialize(conversationDatas);
+
+        try
+        {
+            // 4. Update the DB
+            await Db.SaveInstanceAsync(instance);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Database Sync Error: {ex.Message}");
+            errorMessage = "Message sent, but failed to save to history.";
+        }
+    }
+
 }
+

@@ -27,6 +27,12 @@ namespace CSLLMCapstone.Services
         public string answer_desc { get; set; } = ""; // optional field for future use, not currently used in the prompt } 
     }
 
+    public class TutorConversationData
+    {
+        public string role { get; set; } = "";
+        public string content { get; set; } = "";
+    }
+
     public class LLMService
     {
 
@@ -175,6 +181,32 @@ namespace CSLLMCapstone.Services
 
             return quizData;
         }
+
+
+        public async Task<TutorConversationData> GenerateTutorResponse(LLM llm, string userInput, List<TutorConversationData> history)
+        {
+            // 1. Create a string of the history so the LLM has context
+            // We use a StringBuilder or Join for better performance
+            string conversationHistoryString = string.Join(" ", history.Select(h => $"{h.role}: {h.content}"));
+
+            // 2. Build the prompt
+            string prompt = $"You are a helpful Computer Science Tutor. " +
+                            $"Based on the following history, answer the student's question. " +
+                            $"History: {conversationHistoryString} " +
+                            $"Student Question: {userInput}";
+
+            // 3. Get the response from the LLM
+            string tutorResponse = await llm.AskAsync(prompt);
+
+            // 4. Return the new message object
+            return new TutorConversationData
+            {
+                role = "tutor",
+                content = tutorResponse
+            };
+        }
+
+
 
         /*
         public List<List<string>> GenerateQuizDataList(string JSONValidatedData)

@@ -156,7 +156,7 @@ namespace CSLLMCapstone.Services
         {
             using var context = _contextFactory.CreateDbContext();
             return await context.Instances
-                .Include(i => i.User)
+                //.Include(i => i.User)
                 .FirstOrDefaultAsync(i => i.InstanceId == instanceId);
         }
 
