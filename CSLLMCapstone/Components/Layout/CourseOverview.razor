@@ -27,6 +27,21 @@
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+<!--Loading UI-->
+@if (isGeneratingInstance)
+{
+    <div class="loading-overlay">
+        <div class="loading-card">
+            <img src="favicon.png" class="loading-cat-spinner" alt="Loading" />
+            <h3>Creating your study session...</h3>
+            <p>Our CS Study Cat is fetching the best materials for CS @CourseID @CourseTitle</p>
+            <div class="progress-bar-container">
+                <div class="progress-bar-fill"></div>
+            </div>
+        </div>
+    </div>
+}
+
 <!--Course Modal-->
 <div class="modal" id="courseModal" style="display: flex !important; align-items: center; justify-content: center;">
     <div class="modal-content">
@@ -137,44 +152,61 @@
 
 <!--HandleInstanceClick Logic-->
 @code {
+    // Flag to show loading UI when generating instance
+    private bool isGeneratingInstance = false;
+
     private async Task HandleInstanceClick(InstanceType type)
     {
         try
         {
+            // Start Loading UI
+            isGeneratingInstance = true;
+            StateHasChanged();
+
             // Create new instance
             var newInstance = new Instance
             {
                 UserId = int.Parse(await JSRuntime.InvokeAsync<string>("localStorage.getItem", "UserId")),
                 Type = type,
-                llm = new LLM(type),
                 Data = "{}", // Initialize with empty JSON
                 IsFavorite = false, // set default value for IsFavorite
                 CourseId = CourseID,
                 CourseTitle = CourseTitle
             };
 
-			// convert the topics list to a list of strings containing the topic names
+            // convert the topics list to a list of strings containing the topic names
             List<string> topicNames = topics.Select(t => t.Name).ToList();
 
-            if (type == InstanceType.Quiz)
+            // generate initial data based on instance type
+            if (type == InstanceType.Tutor)
             {
-                // Generate quiz data using LLM service
-                var quizData = await llm.GenerateQuizDataValidatedJSONAsync(newInstance.llm, CourseTitle, CourseDesc, topicNames, null);
-                newInstance.Data = quizData;
+                // construct the initial message for the tutor mode
+                var initialMessage = new List<TutorConversationData>
+                {
+                    new TutorConversationData
+                    {
+                        role = "tutor",
+                        content = "Hello! I'm your AI tutor. How can I help you today?"
+                    }
+                };
+                newInstance.Data = System.Text.Json.JsonSerializer.Serialize(initialMessage);
             }
-            else if (type == InstanceType.Flash)
+            else
             {
-                // Generate flashcard data using LLM service
-                var flashData = await llm.GenerateFlashCardDataValidatedJSONAsync(newInstance.llm, CourseTitle, CourseDesc, topicNames, null);
-                newInstance.Data = flashData;
+                newInstance.llm = new LLM(type);
+                if (type == InstanceType.Quiz)
+                {
+                    // Generate quiz data using LLM service
+                    var quizData = await llm.GenerateQuizDataValidatedJSONAsync(newInstance.llm, CourseTitle, CourseDesc, topicNames, null);
+                    newInstance.Data = quizData;
+                }
+                else if (type == InstanceType.Flash)
+                {
+                    // Generate flashcard data using LLM service
+                    var flashData = await llm.GenerateFlashCardDataValidatedJSONAsync(newInstance.llm, CourseTitle, CourseDesc, topicNames, null);
+                    newInstance.Data = flashData;
+                }
             }
-            // FINISH TUTOR MODE LATER
-            else if (type == InstanceType.Tutor)
-            {
-                // Generate tutor session data using LLM service
-                // var tutorData = await llm.GenerateTutorSessionAsync(CourseID, topic?.TopicId);
-                // newInstance.Data = tutorData;
-			}
 
             // Save to database
             await Db.SaveInstanceAsync(newInstance);
@@ -193,6 +225,9 @@
         catch (Exception ex)
         {
             Console.WriteLine($"Error creating instance: {ex.Message}");
+            // Hide the loading UI if there's an error
+            isGeneratingInstance = false;
+            StateHasChanged();
         }
     }
 }

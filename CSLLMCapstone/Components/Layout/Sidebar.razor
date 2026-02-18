@@ -61,7 +61,7 @@
                 {
                     @foreach (var instance in instances)
                     {
-                        <div class="sidebar-instance-container">
+                        <div class="sidebar-instance-container @(instance.InstanceId.ToString() == InstanceId ? "active-instance" : "")">
                             <a class="sidebar-instance-item" @onclick='() => HandleInstanceClick(instance)'>
                                 <div class="sidebar-instance-icon">
                                     <i class="fas @GetInstanceIcon(instance.Type)"></i>
@@ -94,11 +94,17 @@
 </div>
 
 @code {
+    // Parameter to receive the instance ID from the URL for dynamic routing
+    [Parameter] public string? InstanceId { get; set; }
+
     // List of instances - to be fetched from DB
     private List<Instance> instances = new List<Instance>();
 
     // Loading state for dashboard
     private bool isLoading = true;
+
+    // Store the user ID for fetching history and performing actions
+    private string userId = ""; 
 
     // Checking if user is authenticated
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -106,7 +112,7 @@
         if (firstRender)
         {
             // 1. Check local storage for the UserID
-            var userId = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "UserId");
+            userId = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "UserId");
 
             if (string.IsNullOrEmpty(userId))
             {
@@ -154,10 +160,20 @@
     {
         try
         {
+            if (string.IsNullOrEmpty(userId))
+            {
+                NavManager.NavigateTo("/");
+                return;
+            }
+
             // Toggle the favorite status
             instance.IsFavorite = !instance.IsFavorite;
+
             // Update the database with the new favorite status
             await Db.UpdateInstanceFavoriteStatusAsync(instance.InstanceId, instance.IsFavorite);
+
+            // Refresh the dashboard to update instance history
+            instances = await Db.GetUserHistoryAsync(int.Parse(userId));
             StateHasChanged(); // Force a re-render to reflect changes
         }
         catch (Exception ex)
@@ -173,15 +189,34 @@
     {
         try
         {
+            if (string.IsNullOrEmpty(userId))
+            {
+                NavManager.NavigateTo("/");
+                return;
+            }
+
             // prompt the user for confirmation before deleting (UPDATE UI LATER)
             bool confirmed = await JSRuntime.InvokeAsync<bool>("confirm", $"Are you sure you want to delete this {instance.Type} instance?");
             if (!confirmed)
             {
                 return; // User canceled the deletion
             }
+
             // Delete the instance from the database
             await Db.DeleteInstanceAsync(instance.InstanceId);
-            NavManager.NavigateTo("/dashboard"); // Refresh the dashboard to update instance history
+
+            // Check if the deleted instance is currently being viewed
+            if (instance.InstanceId.ToString() == InstanceId)
+            {
+                // If we are deleting the current page, redirect to the main dashboard
+                NavManager.NavigateTo("/dashboard", forceLoad: true);
+            }
+            else
+            {
+                // Refresh the dashboard to update instance history
+                instances = await Db.GetUserHistoryAsync(int.Parse(userId));
+                StateHasChanged(); // Force a re-render to reflect changes
+            }
         }
         catch (Exception ex)
         {
