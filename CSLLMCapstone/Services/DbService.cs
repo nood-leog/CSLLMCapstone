@@ -1,8 +1,9 @@
 ﻿using CSLLMCapstone.Data;
 using CSLLMCapstone.Models;
+using Google.GenAI.Types;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel;
-using Microsoft.AspNetCore.Identity;
 
 namespace CSLLMCapstone.Services
 {
@@ -191,6 +192,18 @@ namespace CSLLMCapstone.Services
             if (instance != null)
             {
                 context.Instances.Remove(instance);
+                await context.SaveChangesAsync();
+            }
+        }
+
+        // Update an existing instance's data, used for allowing users to modify interactions and other operations
+        public async Task UpdateInstanceDataAsync(string instanceId, string newData)
+        {
+            using var context = _contextFactory.CreateDbContext();
+            var instance = await context.Instances.FindAsync(instanceId);
+            if (instance != null)
+            {
+                instance.Data = newData;
                 await context.SaveChangesAsync();
             }
         }

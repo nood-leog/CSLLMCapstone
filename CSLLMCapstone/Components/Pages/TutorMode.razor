@@ -42,7 +42,7 @@
             <a href="/dashboard" class="close-modal">&times;</a>
         </div>
 
-        <!--Tutor Content - HARDCODED, MUST UPDATE W/ LLM INTEGRATION-->
+        <!--Tutor Content - Dynamic with LLM-->
         <div class="study-session-body">
             <div class="tutor-container">
                 <!--Tutor Header-->
@@ -60,9 +60,9 @@
                 </div>
                     
                 <div class="tutor-content">
-
+                    <!--Tutor Mode Chats-->
                     <div class="tutor-chat-container">
-                        @foreach (var message in conversationDatas)
+                        @foreach (var message in conversationData)
                         {
                             <div class="tutor-message @(message.role == "user" ? "user" : "bot")">
                                 <div class="tutor-avatar">
@@ -75,6 +75,17 @@
                         }
                     </div>
 
+                    <!--Error Message-->
+                    @if (!string.IsNullOrEmpty(errorMessage))
+                    {
+                        <div class="alert alert-danger" style="margin: 10px; padding: 10px; border-radius: 5px; background-color: #fee2e2; color: #b91c1c; display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span>@errorMessage</span>
+                            <button class="close-error" @onclick="() => errorMessage = null" style="margin-left: auto; background: none; border: none; cursor: pointer;">&times;</button>
+                        </div>
+                    }
+
+                    <!--User Input-->
                     <div class="tutor-input-container">
                         <input type="text" class="tutor-input" placeholder="Ask anything..."
                                @bind="userInput" @onkeyup="HandleKeyPress">
@@ -94,15 +105,17 @@
 
 
 @code {
+    // The instanceId is passed in the URL and used to load the specific tutor session data from the database
     [Parameter] public string? InstanceId { get; set; }
 
     private Instance? instance;
-    private List<TutorConversationData> conversationDatas = new();
+    private List<TutorConversationData> conversationData = new();
     private User? user;
     private string userInput = "";
     private bool isGenerating = false;
     private string? errorMessage; // To show the user if the AI is busy
 
+    // On component initialization we load the corresponding instance from the database, initialize the LLM, and deserialize any existing conversation data to display in the UI
     protected override async Task OnInitializedAsync()
     {
         if (!string.IsNullOrEmpty(InstanceId))
@@ -117,15 +130,21 @@
                 {
                     try
                     {
-                        conversationDatas = System.Text.Json.JsonSerializer.Deserialize<List<TutorConversationData>>(instance.Data)
+                        conversationData = System.Text.Json.JsonSerializer.Deserialize<List<TutorConversationData>>(instance.Data)
                                            ?? new List<TutorConversationData>();
                     }
-                    catch { /* Handle malformed JSON if necessary */ }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Data Load Error: {ex.Message}");
+                        errorMessage = "Failed to load conversation history.";
+                        conversationData = new List<TutorConversationData>();
+                    }
                 }
             }
         }
     }
 
+    // This method handles the entire flow of sending a message: saving the user's message, generating the tutor's response, and saving that response
     private async Task SendMessage()
     {
         if (string.IsNullOrWhiteSpace(userInput) || isGenerating || instance == null) return;
@@ -140,11 +159,17 @@
 
         try
         {
+            // Ensure LLM is initialized (should already be, but just in case)
+            if (instance.llm == null)
+            {
+                instance.llm = new LLM(instance.Type);
+            }
+
             // Generate LLM Response
-            var tutorMsg = await llm.GenerateTutorResponse(instance.llm, currentInput, conversationDatas);
+            var tutorMessage = await llm.GenerateTutorResponse(instance.llm, currentInput, conversationData);
 
             // Save Tutor Response Block
-            await AppendMessageAndSave("tutor", tutorMsg.content);
+            await AppendMessageAndSave("tutor", tutorMessage.content);
         }
         catch (Exception ex)
         {
@@ -158,11 +183,13 @@
         }
     }
 
+    // Allow pressing Enter to send message
     private async Task HandleKeyPress(KeyboardEventArgs e)
     {
         if (e.Key == "Enter") await SendMessage();
     }
 
+    // Checking if user is authenticated on page load and redirecting if not, otherwise loading user data
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
@@ -180,7 +207,7 @@
         }
     }
 
-
+    // This method handles both appending a new message to the local conversation list and saving the entire conversation back to the database
     private async Task AppendMessageAndSave(string role, string content)
     {
         if (instance == null) return;
@@ -193,16 +220,19 @@
         };
 
         // 2. Add to the local list (the UI uses this)
-        conversationDatas.Add(newMessage);
+        conversationData.Add(newMessage);
 
         // 3. Serialize the ENTIRE list back to JSON
         // This creates the [{"role":"tutor"...}, {"role":"user"...}] structure
-        instance.Data = System.Text.Json.JsonSerializer.Serialize(conversationDatas);
+        instance.Data = System.Text.Json.JsonSerializer.Serialize(conversationData);
 
         try
         {
-            // 4. Update the DB
-            await Db.SaveInstanceAsync(instance);
+            if (!string.IsNullOrEmpty(InstanceId))
+            {
+                // 4. Update the DB
+                await Db.UpdateInstanceDataAsync(InstanceId, instance.Data);
+            }
         }
         catch (Exception ex)
         {

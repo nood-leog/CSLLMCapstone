@@ -27,6 +27,7 @@ namespace CSLLMCapstone.Services
         public string answer_desc { get; set; } = ""; // optional field for future use, not currently used in the prompt } 
     }
 
+    // TutorConversationData class holds the role of the speaker (tutor or student) and the content of the message as string
     public class TutorConversationData
     {
         public string role { get; set; } = "";
@@ -182,7 +183,7 @@ namespace CSLLMCapstone.Services
             return quizData;
         }
 
-
+        // returning generated tutor response in TutorConversationData type
         public async Task<TutorConversationData> GenerateTutorResponse(LLM llm, string userInput, List<TutorConversationData> history)
         {
             // 1. Create a string of the history so the LLM has context
@@ -205,8 +206,6 @@ namespace CSLLMCapstone.Services
                 content = tutorResponse
             };
         }
-
-
 
         /*
         public List<List<string>> GenerateQuizDataList(string JSONValidatedData)

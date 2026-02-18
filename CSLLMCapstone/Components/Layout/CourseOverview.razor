@@ -155,21 +155,19 @@
             // convert the topics list to a list of strings containing the topic names
             List<string> topicNames = topics.Select(t => t.Name).ToList();
 
-            if(type == InstanceType.Tutor)
+            // generate initial data based on instance type
+            if (type == InstanceType.Tutor)
             {
-                var tutorModeData = new List<TutorConversationData>
+                // construct the initial message for the tutor mode
+                var initialMessage = new List<TutorConversationData>
                 {
                     new TutorConversationData
                     {
                         role = "tutor",
-                        content = "Hello! I'm your AI tutor. How can I help you learning today?"
+                        content = "Hello! I'm your AI tutor. How can I help you today?"
                     }
                 };
-
-                newInstance.Data = System.Text.Json.JsonSerializer.Serialize(tutorModeData);
-                // Generate tutor session data using LLM service
-                // var tutorData = await llm.GenerateTutorSessionAsync(CourseID, topic?.TopicId);
-                // newInstance.Data = tutorData;
+                newInstance.Data = System.Text.Json.JsonSerializer.Serialize(initialMessage);
             }
             else
             {
