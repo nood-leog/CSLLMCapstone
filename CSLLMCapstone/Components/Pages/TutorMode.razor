@@ -44,8 +44,18 @@
         <!--Tutor Content - HARDCODED, MUST UPDATE W/ LLM INTEGRATION-->
         <div class="study-session-body">
             <div class="tutor-container">
+                <!--Tutor Header-->
                 <div class="tutor-header">
-                    <div class="tutor-title">CS Study Tutor</div>
+                    <div class="flashcards-title">
+                        @if (instance != null)
+                        {
+                            <span>CS @instance.CourseId @instance.CourseTitle</span>
+                        }
+                        else
+                        {
+                            <span>Loading Course Details...</span>
+                        }
+                    </div>
                 </div>
                     
                 <div class="tutor-content">
@@ -88,13 +98,21 @@
     [Parameter]
     public string? InstanceId { get; set; }
 
+    // delcare instance so HTML can access course info for quiz header
+    private Instance? instance;
+
     protected override async Task OnInitializedAsync()
     {
         // Load instance data here if needed
         if (!string.IsNullOrEmpty(InstanceId))
         {
-            // TODO: Load tutor data based on InstanceId from database
-            Console.WriteLine($"Tutor instance loaded: {InstanceId}");
+            // get the instance from instance id
+            instance = await Db.GetInstanceByIdAsync(InstanceId);
+
+            if (instance != null)
+            {
+                // call llm service to generate tutor content based on instance data
+            }
         }
     }
 }
