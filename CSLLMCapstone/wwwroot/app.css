@@ -1797,6 +1797,7 @@
 .tutor-chat-container {
     flex-grow: 1;
     overflow-y: auto;
+    overflow-x: hidden;
     padding: 20px;
     background-color: #fafafa;
     border-radius: 8px;
@@ -1850,6 +1851,8 @@
     border-radius: 18px;
     line-height: 1.5;
     font-size: 1rem;
+    white-space: pre-wrap; /* This is the key for plain text formatting */
+    word-wrap: break-word;
 }
 
 .tutor-message.user .tutor-message-content {
@@ -2163,6 +2166,11 @@ a.topic-study-button,
 a.topic-row {
     display: block;
     text-decoration: none;
+}
+
+.active-instance {
+    border-left: 4px solid var(--primary-red);
+    background-color: rgba(211, 47, 47, 0.05);
 }
 
 

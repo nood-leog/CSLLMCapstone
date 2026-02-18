@@ -15,7 +15,7 @@
     <!--Sidebar component-->
     @if (user != null)
     {
-        <Sidebar FName="@(user.FName ?? "")" LName="@(user.LName ?? "")" />
+        <Sidebar FName="@(user.FName ?? "")" LName="@(user.LName ?? "")" InstanceId="@InstanceId" />
     }
     else
     {
@@ -144,6 +144,14 @@
         }
     }
 
+    // This method is called after every render to ensure that the chat container scrolls to the bottom whenever new messages are added
+    private async Task ScrollToBottom()
+    {
+        // Give Blazor a tiny moment to render the new HTML nodes first
+        await Task.Delay(100);
+        await JSRuntime.InvokeVoidAsync("scrollToBottom", ".tutor-chat-container");
+    }
+
     // This method handles the entire flow of sending a message: saving the user's message, generating the tutor's response, and saving that response
     private async Task SendMessage()
     {
@@ -156,6 +164,7 @@
         var currentInput = userInput;
         userInput = ""; // Clear UI input immediately
         await AppendMessageAndSave("user", currentInput);
+        await ScrollToBottom();
 
         try
         {
@@ -170,6 +179,7 @@
 
             // Save Tutor Response Block
             await AppendMessageAndSave("tutor", tutorMessage.content);
+            await ScrollToBottom();
         }
         catch (Exception ex)
         {

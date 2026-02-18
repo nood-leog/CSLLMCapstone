@@ -17,6 +17,15 @@
 <body>
     <Routes />
     <script src="@Assets["_framework/blazor.web.js"]"></script>
+    <script>
+        window.scrollToBottom = (elementSelector) => {
+            const element = document.querySelector(elementSelector);
+            if (element) {
+                console.log("Scrolling element:", elementSelector);
+                element.scrollTop = element.scrollHeight;
+            }
+        };
+    </script>
 </body>
 
 </html>

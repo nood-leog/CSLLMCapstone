@@ -183,6 +183,21 @@ namespace CSLLMCapstone.Services
             return quizData;
         }
 
+        // This method checks the tutor response and strips any markdown formatting before displaying it in the UI
+        private string StripMarkdown(string text)
+        {
+            if (string.IsNullOrEmpty(text)) return text;
+
+            // Remove common Markdown symbols using simple string replacements
+            return text
+                .Replace("**", "")   // Bold
+                .Replace("__", "")   // Bold/Italic
+                .Replace("#", "")    // Headers
+                .Replace("`", "")    // Code blocks
+                .Replace("* ", "• ") // Convert markdown bullets to standard bullet points
+                .Trim();
+        }
+
         // returning generated tutor response in TutorConversationData type
         public async Task<TutorConversationData> GenerateTutorResponse(LLM llm, string userInput, List<TutorConversationData> history)
         {
@@ -190,20 +205,24 @@ namespace CSLLMCapstone.Services
             // We use a StringBuilder or Join for better performance
             string conversationHistoryString = string.Join(" ", history.Select(h => $"{h.role}: {h.content}"));
 
-            // 2. Build the prompt
+            // 2. Add explicit "Plain Text" instructions to the prompt
             string prompt = $"You are a helpful Computer Science Tutor. " +
+                            $"IMPORTANT: Provide your answer in PLAIN TEXT only. Do not use Markdown, " +
+                            $"do not use asterisks for bold, do not use hashtags for headers, " +
+                            $"and do not use backticks for code. Use standard indentation and capitalization. " +
                             $"Based on the following history, answer the student's question. " +
                             $"History: {conversationHistoryString} " +
                             $"Student Question: {userInput}";
 
             // 3. Get the response from the LLM
             string tutorResponse = await llm.AskAsync(prompt);
+            string cleanedResponse = StripMarkdown(tutorResponse); // Remove any markdown formatting
 
             // 4. Return the new message object
             return new TutorConversationData
             {
                 role = "tutor",
-                content = tutorResponse
+                content = cleanedResponse
             };
         }
 
