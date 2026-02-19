@@ -18,7 +18,7 @@ namespace CSLLMCapstone.Services
     // QuizData class holds generated question as string, options as list of strings, and answer as string  
     public class QuizData
     {
-        public string questionID { get; set; } // To store "question 1"
+        public string questionID { get; set; } = ""; // To store "question 1"
 
         [JsonPropertyName("question text")] // this forces it to map the key with the space
         public string questionText { get; set; } = "";
