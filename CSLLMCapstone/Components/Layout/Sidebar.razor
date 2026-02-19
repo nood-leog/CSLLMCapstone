@@ -9,6 +9,9 @@
 @code {
     [Parameter] public string? FName { get; set; }
     [Parameter] public string? LName { get; set; }
+    [Parameter] public string? Major { get; set; }
+    [Parameter] public string? Minor { get; set; }
+    [Parameter] public int? GradYear { get; set; }
 
     // Computed property for the initials
     private string UserInitials =>
@@ -51,6 +54,11 @@
                 <div class="sidebar-user-avatar">@DisplayInitials</div>
                 <div class="sidebar-user-details">
                     <h3>@FName @LName</h3>
+                    <p><i class="fas fa-graduation-cap"></i> @Major @GradYear</p>
+                    @if (!string.IsNullOrEmpty(Minor))
+                    {
+                        <p><i class="fas fa-book"></i> Minor: @Minor</p>
+                    }
                 </div>
             </div>
 

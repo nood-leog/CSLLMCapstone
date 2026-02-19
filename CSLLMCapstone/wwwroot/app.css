@@ -79,6 +79,11 @@
     }
 }
 
+#app, .auth-layout-container {
+    height: 100%;
+    width: 100%;
+}
+
 /* ========== LOGIN PAGE STYLES ========== */
 .login-body {
     height: 100vh;
@@ -745,9 +750,11 @@
     display: flex;
     height: 100vh;
     width: 100vw;
+    align-items: stretch;
     background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
     color: var(--text-dark);
     overflow: hidden;
+    margin: 0;
 }
 
 /* Sidebar */
@@ -770,13 +777,16 @@
     border-bottom: 1px solid var(--border-color);
     display: flex;
     align-items: center;
-    gap: 12px;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
 }
 
 .sidebar-logo h1 {
     font-size: 1.5rem;
     font-weight: 700;
     color: var(--dark-red);
+    margin: 0;
 }
 
 .sidebar-logo i {
@@ -994,19 +1004,22 @@
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-    height: 100%;
-    overflow-y: auto;
+    height: 100vh;
+    overflow: hidden;
     background-color: var(--white);
+    position: relative;
 }
 
 .top-bar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 30px;
+    padding: 22px 30px;
     background-color: var(--white);
     box-shadow: 0 2px 15px var(--shadow-color);
     border-bottom: 1px solid var(--border-color);
+    z-index: 5;
+    margin-top: 0;
 }
 
 .page-title {

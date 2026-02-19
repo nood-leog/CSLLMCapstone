@@ -15,7 +15,14 @@
     <!--Sidebar component-->
     @if (user != null)
     {
-        <Sidebar FName="@(user.FName ?? "")" LName="@(user.LName ?? "")" InstanceId="@InstanceId" />
+        <Sidebar 
+            FName="@(user.FName ?? "")"
+            LName="@(user.LName ?? "")"
+            Major="@(user.Major ?? "")"
+            Minor="@(user.Minor ?? "")"
+            GradYear="@(user.GraduationDate)"
+            InstanceId="@InstanceId" 
+        />
     }
     else
     {
