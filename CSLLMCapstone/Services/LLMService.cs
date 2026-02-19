@@ -199,26 +199,32 @@ namespace CSLLMCapstone.Services
         }
 
         // returning generated tutor response in TutorConversationData type
-        public async Task<TutorConversationData> GenerateTutorResponse(LLM llm, string userInput, List<TutorConversationData> history)
+        public async Task<TutorConversationData> GenerateTutorResponse(LLM llm, string userInput, List<TutorConversationData> history, string courseName, string courseDesc, List<string> courseTopics)
         {
             // 1. Create a string of the history so the LLM has context
             // We use a StringBuilder or Join for better performance
             string conversationHistoryString = string.Join(" ", history.Select(h => $"{h.role}: {h.content}"));
 
-            // 2. Add explicit "Plain Text" instructions to the prompt
-            string prompt = $"You are a helpful Computer Science Tutor. " +
-                            $"IMPORTANT: Provide your answer in PLAIN TEXT only. Do not use Markdown, " +
-                            $"do not use asterisks for bold, do not use hashtags for headers, " +
-                            $"and do not use backticks for code. Use standard indentation and capitalization. " +
-                            $"Based on the following history, answer the student's question. " +
-                            $"History: {conversationHistoryString} " +
-                            $"Student Question: {userInput}";
+            // 2. Build a string of topics for the LLM query
+            string topicString = string.Join(", ", courseTopics);
 
-            // 3. Get the response from the LLM
+            // 3. Updated Prompt with CAG logic
+            string prompt = $"You are the 'CS Study Cat', an expert Computer Science Tutor for Central Washington University. " +
+                            $"You are currently helping a student with the course: {courseName}. " +
+                            $"Course Overview: {courseDesc} " +
+                            $"Authorized Topics for this course: {topicString}. " +
+                            $"INSTRUCTIONS: " +
+                            $"1. Provide your answer in PLAIN TEXT only. Do not use Markdown (no *, #, or `). " +
+                            $"2. Only discuss topics related to the course description and authorized topics provided above. " +
+                            $"3. If the student asks something outside of these topics, politely redirect them. " +
+                            $"\nConversation History:\n{conversationHistoryString} " +
+                            $"\nStudent Question: {userInput}";
+
+            // 4. Get the response from the LLM
             string tutorResponse = await llm.AskAsync(prompt);
             string cleanedResponse = StripMarkdown(tutorResponse); // Remove any markdown formatting
 
-            // 4. Return the new message object
+            // 5. Return the new message object
             return new TutorConversationData
             {
                 role = "tutor",

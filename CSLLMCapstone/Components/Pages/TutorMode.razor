@@ -15,7 +15,14 @@
     <!--Sidebar component-->
     @if (user != null)
     {
-        <Sidebar FName="@(user.FName ?? "")" LName="@(user.LName ?? "")" InstanceId="@InstanceId" />
+        <Sidebar 
+            FName="@(user.FName ?? "")"
+            LName="@(user.LName ?? "")"
+            Major="@(user.Major ?? "")"
+            Minor="@(user.Minor ?? "")"
+            GradYear="@(user.GraduationDate)"
+            InstanceId="@InstanceId" 
+        />
     }
     else
     {
@@ -115,7 +122,11 @@
     private bool isGenerating = false;
     private string? errorMessage; // To show the user if the AI is busy
 
-    // On component initialization we load the corresponding instance from the database, initialize the LLM, and deserialize any existing conversation data to display in the UI
+    // needed to generate tutor responses
+    private string? courseDescription;
+    private List<string> topicNames = new();
+
+    // On component initialization we load the corresponding instance from the database, fetch courses and topcis, and initialize the LLM, and deserialize any existing conversation data to display in the UI
     protected override async Task OnInitializedAsync()
     {
         if (!string.IsNullOrEmpty(InstanceId))
@@ -123,9 +134,26 @@
             instance = await Db.GetInstanceByIdAsync(InstanceId);
             if (instance != null)
             {
+                // Fetch course description and topics for LLM context
+                courseDescription = await Db.GetCourseDescriptionByCourseIdAsync(instance.CourseId);
+                var topics = await Db.GetTopicsByCourseIDAsync(instance.CourseId);
+                topicNames = topics.Select(t => t.Name).ToList();
+
+                // Provide defaults if data is missing to ensure LLM always has some context
+                if (string.IsNullOrEmpty(courseDescription))
+                {
+                    courseDescription = "No course description available.";
+                }
+
+                if (topicNames.Count == 0)
+                {
+                    topicNames.Add("No specific topics available.");
+                }
+
                 // Initialize LLM object
                 instance.llm = new LLM(instance.Type);
 
+                // Deserialize existing conversation
                 if (!string.IsNullOrEmpty(instance.Data) && instance.Data != "{}")
                 {
                     try
@@ -175,7 +203,7 @@
             }
 
             // Generate LLM Response
-            var tutorMessage = await llm.GenerateTutorResponse(instance.llm, currentInput, conversationData);
+            var tutorMessage = await llm.GenerateTutorResponse(instance.llm, currentInput, conversationData, instance.CourseTitle, courseDescription, topicNames);
 
             // Save Tutor Response Block
             await AppendMessageAndSave("tutor", tutorMessage.content);

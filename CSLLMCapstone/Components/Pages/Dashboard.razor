@@ -24,7 +24,13 @@ else
         <!--Sidebar component-->
         @if (user != null)
         {
-            <Sidebar FName="@(user.FName ?? "")" LName="@(user.LName ?? "")" />
+            <Sidebar 
+                FName="@(user.FName ?? "")" 
+                LName="@(user.LName ?? "")"
+                Major="@(user.Major ?? "")"
+                Minor="@(user.Minor ?? "")"
+                GradYear="@(user.GraduationDate)"
+            />
         }
         else
         {
@@ -195,6 +201,7 @@ else
 
         return "course-other";
     }
+}
 
 <!--Major and minor course data-->
 @code{
@@ -227,5 +234,3 @@ else
             }
     };
 }
-}
-
