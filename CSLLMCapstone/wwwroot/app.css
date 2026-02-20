@@ -1398,7 +1398,8 @@
     margin-bottom: 5px;
 }
 
-.course-title-text p {
+.course-title-text p,
+.topic-title-text p {
     color: var(--dark-gray);
     font-size: 0.95rem;
 }

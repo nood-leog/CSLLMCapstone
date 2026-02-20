@@ -41,5 +41,8 @@ namespace CSLLMCapstone.Models
 
         [Required]
         public string CourseTitle { get; set; } = "";
+
+        [Required]
+        public string TopicName { get; set; } = "";
     }
 }

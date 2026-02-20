@@ -62,6 +62,10 @@
                             @if (instance != null)
                             {
                                 <span>CS @instance.CourseId @instance.CourseTitle</span>
+                                @if (!string.IsNullOrWhiteSpace(instance.TopicName))
+                                {
+                                    <span> / @instance.TopicName</span>
+                                }
                             }
                             else
                             {
@@ -74,7 +78,7 @@
                     <!--Quiz Main Section-->
                     <div class="quiz-content">
                         <div class="quiz-question-section">
-                            <h4>@(currentQuestion[0].StartsWith("q") ? "Q" + currentQuestion[0].Substring(1) : currentQuestion[0]):</h4>
+                            <h4>Question @(currentIndex + 1):</h4>
                             <p>@currentQuestion[1]</p>
 
                             <div class="quiz-options">

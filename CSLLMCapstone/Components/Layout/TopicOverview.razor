@@ -76,6 +76,7 @@
                     <div class="topic-title-icon">CS</div>
                     <div class="topic-title-text">
                         <h2>@CourseID / @(Topic?.Name ?? "Unknown")</h2>
+                        <p>@CourseTitle</p>
                     </div>
                 </div>
 
@@ -108,7 +109,8 @@
                 Data = "{}", // Initialize with empty JSON
                 IsFavorite = false, // set default value for IsFavorite
                 CourseId = CourseID,
-                CourseTitle = CourseTitle ?? "No title available"
+                CourseTitle = CourseTitle ?? "No title available",
+                TopicName = Topic?.Name ?? ""
             };
 
             // create list of topic names for current topic (if exists) to pass to LLM service

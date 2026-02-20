@@ -58,6 +58,10 @@
                         @if (instance != null)
                         {
                             <span>CS @instance.CourseId @instance.CourseTitle</span>
+                            @if (!string.IsNullOrWhiteSpace(instance.TopicName))
+                            {
+                                <span> / @instance.TopicName</span>
+                            }
                         }
                         else
                         {

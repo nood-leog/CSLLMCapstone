@@ -77,6 +77,10 @@
                                 <div class="sidebar-instance-info">
                                     <h5>@instance.Type</h5>
                                     <p>CS @instance.CourseId @instance.CourseTitle</p>
+                                    @if (!string.IsNullOrWhiteSpace(instance.TopicName))
+                                    {
+                                        <p>@instance.TopicName</p>
+                                    }
                                 </div>
                             </a>
                             <div class="instance-actions">
