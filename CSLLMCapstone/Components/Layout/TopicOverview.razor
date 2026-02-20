@@ -108,7 +108,7 @@
                 Data = "{}", // Initialize with empty JSON
                 IsFavorite = false, // set default value for IsFavorite
                 CourseId = CourseID,
-                CourseTitle = CourseTitle
+                CourseTitle = CourseTitle ?? "No title available"
             };
 
             // create list of topic names for current topic (if exists) to pass to LLM service
@@ -133,14 +133,14 @@
                 newInstance.llm = new LLM(type);
                 if (type == InstanceType.Quiz)
                 {
-                    // Generate quiz data using LLM service
-                    var quizData = await llm.GenerateQuizDataValidatedJSONAsync(newInstance.llm, CourseTitle, CourseDesc, topicNames, null);
+      
+                    var quizData = await llm.GenerateQuizDataValidatedJSONAsync(newInstance.llm, Topic?.Name ?? "No title available", Topic?.TopicDesc ?? "No description available", topicNames, null);
                     newInstance.Data = quizData;
                 }
                 else if (type == InstanceType.Flash)
                 {
                     // Generate flashcard data using LLM service
-                    var flashData = await llm.GenerateFlashCardDataValidatedJSONAsync(newInstance.llm, CourseTitle, CourseDesc, topicNames, null);
+                    var flashData = await llm.GenerateFlashCardDataValidatedJSONAsync(newInstance.llm, Topic?.Name ?? "No title available", Topic?.TopicDesc ?? "No description available", topicNames, null);
                     newInstance.Data = flashData;
                 }
             }
