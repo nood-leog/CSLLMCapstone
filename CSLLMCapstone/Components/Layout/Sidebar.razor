@@ -53,7 +53,13 @@
             <div class="sidebar-user-info">
                 <div class="sidebar-user-avatar">@DisplayInitials</div>
                 <div class="sidebar-user-details">
-                    <h3>@FName @LName</h3>
+                    <div class="user-header-row">
+                        <h3>@FName @LName</h3>
+                        <!--Sign Out Button-->
+                        <button class="sign-out-inline-btn" @onclick="HandleSignOutClick" title="Sign Out">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </button>
+                    </div>
                     <p><i class="fas fa-graduation-cap"></i> @Major @GradYear</p>
                     @if (!string.IsNullOrEmpty(Minor))
                     {
@@ -234,5 +240,13 @@
         {
             Console.WriteLine($"Error deleting instance: {ex.Message}");
         }
+    }
+}
+
+<!--HandleSignOutClick Logic-->
+@code {
+    private void HandleSignOutClick()
+    {
+        NavManager.NavigateTo("/", forceLoad: true);
     }
 }

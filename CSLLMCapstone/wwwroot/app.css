@@ -834,6 +834,41 @@
     gap: 5px;
 }
 
+/* Container for the Name and the Logout Button */
+.user-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    gap: 10px;
+}
+
+/* The Sign Out Button itself */
+.sign-out-inline-btn {
+    background: none;
+    border: none;
+    color: var(--dark-gray);
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    .sign-out-inline-btn:hover {
+        color: var(--primary-red);
+        background-color: rgba(211, 47, 47, 0.1);
+        transform: scale(1.1);
+    }
+
+/* Adjust details to fill remaining space */
+.sidebar-user-details {
+    flex-grow: 1;
+}
+
 /* Legend Styling*/
 /* Keep the legend pinned right and in a horizontal row */
 .top-legend {
