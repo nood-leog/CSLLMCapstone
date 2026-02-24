@@ -85,7 +85,13 @@ else
                             <!--Course Card-->
                             <div class="course-card @CategorizeCourse(course)" @onclick="() => HandleCourseClick(course)">
                                 <div class="course-content">
-                                    <div class="course-number">@course.CourseId</div>
+                                    <div class="course-header-row">
+                                        <div class="course-number">@course.CourseId</div>
+                                        <button class="favorite-button @(course.IsFavorite ? "is-favorite" : "")"
+                                                @onclick='() => HandleFavoriteClick(course)' @onclick:stopPropagation="true">
+                                            <i class="@(course.IsFavorite ? "fas fa-star" : "far fa-star")"></i>
+                                        </button>
+                                    </div>
                                     <div class="course-name">@course.Title</div>
                                 </div>
                                 <div class="course-footer">
@@ -234,19 +240,13 @@ else
             }
     };
 }
-@* 
+
 <!--HandleFavoriteClick Logic for courses-->
 @code {
     private async Task HandleFavoriteClick(Course course)
     {
         try
         {
-            if (string.IsNullOrEmpty(userId))
-            {
-                NavManager.NavigateTo("/");
-                return;
-            }
-
             // Toggle the favorite status
             course.IsFavorite = !course.IsFavorite;
 
@@ -262,4 +262,4 @@ else
             Console.WriteLine($"Error updating favorite status: {ex.Message}");
         }
     }
-} *@
+}

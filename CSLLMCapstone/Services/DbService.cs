@@ -101,12 +101,15 @@ namespace CSLLMCapstone.Services
 
         // --- COURSE METHODS ---
         // Get all courses with their associated topics, used for displaying the course catalog and other operations
+        // Also includes the IsFavorite property to allow for sorting and display purposes in the UI
         public async Task<List<Course>> GetAllCoursesAsync()
         {
             using var context = _contextFactory.CreateDbContext();
             return await context.Courses
                 .Include(c => c.Topics)
-                .ToListAsync();
+                 .OrderByDescending(c => c.IsFavorite) // true (1) comes before false (0)
+                 .ThenBy(c => c.CourseId)            // secondary sort by ID so the list remains consistent
+                 .ToListAsync();
         }
 
         // Get course name by course ID, used for displaying course details and other operations
