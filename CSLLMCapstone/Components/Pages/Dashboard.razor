@@ -234,3 +234,32 @@ else
             }
     };
 }
+
+<!--HandleFavoriteClick Logic for courses-->
+@code {
+    private async Task HandleFavoriteClick(Course course)
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(userId))
+            {
+                NavManager.NavigateTo("/");
+                return;
+            }
+
+            // Toggle the favorite status
+            course.IsFavorite = !course.IsFavorite;
+
+            // Update the database with the new favorite status
+            await Db.UpdateCourseFavoriteStatusAsync(course.CourseId, course.IsFavorite);
+
+            // Refresh the dashboard to update courses
+            courses = await Db.GetAllCoursesAsync();
+            StateHasChanged(); // Force a re-render to reflect changes
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error updating favorite status: {ex.Message}");
+        }
+    }
+}
