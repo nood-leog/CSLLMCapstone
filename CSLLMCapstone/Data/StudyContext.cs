@@ -32,7 +32,8 @@ namespace CSLLMCapstone.Data
                     "vary but may include Big Tech, Video games, Telemedicine, Artificial intelligence, Robotics, 5G, Deep web, Virtual reality, Music technology, " +
                     "Wearables, and Ethics. The course emphasizes exploration of new methods of obtaining, analyzing, and reporting information in health-technology. " +
                     "Students will engage through written papers and group discussions, and create their own personal health index calculator through simple, " +
-                    "beginning-level programming."
+                    "beginning-level programming.", 
+                    IsFavorite = false
                 },
 
                 new Course { CourseId = 105, Title = "The Logical Basis of Computing", 
@@ -40,14 +41,16 @@ namespace CSLLMCapstone.Data
                     "Learning to program helps students develop enhanced critical thinking skills, grounded in mathematical logic and quantitative reasoning. " +
                     "Students gain an understanding of possible connections between technology and artistic expression. Course goals include students demonstrating " +
                     "knowledge of the inner workings of the digital revolution, composing the mathematical logic required to solve problems with programming code, " +
-                    "and demonstrating mathematical and quantitative reasoning skills by identifying the programming code needed to solve problems of increasing complexity."
+                    "and demonstrating mathematical and quantitative reasoning skills by identifying the programming code needed to solve problems of increasing complexity.",
+                    IsFavorite = false
                 },
 
                 new Course { CourseId = 107, Title = "Make a Game with Computer Science", 
                     CourseDesc = "CS 107 focuses on the complete principles of software development, guiding students through the full lifecycle from requirement specification " +
                     "to deployment and maintenance. The primary goal is to foster the ability to apply both theoretical and practical knowledge to develop various " +
                     "software tools, packages, or libraries addressing a specific problem statement. Students will gain hands-on experience in designing, debugging, " +
-                    "and executing programs in modern programming languages such as Java. The course uses Unreal Engine 4.24.xx."
+                    "and executing programs in modern programming languages such as Java. The course uses Unreal Engine 4.24.xx.",
+                    IsFavorite = false
                 },
 
                 new Course { CourseId = 109, Title = "Quantitative Reasoning Using Python", 
@@ -56,14 +59,16 @@ namespace CSLLMCapstone.Data
                     "They will evaluate these mathematical forms to formulate meaningful conclusions. In addition to quantitative and statistical processes, " +
                     "students will learn programming skills to develop enhanced critical thinking skills, grounded in logic and reason. Course topics include " +
                     "Introduction to Python, Data visualization, Classes and Object Oriented Programming (OOP), Stochastic programs, probability and distributions, " +
-                    "Sampling and confidence intervals, Understanding experimental data, Hypothesis checking, and Conditional probability and Bayesian statistics."
+                    "Sampling and confidence intervals, Understanding experimental data, Hypothesis checking, and Conditional probability and Bayesian statistics.",
+                    IsFavorite = false
                 },
 
                 new Course { CourseId = 110, Title = "Programming Fundamentals I", 
                     CourseDesc = "CS110 teaches students the basics of writing Java programs to solve problems of increasing complexity. Specific learner outcomes include " +
                     "implementing sequential programming, decision statements, repetition constructs (including nested loops), and arithmetic operators. " +
                     "Students will also implement Java primitive data type variables, file processing, methods to modularize programs, class definitions, and arrays " +
-                    "and objects of the ArrayList class."
+                    "and objects of the ArrayList class.",
+                    IsFavorite = false
                 },
 
                 new Course { CourseId = 111, Title = "Programming Fundamentals II", 
@@ -73,14 +78,16 @@ namespace CSLLMCapstone.Data
                     "Advanced File I/O, including object serialization and random access files, alongside a thorough introduction to Recursion. Beyond command-line " +
                     "applications, students are expected to design and implement Graphical User Interfaces (GUIs) using Event Listeners and Layout Managers. " +
                     "This comprehensive approach ensures students understand how to transition from basic logic to building robust, interactive software systems " +
-                    "equipped with professional error-handling and debugging techniques."
+                    "equipped with professional error-handling and debugging techniques.",
+                    IsFavorite = false
                 },
 
                 new Course { CourseId = 112, Title = "Introduction to Data Science in Python", 
                     CourseDesc = "CS112 focuses on the foundations of data science and its applications, including how the data science process can be used to address " +
                     "real-life problems. Students will identify key characteristics of Python programming, including syntax, semantics, debugging, and data science packages. " +
                     "The course aims to resolve compilation warnings and error messages in Python and demonstrate full understanding of the Python programming paradigms in " +
-                    "respect to the data science paradigm."
+                    "respect to the data science paradigm.",
+                    IsFavorite = false
                 },
 
                 new Course { CourseId = 301, Title = "Data Structures", 
@@ -88,7 +95,8 @@ namespace CSLLMCapstone.Data
                     "programming languages and environments. Attention is paid to the analysis of algorithms to characterize their worst and average case requirements for " +
                     "running time and memory. The course should expand the students' toolbox of basic techniques for manipulating data at both the conceptual and the concrete level. " +
                     "Topics will proceed through classic data structures and Java-based containers, exploring the use and implementation of each. Motivating problems will be " +
-                    "drawn from a variety of application areas."
+                    "drawn from a variety of application areas.",
+                    IsFavorite = false
                 },
 
                 new Course { CourseId = 302, Title = "Advanced Data Structures and File Processing", 
@@ -96,21 +104,24 @@ namespace CSLLMCapstone.Data
                     "programming languages and environments. This course will focus on the analysis of algorithms to characterize worst and average case requirements " +
                     "for running time and memory. Students will be able to apply basic complexity measures and demonstrate the correct use and application of " +
                     "various data structures, including trees, hashing, and graphs. The primary goal is to expand the student's toolbox of basic techniques for " +
-                    "manipulating data at both the conceptual and concrete levels."
+                    "manipulating data at both the conceptual and concrete levels.",
+                    IsFavorite = false
                 },
 
                 new Course { CourseId = 311, Title = "Computer Architecture I", 
                     CourseDesc = "CS 311 is an introduction to computer architecture focusing on assembly language programming on the x86-64 bit architecture. " +
                     "The course uses the yasm assembly compiler and the ebe interface. Students will learn to create and modify programs of significant size " +
                     "using 64-bit Assembly language. Course topics include numbers type conversions, computer memory architecture, registers in 32/64-bit modes, " +
-                    "arithmetic, bit operations, branching, looping, and functions in Assembly. The primary goal is to gain hands-on experience in Assembly language programming."
+                    "arithmetic, bit operations, branching, looping, and functions in Assembly. The primary goal is to gain hands-on experience in Assembly language programming.",
+                    IsFavorite = false
                 },
 
                 new Course { CourseId = 312, Title = "Computer Architecture II", 
                     CourseDesc = "CS 312 focuses on distinguishing between computer architecture and computer organization, and using Boolean algebra to solve basic " +
                     "logic problems. Students will describe the operation of CPU, memory, bus, and I/O, and compare different instruction sets for processors. " +
                     "The course will cover topics such as Digital Logic, Cache Memory, and Instruction Sets. The primary goal is for students to comprehend different " +
-                    "gate and logic-based structures and analyze various computer architectures. Students will gain hands-on experience using software like MultiMedia Logic and Java."
+                    "gate and logic-based structures and analyze various computer architectures. Students will gain hands-on experience using software like MultiMedia Logic and Java.",
+                    IsFavorite = false
                 },
 
                 new Course { CourseId = 325, Title = "Technical Writing in Computer Science", 
@@ -119,7 +130,8 @@ namespace CSLLMCapstone.Data
                     "Students engage in a workshop-oriented environment, applying their skills through hands-on assignments such as technical summaries, " +
                     "research proposals, annotated bibliographies, and professional presentations. By utilizing software tools like LaTeX and Microsoft Office, " +
                     "students learn to produce high-quality documentation that meets industry standards. The course requires significant effort outside of class to " +
-                    "refine professional-level writing and mechanical proficiency."
+                    "refine professional-level writing and mechanical proficiency.",
+                    IsFavorite = false
                 },
 
                 new Course { CourseId = 351, Title = "Web Development Technologies II", 
@@ -128,7 +140,8 @@ namespace CSLLMCapstone.Data
                     "dynamic web applications using PHP and SQL. The course also reinforces client-side mastery of XHTML, CSS, and JavaScript, while introducing " +
                     "complex topics like e-commerce and system testing. Beyond technical implementation, students are expected to articulate ethical positions " +
                     "on contemporary web issues and deliver professional oral presentations on their designs. This comprehensive approach ensures students " +
-                    "understand both the functional and societal impacts of web technologies."
+                    "understand both the functional and societal impacts of web technologies.",
+                    IsFavorite = false
                 },
 
                 new Course { CourseId = 361, Title = "Principles of Language Design I", 
@@ -137,7 +150,8 @@ namespace CSLLMCapstone.Data
                     "Students delve into complex concepts such as pointers, arrays, strings, dynamic memory management, and structures. By following a " +
                     "structured approach to branching, iteration, and input/output, learners gain a deep understanding of how languages are implemented and utilized. " +
                     "Through these technical foundations, the course aims to develop a student's ability to design efficient software and understand the underlying mechanics " +
-                    "of various programming paradigms."
+                    "of various programming paradigms.",
+                    IsFavorite = false
                 },
 
                 new Course { CourseId = 362, Title = "Principles of Language Design II", 
@@ -145,7 +159,8 @@ namespace CSLLMCapstone.Data
                     "Students critically compare design alternatives across various common languages and study implementation methods integrated throughout the class. " +
                     "Key topics include abstract data types, parallel processing, object-oriented programming, exception handling, and functional and logic programming. " +
                     "Upon completion, students will be able to apply formal methods of syntax, such as attribute grammars, and understand static and dynamic semantics. " +
-                    "The course ultimately empowers students to compare computer languages effectively and demonstrate advanced knowledge in naming and language constructs."
+                    "The course ultimately empowers students to compare computer languages effectively and demonstrate advanced knowledge in naming and language constructs.",
+                    IsFavorite = false
                 },
 
                 new Course { CourseId = 367, Title = "Advanced Visual Basic Programming", 
@@ -154,7 +169,8 @@ namespace CSLLMCapstone.Data
                     "requirements elicitation, system analysis, and architectural design. The curriculum emphasizes Object-Oriented Analysis and Design (OOAD) using UML " +
                     "for modeling and documentation. Additionally, the course addresses practical industry concerns, including project management, software testing strategies, " +
                     "and the ethical implications of technology. Through collaborative projects and technical writing, students learn to translate complex user needs " +
-                    "into robust, maintainable software solutions."
+                    "into robust, maintainable software solutions.",
+                    IsFavorite = false
                 },
 
                 new Course { CourseId = 370, Title = "Introduction to Linux", 
@@ -163,7 +179,8 @@ namespace CSLLMCapstone.Data
                     "and utilize shell scripting for task automation. The course curriculum covers essential topics such as process management, software installation, " +
                     "and system configuration, emphasizing practical, hands-on experience. Students also delve into networking basics and security protocols within the " +
                     "Linux environment. By the end of the term, learners will have developed the technical proficiency required to manage Linux-based systems effectively " +
-                    "in both personal and professional computing contexts."
+                    "in both personal and professional computing contexts.",
+                    IsFavorite = false
                 },
 
                 new Course { CourseId = 380, Title = "Introduction to Software Engineering", 
@@ -172,7 +189,8 @@ namespace CSLLMCapstone.Data
                     "robust testing strategies. The curriculum covers the entire Software Development Lifecycle, from project planning and requirements gathering using UML diagrams " +
                     "to version control and final execution. Beyond technical skills, the course emphasizes human-centric elements such as customer interaction, team organization, " +
                     "and conflict resolution. Through collaborative projects and progress presentations, students gain practical experience in managing large-scale resources " +
-                    "and delivering quality software solutions."
+                    "and delivering quality software solutions.",
+                    IsFavorite = false
                 },
 
                 new Course { CourseId = 420, Title = "Database Management Systems", 
@@ -181,7 +199,8 @@ namespace CSLLMCapstone.Data
                     "user requirements into valid database designs using Entity/Relationship (E/R) modeling and relational algebra. Practical skills are emphasized through " +
                     "the mastery of Structured Query Language (SQL) and the application of normalization principles via functional dependencies. By utilizing industry-standard tools " +
                     "like MySQL Workbench, students learn to identify and implement high-quality relational database designs. The course ensures that learners can " +
-                    "effectively manage data integrity and optimize database organization for modern software applications."
+                    "effectively manage data integrity and optimize database organization for modern software applications.",
+                    IsFavorite = false
                 },
 
                 new Course { CourseId = 427, Title = "Algorithm Analysis", 
@@ -190,7 +209,8 @@ namespace CSLLMCapstone.Data
                     "branch-and-bound techniques. Students learn to evaluate the efficiency of algorithms using asymptotic notation, focusing on both time and " +
                     "space complexity for iterative and recursive processes. By applying these strategies to traditional and non-traditional computing domains, " +
                     "students develop high-level critical thinking and technical skills. The curriculum emphasizes mastering specific strategies to solve complex mathematical and " +
-                    "computational problems efficiently."
+                    "computational problems efficiently.",
+                    IsFavorite = false
                 },
 
                 new Course { CourseId = 428, Title = "Introduction to Graph Algorithm", 
@@ -199,7 +219,8 @@ namespace CSLLMCapstone.Data
                     "directed, undirected, and weighted graphs. Students master essential search techniques such as DFS, BFS, and Maximum Cardinality Search, while " +
                     "exploring efficiently solvable problems like shortest paths (A* and Floyd-Warshall), Max-Flow, and Min-Cut. Additionally, the course delves into " +
                     "advanced topics such as graph coloring, isomorphism, and planarity. Through lab assignments and quizzes, students develop the skills necessary to " +
-                    "apply these complex mathematical structures to real-world computing challenges."
+                    "apply these complex mathematical structures to real-world computing challenges.",
+                    IsFavorite = false
                 },
 
                 new Course { CourseId = 430, Title = "Cybersecurity", 
@@ -209,7 +230,8 @@ namespace CSLLMCapstone.Data
                     "Additionally, the course explores IT infrastructure security practices, authentication mechanisms, remote access, and wireless security. " +
                     "A significant focus is placed on understanding and implementing methods to counter cyber-attacks in modern computer systems. " +
                     "By combining theoretical knowledge with practical defense strategies, students develop the skills necessary to protect digital assets and maintain " +
-                    "secure computing environments."
+                    "secure computing environments.",
+                    IsFavorite = false
                 },
 
                 new Course { CourseId = 440, Title = "Computer Graphics", 
@@ -218,7 +240,8 @@ namespace CSLLMCapstone.Data
                     "3-D techniques. The curriculum emphasizes the mathematical foundations of graphics, including vector manipulation, dot and cross products, and " +
                     "matrix techniques for rotation, scaling, and translation. Additionally, students explore advanced topics such as vector clipping, scientific visualization, " +
                     "and image processing. Through hands-on programming assignments involving rosettes, arcs, and clipping algorithms, learners gain practical experience " +
-                    "in rendering complex visual data and managing aspect ratios in dynamic windows."
+                    "in rendering complex visual data and managing aspect ratios in dynamic windows.",
+                    IsFavorite = false
                 },
 
                 new Course { CourseId = 445, Title = "Data and Information Visualization", 
@@ -226,7 +249,8 @@ namespace CSLLMCapstone.Data
                     "Students learn to utilize tools like Jupyter Notebooks, Matplotlib, and Seaborn to create effective marks and channels for data abstraction. " +
                     "The curriculum covers task abstraction, spatial fields, and the arrangement of networks and trees. Key topics include color theory, 3D graph practice, " +
                     "and advanced techniques such as Principal Component Analysis (PCA) and map visualization. Through lab assignments and a multi-phase final project, " +
-                    "students master rules of thumb for design and gain practical experience in visual knowledge discovery and machine learning integration."
+                    "students master rules of thumb for design and gain practical experience in visual knowledge discovery and machine learning integration.",
+                    IsFavorite = false
                 },
 
                 new Course { CourseId = 446, Title = "User Interface Design and Development", 
@@ -235,7 +259,8 @@ namespace CSLLMCapstone.Data
                     "mental models to understand how users interact with technology. The curriculum follows a practical, lab-based approach covering the entire design lifecycle, " +
                     "including requirements gathering, paper prototyping, and computer-based implementation using Visual C#. Students master critical topics such as " +
                     "usability testing, accessibility, information visualization, and graphic design elements like typography and color theory. Through a multi-phase project, " +
-                    "learners gain hands-on experience in building and evaluating interfaces that are intuitive, safe, and efficient."
+                    "learners gain hands-on experience in building and evaluating interfaces that are intuitive, safe, and efficient.",
+                    IsFavorite = false
                 },
 
                 new Course { CourseId = 450, Title = "Computer Network and Data Communications", 
@@ -245,7 +270,8 @@ namespace CSLLMCapstone.Data
                     "The curriculum also delves into advanced topics including encryption, data compression, and network security. " +
                     "Practical objectives include identifying LAN architectures and evaluating the messaging mechanisms of various network operating systems. " +
                     "By the end of the course, students will be equipped to analyze the functionality of modern computer networks and understand the fundamentals of " +
-                    "wide area versus local area communications."
+                    "wide area versus local area communications.",
+                    IsFavorite = false
                 },
 
                 new Course { CourseId = 452, Title = "Ethical Hacking and Penetration Testing for Computer Science", 
@@ -253,7 +279,8 @@ namespace CSLLMCapstone.Data
                     "and scripting attacks. The curriculum is structured to cover the full process, including reconnaissance, vulnerability scanning, and penetration testing. " +
                     "Students will use DevOps security tools to simulate and analyze real-world attacks. Key topics include Enumeration, Vulnerability Analysis, Exploitation, " +
                     "Privilege Escalation, and Post-Exploitation. Further content covers Web Interception, Malware Analysis, Wireless, Cloud & IoT Attacks, " +
-                    "AI-powered ethical hacking, and professional reporting."
+                    "AI-powered ethical hacking, and professional reporting.",
+                    IsFavorite = false
                 },
 
                 new Course { CourseId = 456, Title = "Data Mining", 
@@ -262,7 +289,8 @@ namespace CSLLMCapstone.Data
                     "machine learning techniques, and visualization. The course emphasizes Machine Learning methods as real knowledge discovery tools. " +
                     "Important related technologies, such as data warehousing, are also discussed. Students will gain proficiency in techniques like classification, " +
                     "clustering, association rule mining, and regression, and apply them to real-world problems using recent Data Mining software. " +
-                    "The main goal is to extract useful knowledge from raw data."
+                    "The main goal is to extract useful knowledge from raw data.",
+                    IsFavorite = false
                 },
 
                 new Course { CourseId = 457, Title = "Computational Intelligence and Machine Learning", 
@@ -270,7 +298,8 @@ namespace CSLLMCapstone.Data
                     "Machine Learning (CI & ML) models. Typical topics include neural networks, supervised and unsupervised learning, clustering, support vector machines, " +
                     "evolutionary learning, deep learning, and convolutional neural networks. Upon completion, students will understand core CI & ML models, implement algorithms, " +
                     "and apply techniques to solve classification, regression, prediction, and optimization problems. Practical application is emphasized through three group " +
-                    "projects and an individual final project. Students are encouraged to use software tools like Python, Anaconda, and Weka for implementation."
+                    "projects and an individual final project. Students are encouraged to use software tools like Python, Anaconda, and Weka for implementation.",
+                    IsFavorite = false
                 },
 
                 new Course { CourseId = 460, Title = "Software Engineering for Mobile Devices", 
@@ -278,7 +307,8 @@ namespace CSLLMCapstone.Data
                     "data management techniques. The curriculum covers fundamental concepts of relational database models, including relational algebra, SQL, and database design " +
                     "using entity-relationship and functional dependency modeling. Students will also explore advanced topics such as NoSQL databases, transaction management, " +
                     "concurrency control, and data warehousing. A major component of the course is hands-on experience in designing, implementing, and querying a database system. " +
-                    "The course objective is to enable students to effectively design and manage robust, scalable, and secure data storage solutions for various applications."
+                    "The course objective is to enable students to effectively design and manage robust, scalable, and secure data storage solutions for various applications.",
+                    IsFavorite = false
                 },
 
                 new Course { CourseId = 465, Title = "Scientific Computing", 
@@ -287,7 +317,8 @@ namespace CSLLMCapstone.Data
                     "mathematical algorithms to a variety of complex computational problems. Key content areas include an introduction to computing with Python, symbolic computing, " +
                     "plotting and visualization, equation solving, and various advanced topics like sparse matrices, data processing, Bayesian statistics, and signal processing. " +
                     "Students will demonstrate their knowledge by applying coding skills to develop solutions using scientific computing libraries and tools. " +
-                    "Assessment consists of five lab exercises with both written and coding parts, and a final project is assigned only to CS 565 students."
+                    "Assessment consists of five lab exercises with both written and coding parts, and a final project is assigned only to CS 565 students.",
+                    IsFavorite = false
                 },
 
                 new Course { CourseId = 466, Title = "Virtual Reality", 
@@ -296,7 +327,8 @@ namespace CSLLMCapstone.Data
                     "human-computer interaction research papers. Students will also explore experimental study designs. This is a hybrid class with asynchronous online assignments " +
                     "and real-time meetings for demonstrations, discussions, and projects. The curriculum uses the Unity 3D game engine for programming and requires a smartphone " +
                     "and a Google Cardboard-like VR Viewer. The course integrates a group term project, worth 40% of the grade, where student teams develop a " +
-                    "VR-related human-computer interaction research paper."
+                    "VR-related human-computer interaction research paper.",
+                    IsFavorite = false
                 },
 
                 new Course { CourseId = 467, Title = "Computational Statistics", 
@@ -304,7 +336,8 @@ namespace CSLLMCapstone.Data
                     "problems. Students will learn to manipulate and analyze data, design simulated experiments, and use resampling methods. The primary focus is on the " +
                     "in-depth understanding and use of the R Language, the predominate software platform for statistical analysis. The curriculum covers key topics like correlation, " +
                     "linear regression, and logistic regression. The course includes four research seminars and two complex programming projects involving background research, " +
-                    "coding, and analysis of results."
+                    "coding, and analysis of results.",
+                    IsFavorite = false
                 },
 
                 new Course { CourseId = 470, Title = "Operating Systems", 
@@ -312,7 +345,8 @@ namespace CSLLMCapstone.Data
                     "UNIX-based systems, including Linux and Windows. It begins with an architectural overview, followed by an in-depth exploration of major components " +
                     "like processes, threads, memory management, and file I/O. Students will assess and critically analyze various CPU scheduling algorithms, recognizing " +
                     "their advantages and limitations. Through practical assessments, students will demonstrate the ability to discern and articulate different strategies " +
-                    "within the operating system framework. The goal is to prepare students for advanced academic study or professional pursuits in computer science."
+                    "within the operating system framework. The goal is to prepare students for advanced academic study or professional pursuits in computer science.",
+                    IsFavorite = false
                 },
 
                 new Course { CourseId = 471, Title = "Optimization", 
@@ -320,7 +354,8 @@ namespace CSLLMCapstone.Data
                     "CPU scheduling algorithms, synchronization, deadlock prevention, and concurrent programming. A major focus is on memory management, covering virtual memory, " +
                     "paging, and segmentation techniques. The curriculum also delves into file system structure, I/O systems, and the fundamentals of system security. " +
                     "Students will gain practical experience in system-level programming and apply theoretical concepts to understand the design and trade-offs of modern " +
-                    "operating systems. The core objective is to equip students with the knowledge to analyze, design, and implement operating system components."
+                    "operating systems. The core objective is to equip students with the knowledge to analyze, design, and implement operating system components.",
+                    IsFavorite = false
                 },
 
                 new Course { CourseId = 473, Title = "Parallel Computing", 
@@ -328,7 +363,8 @@ namespace CSLLMCapstone.Data
                     "Key topics include Parallel Algorithm Design, Shared-Memory Programming with OpenMP, CUDA, Message-Passing Programming (MPI), and Performance Analysis. " +
                     "Students will engage with advanced concepts such as the Sieve of Eratosthenes, Floyd's Algorithm, Document Classification, and Combinatorial Search. " +
                     "The course includes a rigorous laboratory schedule with multiple projects, challenging students to implement concepts in OpenMP, CUDA, and MPI. " +
-                    "The course material includes a major technical report and an online book by Ian Foster."
+                    "The course material includes a major technical report and an online book by Ian Foster.",
+                    IsFavorite = false
                 },
 
                 new Course { CourseId = 480, Title = "Advanced Software Engineering", 
@@ -336,7 +372,8 @@ namespace CSLLMCapstone.Data
                     "requirements gathering and specification, design, coding, testing, maintenance, and documentation. Students will study the software product lifecycle, " +
                     "from problem definition and client interaction to deployment. A key focus is on acquiring and integrating concepts like software project management and " +
                     "learning how to prepare essential documentation, such as a Software Requirements Specification. The course emphasizes teamwork and culminates in students " +
-                    "working in teams to develop a large software project."
+                    "working in teams to develop a large software project.",
+                    IsFavorite = false
                 },
 
                 new Course { CourseId = 481, Title = "Capstone Project", 
@@ -344,14 +381,16 @@ namespace CSLLMCapstone.Data
                     "specification to deployment and maintenance. The primary goal is to foster the ability to apply both theoretical and practical knowledge to develop various " +
                     "software tools, packages, or libraries addressing a specific problem statement. The course content is structured around weekly discussions, " +
                     "five major assignments, and two required presentations (midterm and final). Students will gain hands-on experience in designing, debugging, and " +
-                    "executing programs in modern programming languages such as Python, Java, JavaScript, and C++. The project culminates in an oral defense of the developed software."
+                    "executing programs in modern programming languages such as Python, Java, JavaScript, and C++. The project culminates in an oral defense of the developed software.",
+                    IsFavorite = false
                 },
 
                 new Course { CourseId = 489, Title = "Senior Colloquium", 
                     CourseDesc = "CS489 is an introduction to research in computer science through the investigation of ethical and historical topics in the field. " +
                     "It also includes end-of-major assessment activities. Topics may include AI Ethics, Professional Responsibility, Computer Crime, and Internet Security. " +
                     "Students will research current topics, prepare written reports on ethical or historical topics, and present their research results with critical analysis to the class. " +
-                    "A Major Field Test (MFT) is also required for the course."
+                    "A Major Field Test (MFT) is also required for the course.",
+                    IsFavorite = false
                 }
             );
 

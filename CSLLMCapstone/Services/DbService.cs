@@ -101,12 +101,15 @@ namespace CSLLMCapstone.Services
 
         // --- COURSE METHODS ---
         // Get all courses with their associated topics, used for displaying the course catalog and other operations
+        // Also includes the IsFavorite property to allow for sorting and display purposes in the UI
         public async Task<List<Course>> GetAllCoursesAsync()
         {
             using var context = _contextFactory.CreateDbContext();
             return await context.Courses
                 .Include(c => c.Topics)
-                .ToListAsync();
+                 .OrderByDescending(c => c.IsFavorite) // true (1) comes before false (0)
+                 .ThenBy(c => c.CourseId)            // secondary sort by ID so the list remains consistent
+                 .ToListAsync();
         }
 
         // Get course name by course ID, used for displaying course details and other operations
@@ -121,6 +124,18 @@ namespace CSLLMCapstone.Services
         {
             using var context = _contextFactory.CreateDbContext();
             return await context.Courses.Where(t => t.CourseId == courseId).Select(t => t.CourseDesc).FirstOrDefaultAsync();
+        }
+
+        // Update an existing course favorite status, used for allowing users to mark interactions as favorites and other operations
+        public async Task UpdateCourseFavoriteStatusAsync(int courseId, bool isFavorite)
+        {
+            using var context = _contextFactory.CreateDbContext();
+            var course = await context.Courses.FirstOrDefaultAsync(i => i.CourseId == courseId);
+            if (course != null)
+            {
+                course.IsFavorite = isFavorite;
+                await context.SaveChangesAsync();
+            }
         }
 
         // --- TOPIC METHODS ---
