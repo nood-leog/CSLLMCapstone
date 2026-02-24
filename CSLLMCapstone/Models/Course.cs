@@ -14,6 +14,9 @@ namespace CSLLMCapstone.Models
         [Required]
         public string CourseDesc { get; set; } = string.Empty;
 
+        [Required]
+        public bool IsFavorite { get; set; } = false;
+
         public List<Topic> Topics { get; set; } = new();
     }
 }
