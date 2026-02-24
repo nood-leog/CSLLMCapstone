@@ -123,6 +123,18 @@ namespace CSLLMCapstone.Services
             return await context.Courses.Where(t => t.CourseId == courseId).Select(t => t.CourseDesc).FirstOrDefaultAsync();
         }
 
+        // Update an existing course favorite status, used for allowing users to mark interactions as favorites and other operations
+        public async Task UpdateCourseFavoriteStatusAsync(int courseId, bool isFavorite)
+        {
+            using var context = _contextFactory.CreateDbContext();
+            var course = await context.Courses.FirstOrDefaultAsync(i => i.CourseId == courseId);
+            if (course != null)
+            {
+                course.IsFavorite = isFavorite;
+                await context.SaveChangesAsync();
+            }
+        }
+
         // --- TOPIC METHODS ---
         // Get all topics for a given course ID, used for displaying course details and other operations
         public async Task<List<Topic>> GetTopicsByCourseIDAsync(int courseId)
