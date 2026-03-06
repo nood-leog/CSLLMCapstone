@@ -74,7 +74,7 @@ else
 
                 <!--Dynamic logic for displaying course modals-->
                 <div class="courses-grid">
-                    @if (courses == null || !courses.Any())
+                    @if (courseDtos == null || !courseDtos.Any())
                     {
                         <p>Loading courses...</p>
                     }
