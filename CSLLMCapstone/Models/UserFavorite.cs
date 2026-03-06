@@ -9,11 +9,9 @@ namespace CSLLMCapstone.Models
         public int UserFavoriteId { get; set; }
 
         [Required]
-        public string UserId { get; set; } // Foreign key to User table
+        public int UserId { get; set; } // Foreign key to User table
 
         [Required]
         public int CourseId { get; set; } // Foreign key to Course table
-
-        public Course Course { get; set; } = null!;
     }
 }
