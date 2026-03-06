@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CSLLMCapstone.Models
 {
@@ -8,10 +9,15 @@ namespace CSLLMCapstone.Models
         [Key]
         public int UserFavoriteId { get; set; }
 
-        [Required]
-        public int UserId { get; set; } // Foreign key to User table
+        public int UserId { get; set; }
 
-        [Required]
-        public int CourseId { get; set; } // Foreign key to Course table
+        public int CourseId { get; set; }
+
+        // Navigation Properties
+        [ForeignKey("UserId")]
+        public User User { get; set; } = null!;
+
+        [ForeignKey("CourseId")]
+        public Course Course { get; set; } = null!;
     }
 }

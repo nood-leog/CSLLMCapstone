@@ -25,6 +25,18 @@ namespace CSLLMCapstone.Data
                 .HasIndex(u => u.CwuEmail)
                 .IsUnique();
 
+            // Define the relationship to Course
+            modelBuilder.Entity<UserFavorite>()
+                .HasOne(f => f.Course)
+                .WithMany() // A course can be favorited many times
+                .HasForeignKey(f => f.CourseId);
+
+            // Define the relationship to User
+            modelBuilder.Entity<UserFavorite>()
+                .HasOne(f => f.User)
+                .WithMany() // A user can have many favorites
+                .HasForeignKey(f => f.UserId);
+
             // Add the seed data for Courses
             modelBuilder.Entity<Course>().HasData(
                 new Course { CourseId = 102, Title = "Health and Technology", 
