@@ -80,19 +80,19 @@ else
                     }
                     else
                     {
-                        @foreach (var course in courses)
+                        @foreach (var dto in courseDtos)
                         {
                             <!--Course Card-->
-                            <div class="course-card @CategorizeCourse(course)" @onclick="() => HandleCourseClick(course)">
+                            <div class="course-card @CategorizeCourse(dto.Course)" @onclick="() => HandleCourseClick(dto.Course)">
                                 <div class="course-content">
                                     <div class="course-header-row">
-                                        <div class="course-number">@course.CourseId</div>
-                                        <button class="favorite-button @(course.IsFavorite ? "is-favorite" : "")"
-                                                @onclick='() => HandleFavoriteClick(course)' @onclick:stopPropagation="true">
-                                            <i class="@(course.IsFavorite ? "fas fa-star" : "far fa-star")"></i>
+                                        <div class="course-number">@dto.Course.CourseId</div>
+                                        <button class="favorite-button @(dto.IsFavorite ? "is-favorite" : "")"
+                                                @onclick='() => HandleFavoriteClick(dto)' @onclick:stopPropagation="true">
+                                            <i class="@(dto.IsFavorite ? "fas fa-star" : "far fa-star")"></i>
                                         </button>
                                     </div>
-                                    <div class="course-name">@course.Title</div>
+                                    <div class="course-name">@dto.Course.Title</div>
                                 </div>
                                 <div class="course-footer">
                                     <div class="course-action">View Details</div>
@@ -127,6 +127,9 @@ else
     // List of courses - to be fetched from DB
     private List<Course> courses = new List<Course>();
 
+    // Set of user's favorite course IDs
+    private List<DbService.CourseDto> courseDtos = new();
+
     // User details - to be fetched from DB
     private User? user;
 
@@ -155,7 +158,7 @@ else
             else
             {
                 // 3. User is valid, fetch the courses & user details and show the UI
-                courses = await Db.GetAllCoursesAsync();
+                courseDtos = await Db.GetAllCoursesForUserAsync(int.Parse(userId));
                 user = await Db.GetUserByIdAsync(int.Parse(userId));
                 isLoading = false;
                 StateHasChanged(); // Force a re-render now that we have data
@@ -243,19 +246,25 @@ else
 
 <!--HandleFavoriteClick Logic for courses-->
 @code {
-    private async Task HandleFavoriteClick(Course course)
+    private async Task HandleFavoriteClick(DbService.CourseDto dto)
     {
+        if (user == null) return;
+
         try
         {
-            // Toggle the favorite status
-            course.IsFavorite = !course.IsFavorite;
+            // 1. Toggle local status
+            dto.IsFavorite = !dto.IsFavorite;
 
-            // Update the database with the new favorite status
-            await Db.UpdateCourseFavoriteStatusAsync(course.CourseId, course.IsFavorite);
+            // 2. Update DB with new user-specific logic
+            await Db.UpdateCourseFavoriteStatusAsync(user.UserId, dto.Course.CourseId, dto.IsFavorite);
 
-            // Refresh the dashboard to update courses
-            courses = await Db.GetAllCoursesAsync();
-            StateHasChanged(); // Force a re-render to reflect changes
+            // 3. Re-sort the list so favorites jump to the top
+            courseDtos = courseDtos
+                .OrderByDescending(d => d.IsFavorite)
+                .ThenBy(d => d.Course.CourseId)
+                .ToList();
+
+            StateHasChanged();
         }
         catch (Exception ex)
         {

@@ -129,7 +129,7 @@ namespace CSLLMCapstone.Services
                 IsFavorite = favoriteCourseIds.Contains(c.CourseId)
             })
             .OrderByDescending(dto => dto.IsFavorite)
-            .ThenBy(dto => dto.Course.Title)
+            .ThenBy(dto => dto.Course.CourseId) // Use CourseId for a consistent numerical sort
             .ToList();
         }
 
@@ -257,6 +257,17 @@ namespace CSLLMCapstone.Services
                 instance.Data = newData;
                 await context.SaveChangesAsync();
             }
+        }
+
+        // --- UserFavorite METHODS ---
+        // Get a list of course IDs that the user has marked as favorites, used for displaying favorite courses and other operations
+        public async Task<List<int>> GetUserFavoriteCourseIdsAsync(int userId)
+        {
+            using var context = _contextFactory.CreateDbContext();
+            return await context.UserFavorites
+                .Where(f => f.UserId == userId)
+                .Select(f => f.CourseId)
+                .ToListAsync();
         }
     }
 }
