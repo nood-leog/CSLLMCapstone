@@ -180,7 +180,7 @@
     private async Task ScrollToBottom()
     {
         // Give Blazor a tiny moment to render the new HTML nodes first
-        await Task.Delay(100);
+        await Task.Delay(10);
         await JSRuntime.InvokeVoidAsync("scrollToBottom", ".tutor-chat-container");
     }
 
@@ -246,6 +246,11 @@
                 user = await Db.GetUserByIdAsync(int.Parse(userId));
                 StateHasChanged();
             }
+        }
+        else
+        {
+            // Ensure the chat scrolls to the bottom after each render
+            await ScrollToBottom();
         }
     }
 
