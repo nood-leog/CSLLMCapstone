@@ -8,7 +8,7 @@
         "applicationUrl": "http://localhost:5172",
         "environmentVariables": {
           "ASPNETCORE_ENVIRONMENT": "Development",
-          "GOOGLE_API_KEY": "AIzaSyCdjn8UUcYLUZc1ULEgWBNGdS95SNPChe4" // Set API key here when testing
+          "GOOGLE_API_KEY": "" // Set API key here when testing
         }
       },
       "https": {
@@ -18,7 +18,7 @@
         "applicationUrl": "https://localhost:7041;http://localhost:5172",
         "environmentVariables": {
           "ASPNETCORE_ENVIRONMENT": "Development",
-          "GOOGLE_API_KEY": "AIzaSyCdjn8UUcYLUZc1ULEgWBNGdS95SNPChe4"
+          "GOOGLE_API_KEY": ""
         }
       }
     }
