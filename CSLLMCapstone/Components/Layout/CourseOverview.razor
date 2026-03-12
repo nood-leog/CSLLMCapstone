@@ -181,29 +181,38 @@
             if (type == InstanceType.Tutor)
             {
                 // construct the initial message for the tutor mode
-                var initialMessage = new List<TutorConversationData>
-                {
-                    new TutorConversationData
-                    {
-                        role = "tutor",
-                        content = "Hello! I'm your AI tutor. How can I help you today?"
-                    }
-                };
-                newInstance.Data = System.Text.Json.JsonSerializer.Serialize(initialMessage);
+                // var initialMessage = new List<TutorConversationData>
+                // {
+                //     new TutorConversationData
+                //     {
+                //         role = "tutor",
+                //         content = "Hello! I'm your AI tutor. How can I help you today?"
+                //     }
+                // };
+                // newInstance.Data = System.Text.Json.JsonSerializer.Serialize(initialMessage);
+                // The service now handles the internal LLM setup
+                var initialTutorData = await llm.GenerateTutorResponse(
+                    "Initial Setup",
+                    new List<TutorConversationData>(),
+                    CourseTitle ?? "",
+                    CourseDesc ?? "",
+                    topicNames);
+            
+                newInstance.Data = System.Text.Json.JsonSerializer.Serialize(new List<TutorConversationData> { initialTutorData });
             }
             else
             {
-                newInstance.llm = new LLM(type);
+                // newInstance.llm = new LLM(type);
                 if (type == InstanceType.Quiz)
                 {
                     // Generate quiz data using LLM service
-                    var quizData = await llm.GenerateQuizDataValidatedJSONAsync(newInstance.llm, CourseTitle, CourseDesc, topicNames, null);
+                    var quizData = await llm.GenerateQuizDataValidatedJSONAsync(CourseTitle, CourseDesc, topicNames, null);
                     newInstance.Data = quizData;
                 }
                 else if (type == InstanceType.Flash)
                 {
                     // Generate flashcard data using LLM service
-                    var flashData = await llm.GenerateFlashCardDataValidatedJSONAsync(newInstance.llm, CourseTitle, CourseDesc, topicNames, null);
+                    var flashData = await llm.GenerateFlashCardDataValidatedJSONAsync(CourseTitle, CourseDesc, topicNames, null);
                     newInstance.Data = flashData;
                 }
             }

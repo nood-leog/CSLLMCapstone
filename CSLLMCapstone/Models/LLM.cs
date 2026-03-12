@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using Google.GenAI;
 using Google.GenAI.Types;
 using CSLLMCapstone.Services;
+using System; // Added for Environment
+using Microsoft.Extensions.Configuration; // Added for IConfiguration
 
 namespace CSLLMCapstone.Models
 {
@@ -15,10 +17,20 @@ namespace CSLLMCapstone.Models
         private GenerateContentConfig initialModelConfig; // record that handles initial configurations of the llm
 
         // LLM will only take InstanceType to build the initial prompt
-        public LLM(InstanceType type)
+        public LLM(InstanceType type, IConfiguration configuration)
         {
             string initialPrompt = initialPromptBuilder(type); // generates initial prompt based on the given instance type
-            client = new Client(); // initializing llm variable
+
+            // First: Check Environment Variables (launchSettings.json)
+            string apiKey = System.Environment.GetEnvironmentVariable("GOOGLE_API_KEY");
+
+            // Second: If environment is empty, check appsettings.json
+            if (string.IsNullOrEmpty(apiKey))
+            {
+                apiKey = configuration["GoogleApiKey"];
+            }
+
+            client = new Client(apiKey: apiKey); // initializing llm variable
 
             // setting up system prompt for the llm
             initialModelConfig = new GenerateContentConfig

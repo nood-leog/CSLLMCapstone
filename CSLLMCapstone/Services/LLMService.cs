@@ -36,13 +36,22 @@ namespace CSLLMCapstone.Services
 
     public class LLMService
     {
+        // dependency injection for configuration to access API keys from environment variables or appsettings.json
+        private readonly IConfiguration _config;
+
+        public LLMService(IConfiguration config)
+        {
+            _config = config;
+        }
 
         // public methods --------------------------------------------------------------------------------------------------------------------------------
 
         // returning generated flashcard data in validated JSON formatted plaintext 
         // would used for generating data for database
-        public async Task<string> GenerateFlashCardDataValidatedJSONAsync(LLM llm, string courseName, string courseDesc, List<string>courseTopics, string? history)
+        public async Task<string> GenerateFlashCardDataValidatedJSONAsync(string courseName, string courseDesc, List<string>courseTopics, string? history)
         {
+            // Pass InstanceType and the injected _config
+            LLM llm = new LLM(InstanceType.Flash, _config);
             string JSON = ""; // buffer 
 
             if (history != null)
@@ -59,8 +68,10 @@ namespace CSLLMCapstone.Services
 
         // returning generated quiz data in validated JSON formatted plaintext
         // would used for generating data for database
-        public async Task<string> GenerateQuizDataValidatedJSONAsync(LLM llm, string courseName, string courseDesc, List<string>courseTopics, string? history)
+        public async Task<string> GenerateQuizDataValidatedJSONAsync(string courseName, string courseDesc, List<string>courseTopics, string? history)
         {
+            // Pass InstanceType and the injected _config
+            LLM llm = new LLM(InstanceType.Quiz, _config);
             string JSON = ""; // buffer
 
             if (history != null)
@@ -199,8 +210,11 @@ namespace CSLLMCapstone.Services
         }
 
         // returning generated tutor response in TutorConversationData type
-        public async Task<TutorConversationData> GenerateTutorResponse(LLM llm, string userInput, List<TutorConversationData> history, string courseName, string courseDesc, List<string> courseTopics)
+        public async Task<TutorConversationData> GenerateTutorResponse(string userInput, List<TutorConversationData> history, string courseName, string courseDesc, List<string> courseTopics)
         {
+            // Pass InstanceType and the injected _config
+            LLM llm = new LLM(InstanceType.Tutor, _config);
+
             // 1. Create a string of the history so the LLM has context
             // We use a StringBuilder or Join for better performance
             string conversationHistoryString = string.Join(" ", history.Select(h => $"{h.role}: {h.content}"));

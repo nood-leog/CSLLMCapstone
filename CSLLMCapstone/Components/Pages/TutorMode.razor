@@ -155,7 +155,7 @@
                 }
 
                 // Initialize LLM object
-                instance.llm = new LLM(instance.Type);
+                //instance.llm = new LLM(instance.Type);
 
                 // Deserialize existing conversation
                 if (!string.IsNullOrEmpty(instance.Data) && instance.Data != "{}")
@@ -201,13 +201,13 @@
         try
         {
             // Ensure LLM is initialized (should already be, but just in case)
-            if (instance.llm == null)
-            {
-                instance.llm = new LLM(instance.Type);
-            }
+            // if (instance.llm == null)
+            // {
+            //     instance.llm = new LLM(instance.Type);
+            // }
 
             // Generate LLM Response
-            var tutorMessage = await llm.GenerateTutorResponse(instance.llm, currentInput, conversationData, instance.CourseTitle, courseDescription, topicNames);
+            var tutorMessage = await llm.GenerateTutorResponse(currentInput, conversationData, instance.CourseTitle, courseDescription, topicNames);
 
             // Save Tutor Response Block
             await AppendMessageAndSave("tutor", tutorMessage.content);
