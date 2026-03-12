@@ -120,15 +120,6 @@
             if (type == InstanceType.Tutor)
             {
                 // construct the initial message for the tutor mode
-                // var initialMessage = new List<TutorConversationData>
-                // {
-                //     new TutorConversationData
-                //     {
-                //         role = "tutor",
-                //         content = "Hello! I'm your AI tutor. How can I help you today?"
-                //     }
-                // };
-                // newInstance.Data = System.Text.Json.JsonSerializer.Serialize(initialMessage);
                 var initialTutorData = await llm.GenerateTutorResponse(
                 $"Help me with the topic: {Topic?.Name}", 
                 new List<TutorConversationData>(), 
@@ -140,7 +131,6 @@
             }
             else
             {
-                // newInstance.llm = new LLM(type);
                 if (type == InstanceType.Quiz)
                 {
       

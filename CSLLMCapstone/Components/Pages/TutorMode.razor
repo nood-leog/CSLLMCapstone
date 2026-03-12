@@ -154,9 +154,6 @@
                     topicNames.Add("No specific topics available.");
                 }
 
-                // Initialize LLM object
-                //instance.llm = new LLM(instance.Type);
-
                 // Deserialize existing conversation
                 if (!string.IsNullOrEmpty(instance.Data) && instance.Data != "{}")
                 {
@@ -200,12 +197,6 @@
 
         try
         {
-            // Ensure LLM is initialized (should already be, but just in case)
-            // if (instance.llm == null)
-            // {
-            //     instance.llm = new LLM(instance.Type);
-            // }
-
             // Generate LLM Response
             var tutorMessage = await llm.GenerateTutorResponse(currentInput, conversationData, instance.CourseTitle, courseDescription, topicNames);
 
