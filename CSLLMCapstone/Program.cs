@@ -29,6 +29,23 @@ If you were to use AddSingleton instead, the same instance of the service would 
 
 var app = builder.Build();
 
+// Migrate the database on startup. This ensures that the database is created and all migrations are applied before the application starts handling requests.
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var context = services.GetRequiredService<StudyContext>();
+        // Automatically creates the .db file and all tables from your migrations
+        context.Database.Migrate();
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "An error occurred while migrating the database.");
+    }
+}
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
